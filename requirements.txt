@@ -6,7 +6,6 @@ opencv-python==4.5.1.48
 Cython
 matplotlib>=3.2.2
 numpy>=1.18.5
-opencv-python>=4.1.2
 Pillow
 PyYAML>=5.3
 scipy>=1.4.1
