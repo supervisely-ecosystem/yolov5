@@ -3,6 +3,7 @@ import json
 import supervisely_lib as sly
 
 from sly_serve_utils import construct_model_meta, load_model, inference
+from sly_init_ui import _load_file as load_hyp
 
 my_app = sly.AppService()
 
@@ -11,7 +12,8 @@ WORKSPACE_ID = int(os.environ['context.workspaceId'])
 image_id = 725268
 
 meta: sly.ProjectMeta = None
-REMOTE_PATH = "/yolov5_train/coco128_002/2278/weights/best.pt"
+REMOTE_PATH = os.environ['modal.state.slyFile']
+
 DEVICE_STR = "cpu"
 model = None
 half = None
@@ -38,6 +40,14 @@ def get_session_info(api: sly.Api, task_id, context, state, app_logger):
     }
     request_id = context["request_id"]
     my_app.send_response(request_id, data=info)
+
+
+@my_app.callback("get_custom_inference_settings")
+@sly.timeit
+def get_custom_inference_settings(api: sly.Api, task_id, context, state, app_logger):
+    settings = load_hyp("supervisely/serve/custom_settings.yaml")
+    request_id = context["request_id"]
+    my_app.send_response(request_id, data={"settings": settings})
 
 
 @my_app.callback("inference_image_id")
@@ -77,8 +87,6 @@ def preprocess(api: sly.Api, task_id, context, state, app_logger):
     # load model on device
     model, half, device, imgsz = load_model(local_path, device=DEVICE_STR)
     meta = construct_model_meta(model)
-
-    debug_inference()
 
 
 def main():
