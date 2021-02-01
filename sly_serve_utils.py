@@ -93,7 +93,7 @@ def inference(model, half, device, imgsz, image: np.ndarray, meta: sly.ProjectMe
                 labels.append(label)
 
     height, width = img0.shape[:2]
-    ann = sly.Annotation(img_size=(width, height), labels=labels)
+    ann = sly.Annotation(img_size=(height, width), labels=labels)
 
     if debug_visualization is True:
         # visualize for debug purposes

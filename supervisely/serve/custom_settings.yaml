@@ -6,3 +6,6 @@ iou_thres: 0.6
 
 # augmented inference
 augment: False
+
+# save image with predictions (for developers)
+debug_visualization: False
