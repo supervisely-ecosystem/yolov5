@@ -16,8 +16,8 @@
   "need_gpu": true,
   "gui_template": "supervisely/train/src/gui.html",
   "context_menu": {
-    "context_root": "Neural networks",
     "target": ["images_project"],
-    "_context_category": "Neural Networks"
+    "context_root": "Neural Networks",
+    "context_category": "YOLO v5"
   }
 }
