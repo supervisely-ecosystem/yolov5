@@ -131,7 +131,7 @@
                 <!--<el-radio :label="3">Random (not recommended)</el-radio>-->
             </el-radio-group>
             <div v-show="state.modelWeightsOptions === 1">
-                <sly-field title="Model size" description="more params => better performace and slower inference time">
+                <sly-field title="Model size" description="more params => better performance and slower inference time">
                     <el-select v-model="state.modelSize"
                                style="width:250px;"
                                @change="() => state.pretrainedWeights = `${state.modelSize}.pt`">
