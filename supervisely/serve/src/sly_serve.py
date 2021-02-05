@@ -114,7 +114,7 @@ def main():
 #https://github.com/ultralytics/yolov5/releases/download/v4.0/yolov5x6.pt
 
 #@TODO: download progress bar
-#@TODO: augment before deploy
+#@TODO: augment inference
 #@TODO: log input arguments
 #@TODO: fix serve template - debug_inference
 #@TODO: deploy on custom device: cpu/gpu
