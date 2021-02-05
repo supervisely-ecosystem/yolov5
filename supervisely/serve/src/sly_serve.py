@@ -102,8 +102,18 @@ def main():
 
 
 #@TODO: add pretrained models
+#https://github.com/ultralytics/yolov5/releases/download/v4.0/yolov5s.pt
+#https://github.com/ultralytics/yolov5/releases/download/v4.0/yolov5m.pt
+#https://github.com/ultralytics/yolov5/releases/download/v4.0/yolov5l.pt
+#https://github.com/ultralytics/yolov5/releases/download/v4.0/yolov5x.pt
+
+#https://github.com/ultralytics/yolov5/releases/download/v4.0/yolov5s6.pt
+#https://github.com/ultralytics/yolov5/releases/download/v4.0/yolov5m6.pt
+#https://github.com/ultralytics/yolov5/releases/download/v4.0/yolov5l6-640.pt
+#https://github.com/ultralytics/yolov5/releases/download/v4.0/yolov5x6-640.pt
+#https://github.com/ultralytics/yolov5/releases/download/v4.0/yolov5x6.pt
+
 #@TODO: download progress bar
-#@TODO: add arguments to labeling inference (make a fork from NN labeling app)
 #@TODO: augment before deploy
 #@TODO: log input arguments
 #@TODO: fix serve template - debug_inference

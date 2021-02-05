@@ -1,0 +1,28 @@
+<div>
+    <sly-field title="Choose model" description="Use custom weights or pretrained checkpoints">
+        <el-radio-group class="mb15" v-model="state.modelWeightsOptions">
+            <el-radio :label="1">Pretrained on COCO</el-radio>
+            <el-radio :label="2">Custom model</el-radio>
+        </el-radio-group>
+        <div v-show="state.modelWeightsOptions === 1">
+            <sly-field title="Model size" description="more params => better performace and slower inference time">
+                <el-select v-model="state.modelSize"
+                           style="width:250px;"
+                           @change="() => state.pretrainedWeights = `${state.modelSize}.pt`">
+                    <el-option
+                            v-for="item in state.modelSizes"
+                            :key="item.label"
+                            :label="`${item.label} (${item.params} params)`"
+                            :value="item.label">
+                    </el-option>
+                </el-select>
+            </sly-field>
+            <!--<el-input v-model="state.pretrainedWeights" :disabled="true" style="width:250px;"></el-input>-->
+        </div>
+        <div v-show="state.modelWeightsOptions === 2">
+            <sly-field title="Path to file" description="Copy path in Team Files">
+                <el-input v-model="state.weightsPath" placeholder="Path to .pt file in Team Files"></el-input>
+            </sly-field>
+        </div>
+    </sly-field>
+</div>
