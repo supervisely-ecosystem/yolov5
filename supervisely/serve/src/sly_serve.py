@@ -18,7 +18,7 @@ pretrained_weights = os.environ['modal.state.modelSize']
 custom_weights = os.environ['modal.state.weightsPath']
 
 
-DEVICE_STR = "cpu"
+DEVICE_STR = os.environ['modal.state.device']
 final_weights = None
 model = None
 half = None
@@ -44,7 +44,7 @@ def get_output_classes_and_tags(api: sly.Api, task_id, context, state, app_logge
 @sly.timeit
 def get_session_info(api: sly.Api, task_id, context, state, app_logger):
     info = {
-        "app": "YOLO v5 serve",
+        "app": "YOLOv5 serve",
         "weights": final_weights,
         "device": str(device),
         "half": str(half),
@@ -68,6 +68,11 @@ def inference_image_id(api: sly.Api, task_id, context, state, app_logger):
     image_id = state["image_id"]
     settings = state["settings"]
 
+    rect = None
+    if "rectangle" in state:
+        top, left, bottom, right = state["rectangle"]
+        rect = sly.Rectangle(top, left, bottom, right)
+
     for key, value in default_settings.items():
         if key not in settings:
             app_logger.warn("Field {!r} not found in inference settings. Use default value {!r}".format(key, value))
@@ -78,6 +83,8 @@ def inference_image_id(api: sly.Api, task_id, context, state, app_logger):
     augment = settings.get("augment", default_settings["augment"])
 
     image = api.image.download_np(image_id)  # RGB image
+    if rect is not None:
+        image = sly.image.crop(image, rect)
     ann_json = inference(model, half, device, imgsz, image, meta,
                          conf_thres=conf_thres, iou_thres=iou_thres, augment=augment,
                          debug_visualization=debug_visualization)
@@ -107,7 +114,7 @@ def preprocess(api: sly.Api, task_id, context, state, app_logger):
     elif modelWeightsOptions == "custom":
         final_weights = custom_weights
         file_info = api.file.get_info_by_path(TEAM_ID, custom_weights)
-        progress.set(0, file_info.sizeb)
+        progress.set(current=0, total=file_info.sizeb)
         api.file.download(TEAM_ID, custom_weights, local_path, my_app.cache, progress.iters_done_report)
     else:
         raise ValueError("Unknown weights option {!r}".format(modelWeightsOptions))
@@ -115,6 +122,7 @@ def preprocess(api: sly.Api, task_id, context, state, app_logger):
     # load model on device
     model, half, device, imgsz = load_model(local_path, device=DEVICE_STR)
     meta = construct_model_meta(model)
+    sly.logger.info("Model has been successfully deployed")
 
 
 def main():
@@ -130,7 +138,6 @@ def main():
 
 
 #@TODO: augment inference
-#@TODO: fix serve template - debug_inference
-#@TODO: deploy on custom device: cpu/gpu
+#@TODO: https://pypi.org/project/cachetools/
 if __name__ == "__main__":
     sly.main_wrapper("main", main)
