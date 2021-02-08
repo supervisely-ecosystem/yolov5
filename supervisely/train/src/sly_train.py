@@ -16,13 +16,15 @@ from sly_train_val_split import train_val_split
 import sly_init_ui as ui
 from sly_prepare_data import filter_and_transform_labels
 from sly_train_utils import init_script_arguments
-from sly_utils import get_progress_cb, load_file_as_string, upload_artifacts
+from sly_utils import get_progress_cb, upload_artifacts
+from supervisely.general_utils import load_file_as_string
 
 root_project_path = str(Path(os.path.realpath(__file__)).parents[3])
 sly.logger.info(f"Root project directory: {root_project_path}")
 sys.path.append(root_project_path)
 
 import train as train_yolov5
+
 
 @my_app.callback("restore_hyp")
 @sly.timeit

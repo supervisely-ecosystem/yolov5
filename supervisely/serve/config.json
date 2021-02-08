@@ -11,7 +11,7 @@
   "main_script": "supervisely/serve/src/sly_serve.py",
   "modal_template": "supervisely/serve/src/modal.html",
   "modal_template_state": {
-    "modelWeightsOptions": "1",
+    "modelWeightsOptions": "pretrained",
     "modelSize": "yolov5s.pt",
     "device": "0"
   },
