@@ -3,16 +3,23 @@ import json
 import yaml
 import supervisely_lib as sly
 
-from sly_serve_utils import construct_model_meta, load_model, inference
-from supervisely.train.src.sly_utils import load_file_as_string as load_hyp
+from nn_utils import construct_model_meta, load_model, inference
+from supervisely.train.src.sly_utils import load_file_as_string
+from general_utils import download_weights_by_url
+
 
 my_app = sly.AppService()
 
 TEAM_ID = int(os.environ['context.teamId'])
 WORKSPACE_ID = int(os.environ['context.workspaceId'])
-image_id = 725268
 
 meta: sly.ProjectMeta = None
+
+modelWeightsOptions = os.environ['modal.state.modelWeightsOptions']
+pretrained_weights = os.path.join("https://github.com/ultralytics/yolov5/releases/download/v4.0/",
+                                  os.environ['modal.state.modelSize'])
+custom_weights = os.environ['modal.state.weightsPath']
+
 REMOTE_PATH = os.environ['modal.state.slyFile']
 
 DEVICE_STR = "cpu"
@@ -20,7 +27,7 @@ model = None
 half = None
 device = None
 imgsz = None
-default_settings = yaml.safe_load(load_hyp("supervisely/serve/custom_settings.yaml"))
+default_settings = yaml.safe_load(load_file_as_string("supervisely/serve/custom_settings.yaml"))
 
 
 @my_app.callback("get_output_classes_and_tags")
@@ -47,7 +54,7 @@ def get_session_info(api: sly.Api, task_id, context, state, app_logger):
 @my_app.callback("get_custom_inference_settings")
 @sly.timeit
 def get_custom_inference_settings(api: sly.Api, task_id, context, state, app_logger):
-    settings = load_hyp("supervisely/serve/custom_settings.yaml")
+    settings = load_file_as_string("supervisely/serve/custom_settings.yaml")
     request_id = context["request_id"]
     my_app.send_response(request_id, data={"settings": settings})
 
@@ -89,6 +96,9 @@ def preprocess(api: sly.Api, task_id, context, state, app_logger):
     global model, half, device, imgsz, meta
 
     # download weights
+    if
+    download_weights_by_url(url, )
+
     local_path = os.path.join(my_app.data_dir, sly.fs.get_file_name_with_ext(REMOTE_PATH))
     api.file.download(TEAM_ID, REMOTE_PATH, local_path)
 
@@ -98,7 +108,14 @@ def preprocess(api: sly.Api, task_id, context, state, app_logger):
 
 
 def main():
-    my_app.run(initial_events=[{"command": "preprocess"}])
+
+    url = "https://github.com/ultralytics/yolov5/releases/download/v4.0/yolov5x.pt"
+    local_path = os.path.join(my_app.data_dir, yolov5x.pt)
+    my_app.cache.write_object()
+
+
+
+    #my_app.run(initial_events=[{"command": "preprocess"}])
 
 
 #@TODO: add pretrained models
@@ -106,12 +123,6 @@ def main():
 #https://github.com/ultralytics/yolov5/releases/download/v4.0/yolov5m.pt
 #https://github.com/ultralytics/yolov5/releases/download/v4.0/yolov5l.pt
 #https://github.com/ultralytics/yolov5/releases/download/v4.0/yolov5x.pt
-
-#https://github.com/ultralytics/yolov5/releases/download/v4.0/yolov5s6.pt
-#https://github.com/ultralytics/yolov5/releases/download/v4.0/yolov5m6.pt
-#https://github.com/ultralytics/yolov5/releases/download/v4.0/yolov5l6-640.pt
-#https://github.com/ultralytics/yolov5/releases/download/v4.0/yolov5x6-640.pt
-#https://github.com/ultralytics/yolov5/releases/download/v4.0/yolov5x6.pt
 
 #@TODO: download progress bar
 #@TODO: augment inference
