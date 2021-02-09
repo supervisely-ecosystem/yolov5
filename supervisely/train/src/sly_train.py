@@ -101,11 +101,11 @@ def main():
     my_app.run(data=data, state=state)
 
 
+# @TODO: chart names
 # @TODO: train == val - handle case in data_config.yaml to avoid data duplication
 # @TODO: resume training
 # @TODO: fix upload directory (number of progress updates)
 # @TODO: repeat dataset (for small lemons)
-# @TODO: chart refresh freezes page
 # @TODO: adam or SGD opt?
 if __name__ == "__main__":
     main()
