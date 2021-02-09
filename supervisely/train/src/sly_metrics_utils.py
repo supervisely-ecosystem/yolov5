@@ -47,7 +47,7 @@ def init_chart(title, names, colors, xs, ys):
             "y": y,
             "name": name,
             "mode": "lines+markers",
-            "type": "scattergl",
+            #"type": "scattergl",
             "line": {
                 "color": f"rgb({color[0]}, {color[1]}, {color[2]})",
                 "width": 2
