@@ -39,6 +39,9 @@ def init(data):
                               names=["mAP@0.5", "mAP@0.5:0.95"],
                               xs=demo_x,
                               ys=demo_y)
+    data["lcOptions"] = {
+        "smoothingWeight": 0.6
+    }
 
 
 def send_metrics(epoch, epochs, metrics):

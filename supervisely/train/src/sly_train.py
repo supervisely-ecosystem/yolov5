@@ -102,11 +102,12 @@ def main():
 
 
 # @TODO: chart names
+# @TODO: fix upload directory (number of progress updates)
+
+# New features:
+# @TODO: adam or SGD opt?
 # @TODO: train == val - handle case in data_config.yaml to avoid data duplication
 # @TODO: resume training
-# @TODO: fix upload directory (number of progress updates)
 # @TODO: repeat dataset (for small lemons)
-# @TODO: adam or SGD opt?
 if __name__ == "__main__":
-    main()
-    #sly.main_wrapper("main", main)
+    sly.main_wrapper("main", main)

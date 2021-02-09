@@ -263,14 +263,32 @@
             </el-collapse-item>
             <el-collapse-item title="Metrics" name="metrics">
                 <div class="fflex" v-if="state.activeNames.includes('metrics')">
-                    <sly-line-chart :content="data.mBox" style="width: 33%; height: 415px;"></sly-line-chart>
-                    <sly-line-chart :content="data.mObjectness" style="width: 33%; height: 415px;"></sly-line-chart>
-                    <sly-line-chart :content="data.mClassification" style="width: 33%; height: 415px"></sly-line-chart>
+                    <sly-line-chart
+                            style="width: 33%;"
+                            :options.sync="data.lcOptions"
+                            :content="data.mBox">
+                    </sly-line-chart>
+                    <sly-line-chart
+                            style="width: 33%;"
+                            :options.sync="data.lcOptions"
+                            :content="data.mObjectness">
+                    </sly-line-chart>
+                    <sly-line-chart
+                            style="width: 33%;"
+                            :options.sync="data.lcOptions"
+                            :content="data.mClassification">
+                    </sly-line-chart>
                 </div>
                 <div class="fflex mt15" v-if="state.activeNames.includes('metrics')">
-                    <sly-line-chart :content="data.mPR" style="width: 33%; height: 415px"></sly-line-chart>
-                    <sly-line-chart :content="data.mMAP" style="width: 33%; height: 415px"></sly-line-chart>
-                    <div style="width: 33%; height: 300px"></div>
+                    <sly-line-chart
+                            style="width: 33%;"
+                            :content="data.mPR">
+                    </sly-line-chart>
+                    <sly-line-chart
+                            style="width: 33%;"
+                            :content="data.mMAP">
+                    </sly-line-chart>
+                    <div style="width: 33%;"></div>
                 </div>
             </el-collapse-item>
             <el-collapse-item title="Predictions visualization" name="pred">
