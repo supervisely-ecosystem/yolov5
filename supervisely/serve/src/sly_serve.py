@@ -125,7 +125,7 @@ def inference_image_id(api: sly.Api, task_id, context, state, app_logger):
 
 @my_app.callback("inference_batch_ids")
 @sly.timeit
-def inference_image_id(api: sly.Api, task_id, context, state, app_logger):
+def inference_batch_ids(api: sly.Api, task_id, context, state, app_logger):
     app_logger.debug("Input data", extra={"state": state})
     ids = state["batch_ids"]
     infos = api.image.get_info_by_id_batch(ids)
@@ -138,6 +138,7 @@ def inference_image_id(api: sly.Api, task_id, context, state, app_logger):
     for image_path in paths:
         ann_json = inference_image_path(image_path, context, state, app_logger)
         results.append(ann_json)
+        sly.fs.silent_remove(image_path)
 
     request_id = context["request_id"]
     my_app.send_response(request_id, data=results)
