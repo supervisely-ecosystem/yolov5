@@ -22,7 +22,16 @@
 
 # Overview
 
-App deploys model (pretrained on COCO or custom one) as REST API service.
+App deploys model (pretrained on COCO or custom one) as REST API service. This is the simplest way how any model can be 
+integrated into Supervisely. Developer just has to implement 3 methods:
+- 1
+- 2
+- 3...
+
+Benefits:
+- 1
+- 2
+- 3
 
 # How To Run
 
