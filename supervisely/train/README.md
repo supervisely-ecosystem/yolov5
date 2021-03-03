@@ -41,3 +41,7 @@ Watch short video for more details:
 <a data-key="sly-embeded-video-link" href="https://youtu.be/e47rWdgK-_M" data-video-code="e47rWdgK-_M">
     <img src="https://i.imgur.com/sJdEEkN.png" alt="SLY_EMBEDED_VIDEO_LINK"  style="max-width:100%;">
 </a>
+
+# Screenshot
+
+<img src="https://i.imgur.com/vAbSv02.jpg"/>
