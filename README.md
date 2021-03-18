@@ -6,7 +6,7 @@ This guide explains how to use Supervisely with YOLOv5.
 2. [Prerequisites](#Prerequisites)
 3. [YOLOv5 Apps Collection](#YOLOv5-Apps-Collection)
 8. [For developers](#For-developers)
-9. [Contact & Questions & Suggestions](#Contact)
+9. [Contact & Questions & Suggestions](#Contact-&-Questions-&-Suggestions)
 
 # About Supervisely
 
@@ -48,7 +48,7 @@ YOLOv5 is one of the best available detectors. And we are proud to announce its 
 
  YOLOv5 Collection consists of the following apps: 
 
-1. [Train YOLOv5](https://ecosystem.supervise.ly/apps/supervisely-ecosystem%252Fyolov5%252Fsupervisely%252Ftrain) - start training on your custom data. Just run app from the context menu of your project, choose classes of interest, configure training metaparameters and augmentations and monitor training metrics in realtime. All training artifacts including weights will be saved to Team Files. 
+1. [Train YOLOv5](https://ecosystem.supervise.ly/apps/supervisely-ecosystem%252Fyolov5%252Fsupervisely%252Ftrain) - start training on your custom data. Just run app from the context menu of your project, choose classes of interest, train/val splits, configure training metaparameters and augmentations, and monitor training metrics in realtime. App automatically converts all labels to rectangles. All training artifacts including model weights will be saved to Team Files and can be easily downloaded. 
 
 <img src="https://i.imgur.com/RkVzrLC.png" width="350px"/>
 
@@ -60,22 +60,22 @@ YOLOv5 is one of the best available detectors. And we are proud to announce its 
    
 <img src="https://i.imgur.com/M2Tp8lE.png" width="350px"/> 
 
-4. [NN Image Labeling](https://ecosystem.supervise.ly/apps/supervisely-ecosystem%252Fnn-image-labeling%252Fannotation-tool) - app allows to integrate any deployd NN to Supervisely Image Labeling UI. configure inference settings and model output classes. Press `Apply` button and predictions with their confidences will immediately appear on the image. 
+4. [NN Image Labeling](https://ecosystem.supervise.ly/apps/supervisely-ecosystem%252Fnn-image-labeling%252Fannotation-tool) - integrate any deployd NN to Supervisely Image Labeling UI. Configure inference settings and model output classes. Press `Apply` button (or use hotkey) and detections with their confidences will immediately appear on the image. 
    
 <img src="https://i.imgur.com/hYEucNt.png" width="350px"/> 
 
-5. [Convert Supervisely to YOLO v5 format](https://ecosystem.supervise.ly/apps/convert-supervisely-to-yolov5-format)
+5. [Convert Supervisely to YOLO v5 format](https://ecosystem.supervise.ly/apps/convert-supervisely-to-yolov5-format) - export labeled images project in yolov5 compatible format. 
    
 <img src="https://i.imgur.com/9cfB1m0.png" width="350px"/> 
 
-6. [Convert YOLO v5 to Supervisely format](https://ecosystem.supervise.ly/apps/convert-yolov5-to-supervisely-format)
+6. [Convert YOLO v5 to Supervisely format](https://ecosystem.supervise.ly/apps/convert-yolov5-to-supervisely-format) - import images and yolov5 annotatons to Supervisely.
 
 <img src="https://i.imgur.com/roiJIE8.png" width="350px"/> 
-
-
 
 # For Developers
 - associated release version v4.0
 - sources
 - contact us
 - for enterprises
+
+# Contact & Questions & Suggestions
