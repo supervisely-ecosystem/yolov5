@@ -3,14 +3,10 @@ This guide explains how to use Supervisely with YOLOv5.
 # Table of Contents
 
 1. [About Supervisely](#About-Supervisely)
-2. [YOLOv5 Apps Collection](#YOLOv5-Apps-Collection) 
-3. [Prerequisites](#Prerequisites)
-4. [Train Custom Data](#Installation)
-5. [Deploy model as REST API](#Documentation)
-6. [Integrate model to labeling UI](#Example-images)
-7. [Apply model to images project](#Eecent-changes)
+2. [Prerequisites](#Prerequisites)
+3. [YOLOv5 Apps Collection](#YOLOv5-Apps-Collection)
 8. [For developers](#For-developers)
-9. [Contact](#Contact)
+9. [Contact & Questions & Suggestions](#Contact)
 
 # About Supervisely
 
@@ -27,30 +23,59 @@ More concretely, Supervisely includes the following functionality:
 
 One challenge is to make it possible for everyone to train and apply SOTA Deep Learning models directly from the Web Browser. To address it, we introduce an open sourced Supervisely Agent. All you need to do is to execute a single command on your machine with the GPU that installs the Agent. After that, you keep working in the browser and all the GPU related computations will be performed on the connected machine(s).
 
-# YOLO v5 apps collection
-
-YOLOv5 is a part of [Supervisely Ecosystem](https://ecosystem.supervise.ly/) 🎉. Now Supervisely users can quickly train and use YOLOv5 with their custom data with a few clicks.
 
 # Prerequisites
+You should connect computer with GPU to your Supervisely account. If you already have Supervisely Agent running on your computer, you can skip this step.
 
-1. Add YOLOv5 [train](https://ecosystem.supervise.ly/apps/supervisely-ecosystem%252Fyolov5%252Fsupervisely%252Ftrain) / [serve](https://ecosystem.supervise.ly/apps/supervisely-ecosystem%252Fyolov5%252Fsupervisely%252Fserve) apps from Ecosystem to your team.
-2. Be sure that you connected computer with GPU to Supervisely. Watch how-to video:
+ Several tools have to be installed on your computer:
 
-# YOLOv5 integration into Supervisely
+- Nvidia drives + [CUDA Toolkit](https://developer.nvidia.com/cuda-downloads)
+- [Docker](https://docs.docker.com/engine/install/)
+- [NVIDIA Container Toolkit](https://github.com/NVIDIA/nvidia-docker)
 
-- [train app](./supervisely/train/README.md)
+Once your computer is ready just add agent to your team and execute automatically generated running command in terminal. Watch how-to video:
 
-<img src="https://i.imgur.com/YwSq29o.png"/>
+<a data-key="sly-embeded-video-link" href="https://youtu.be/aDqQiYycqyk" data-video-code="aDqQiYycqyk">
+    <img src="https://i.imgur.com/X9NTc5X.png" alt="SLY_EMBEDED_VIDEO_LINK"  style="max-width:50%;">
+</a>
 
-- [serve app](./supervisely/serve/README.md)
 
-<img src="https://i.imgur.com/1qXIdqs.png"/>
+# 🎉 YOLO v5 Apps Collection
 
-Original readme is [here](./README-original.md).
+YOLOv5 is one of the best available detectors. And we are proud to announce its full integrtion into [Supervisely Ecosystem](https://ecosystem.supervise.ly/). To learn more about how to use every app, please go to app's readme page (links are provided). Just add an interested app to your team to start using it.
+
+<img src="https://i.imgur.com/az5sqvk.png"/>
+
+ YOLOv5 Collection consists of the following apps: 
+
+1. [Train YOLOv5](https://ecosystem.supervise.ly/apps/supervisely-ecosystem%252Fyolov5%252Fsupervisely%252Ftrain) - start training on your custom data. Just run app from the context menu of your project, choose classes of interest, configure training metaparameters and augmentations and monitor training metrics in realtime. All training artifacts including weights will be saved to Team Files. 
+
+<img src="https://i.imgur.com/RkVzrLC.png" width="350px"/>
+
+2. [Serve YOLOv5](https://ecosystem.supervise.ly/apps/supervisely-ecosystem%252Fyolov5%252Fsupervisely%252Fserve) - serve model as Rest API service. Thus other apps from Ecosystem can get predictions from the deployed model. Also developers can send inference requiests in a few lines of python code.
+   
+<img src="https://i.imgur.com/DVONwK8.png" width="350px"/>
+
+3. [Apply NN to images project ](https://ecosystem.supervise.ly/apps/supervisely-ecosystem%252Fnn-image-labeling%252Fproject-dataset) - app allows to play with different inference options and visualize predictions in real time.  Once you choose inference settings you can apply model to all images in your project to visually analise predictions and perform automatic data pre-labeling.   
+   
+<img src="https://i.imgur.com/M2Tp8lE.png" width="350px"/> 
+
+4. [NN Image Labeling](https://ecosystem.supervise.ly/apps/supervisely-ecosystem%252Fnn-image-labeling%252Fannotation-tool) - app allows to integrate any deployd NN to Supervisely Image Labeling UI. configure inference settings and model output classes. Press `Apply` button and predictions with their confidences will immediately appear on the image. 
+   
+<img src="https://i.imgur.com/hYEucNt.png" width="350px"/> 
+
+5. [Convert Supervisely to YOLO v5 format](https://ecosystem.supervise.ly/apps/convert-supervisely-to-yolov5-format)
+   
+<img src="https://i.imgur.com/9cfB1m0.png" width="350px"/> 
+
+6. [Convert YOLO v5 to Supervisely format](https://ecosystem.supervise.ly/apps/convert-yolov5-to-supervisely-format)
+
+<img src="https://i.imgur.com/roiJIE8.png" width="350px"/> 
+
 
 
 # For Developers
-- associated release version
+- associated release version v4.0
 - sources
 - contact us
 - for enterprises
