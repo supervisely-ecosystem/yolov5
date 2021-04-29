@@ -13,6 +13,15 @@
         font-size: 13px;
         }
 
+        .beautiful-table { border-collapse: collapse; }
+        .beautiful-table tr:nth-child(2n) { background-color: #f6f8fa; }
+        .beautiful-table td, .beautiful-table th {
+            border: 1px solid #dfe2e5;
+            padding: 6px 13px;
+            text-align: center;
+            line-height: 20px;
+        }
+
         #yolov5-train .el-tabs.el-tabs-cards { border-radius: 4px; box-shadow: none; }
         #yolov5-train .el-tabs.el-tabs-cards .el-tabs__header { background-color: #f6fafd; }
         #yolov5-train .el-tabs.el-tabs-cards .el-tabs__nav { float: none; display: flex; justify-content:
@@ -28,7 +37,6 @@
             <sly-icon slot="icon" :options="{ imageUrl: `${data.projectPreviewUrl}` }"/>
         </sly-field>
     </sly-card>
-
     <sly-card class="mt15"
               title="2. Training classes"
               subtitle="Select classes, that should be used for training. Training supports only classes of shape
@@ -108,7 +116,7 @@
                     <div>Images already should have assigned train or val tag</div>
                 </el-radio>
                 <sly-field title="Notice 1: How to create train/val splits based on tags"
-                           description="Option 1: use app 'tag-train-val-test' from Ecosystem. Option 2: manually assign
+                           description="Option 1: use app 'Assign train/val tags to images' from Ecosystem. Option 2: manually assign
                                     train/val tags to images. Option 3: use other way you want - python SDK, API, ...
                                     Please, contact tech support if your case is not covered">
                     <sly-icon slot="icon" :options="{ color: '#fba607', bgColor: '#ffe9da', rounded: false }">
@@ -178,24 +186,46 @@
             <el-tab-pane name="coco">
                 <el-radio slot="label" v-model="state.modelWeightsOptions" label="coco">
                     Pretrained on COCO
+                    <div>Default pretrained checkpoints provided by authors of YOLOv5</div>
                 </el-radio>
-                <el-table
-                        class="ultra-table"
-                        :data="data.models"
-                        style="width: 100%"
-                >
-                    <el-table-column label="Model" prop="model" sortable>
-                        <template scope="scope">
-                            <el-radio class="radio" v-model="state.selectedModel" :label="scope.row.model">
-                                {{scope.row.model}}
-                            </el-radio>
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="Params (M)" prop="params" sortable></el-table-column>
-                    <el-table-column label="Flops (G)" prop="flops" sortable></el-table-column>
-                    <el-table-column label="Top-1 (%)" prop="top1" sortable></el-table-column>
-                    <el-table-column label="Top-5 (%)" prop="top5" sortable></el-table-column>
-                </el-table>
+
+                <table class="beautiful-table">
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Params (P)</th>
+                            <th>Params (V)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="row in data.models">
+                            <td v-for="(val, key) in row">{{ val }}</td>
+
+<!--                            <td>{{ row['blah-blah'] }}</td>-->
+                        </tr>
+                    </tbody>
+                </table>
+
+<!--                <el-table-->
+<!--                        class="ultra-table"-->
+<!--                        :data="data.models"-->
+<!--                        style="width: 100%"-->
+<!--                >-->
+<!--                    <el-table-column label="Model" prop="model" sortable>-->
+<!--                        <template scope="scope">-->
+<!--                            <el-radio class="radio" v-model="state.selectedModel" :label="scope.row.model">-->
+<!--                                {{scope.row.model}}-->
+<!--                            </el-radio>-->
+<!--                        </template>-->
+<!--                    </el-table-column>-->
+<!--                    <el-table-column label="In size (pixels)" prop="size pixels" sortable></el-table-column>-->
+<!--                    <el-table-column label="mAP_val 0.5:0.95" prop="mAP_val 0.5_0.95" sortable></el-table-column>-->
+<!--                    <el-table-column label="mAP_test 0.5:0.95" prop="mAP_test 0.5_0.95" sortable></el-table-column>-->
+<!--                    <el-table-column label="mAP_val 0.5" prop="mAP_val 0.5" sortable></el-table-column>-->
+<!--                    <el-table-column label="speed v100 (ms)" prop="speed v100 (ms)" sortable></el-table-column>-->
+<!--                    <el-table-column label="params (M)" prop="params (M)" sortable></el-table-column>-->
+<!--                    <el-table-column label="FLOPS 640 (B)" prop="FLOPS 640 (B)" sortable></el-table-column>-->
+<!--                </el-table>-->
             </el-tab-pane>
             <el-tab-pane name="custom">
                 <el-radio slot="label" v-model="state.modelWeightsOptions" label="custom">

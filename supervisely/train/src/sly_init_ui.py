@@ -3,6 +3,7 @@ import supervisely_lib as sly
 
 import sly_train_globals as globals
 import sly_metrics as metrics
+from models_description import get_models_list
 
 
 empty_gallery = {
@@ -80,7 +81,7 @@ def init_splits(PROJECT, data, state):
 
 
 def init_model_settings(data, state):
-    data["models"] = "" #@TODO
+    data["models"] = get_models_list()
     # data["modelSizes"] = [
     #     {"label": "yolov5s", "config": "yolov5s.yaml", "params": "7.3M"},
     #     {"label": "yolov5m", "config": "yolov5m.yaml", "params": "21.4M"},
@@ -88,8 +89,9 @@ def init_model_settings(data, state):
     #     {"label": "yolov5x", "config": "yolov5x.yaml", "params": "87.7M"},
     # ]
     # state["modelSize"] = data["modelSizes"][0]["label"]
-    state["modelWeightsOptions"] = "coco"
-    state["pretrainedWeights"] = f'{data["modelSizes"][0]["label"]}.pt'
+    state["selectedModel"] = ""
+    state["modelWeightsOptions"] = "" # "coco"
+    state["pretrainedWeights"] = "" #f'{data["modelSizes"][0]["label"]}.pt'
 
     # @TODO: for debug
     #state["weightsPath"] = "/yolov5_train/coco128_002/2390/weights/best.pt"
