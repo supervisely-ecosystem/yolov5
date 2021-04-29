@@ -80,14 +80,15 @@ def init_splits(PROJECT, data, state):
 
 
 def init_model_settings(data, state):
-    data["modelSizes"] = [
-        {"label": "yolov5s", "config": "yolov5s.yaml", "params": "7.3M"},
-        {"label": "yolov5m", "config": "yolov5m.yaml", "params": "21.4M"},
-        {"label": "yolov5l", "config": "yolov5l.yaml", "params": "47.0M"},
-        {"label": "yolov5x", "config": "yolov5x.yaml", "params": "87.7M"},
-    ]
-    state["modelSize"] = data["modelSizes"][0]["label"]
-    state["modelWeightsOptions"] = 1
+    data["models"] = "" #@TODO
+    # data["modelSizes"] = [
+    #     {"label": "yolov5s", "config": "yolov5s.yaml", "params": "7.3M"},
+    #     {"label": "yolov5m", "config": "yolov5m.yaml", "params": "21.4M"},
+    #     {"label": "yolov5l", "config": "yolov5l.yaml", "params": "47.0M"},
+    #     {"label": "yolov5x", "config": "yolov5x.yaml", "params": "87.7M"},
+    # ]
+    # state["modelSize"] = data["modelSizes"][0]["label"]
+    state["modelWeightsOptions"] = "coco"
     state["pretrainedWeights"] = f'{data["modelSizes"][0]["label"]}.pt'
 
     # @TODO: for debug

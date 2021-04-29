@@ -64,7 +64,7 @@
             <el-tab-pane name="random">
                 <el-radio slot="label" v-model="state.splitMethod" label="random">
                     Random
-                    <div>Basic augmentations, can be used to quickly build baseline</div>
+                    <div>Shuffle data and split with defined probability</div>
                 </el-radio>
                 <el-table :data="data.randomSplit" class="ultra-table">
                     <el-table-column label="Info" width="180">
@@ -105,9 +105,9 @@
             <el-tab-pane name="tags">
                 <el-radio slot="label" v-model="state.splitMethod" label="tags">
                     Based on image tags
-                    <div>Basic augmentations, can be used to quickly build baseline</div>
+                    <div>Images already should have assigned train or val tag</div>
                 </el-radio>
-                <sly-field title="Notice 1: how to create train/val splits based on tags"
+                <sly-field title="Notice 1: How to create train/val splits based on tags"
                            description="Option 1: use app 'tag-train-val-test' from Ecosystem. Option 2: manually assign
                                     train/val tags to images. Option 3: use other way you want - python SDK, API, ...
                                     Please, contact tech support if your case is not covered">
@@ -115,7 +115,7 @@
                         <i class="zmdi zmdi-help"></i>
                     </sly-icon>
                 </sly-field>
-                <sly-field title="Notice 2: Train == Validation"
+                <sly-field title="Notice 2: How to make equal splits"
                            description="Choose the same tag for train/validation to make splits equal. Can be used for debug
                                     and for tiny projects">
                     <sly-icon slot="icon" :options="{ color: '#fba607', bgColor: '#ffe9da', rounded: false }">
@@ -140,8 +140,11 @@
                 <div>If image does not have such tags, it will be assigned to training set</div>
             </el-tab-pane>
             <el-tab-pane name="datasets">
-                <el-radio slot="label" v-model="state.splitMethod" label="datasets">Based on datasets</el-radio>
-                <sly-field title="Notice: Train == Validation"
+                <el-radio slot="label" v-model="state.splitMethod" label="datasets">
+                    Based on datasets
+                    <div>Select one or several datasets for every split</div>
+                </el-radio>
+                <sly-field title="Notice: How to make equal splits"
                            description="Choose the same dataset(s) for train/validation to make splits equal. Can be used for debug
                                     and for tiny projects">
                     <sly-icon slot="icon" :options="{ color: '#fba607', bgColor: '#ffe9da', rounded: false }">
@@ -171,34 +174,66 @@
     <sly-card class="mt15"
               title="4. Model settings"
               subtitle="Choose model size or how weights should be initialized">
-        <sly-field title="Weights initialization" description="Define how model is initialized before training">
-            <el-radio-group class="mb15" v-model="state.modelWeightsOptions">
-                <el-radio :label="1">Pretrained on COCO</el-radio>
-                <el-radio :label="2">From custom model</el-radio>
-                <!--                <el-radio :label="3" :disabled="true">Resume training (not implemented yet)</el-radio>-->
-                <!--<el-radio :label="3">Random (not recommended)</el-radio>-->
-            </el-radio-group>
-            <div v-show="state.modelWeightsOptions === 1">
-                <sly-field title="Model size" description="more params => better performance and slower inference time">
-                    <el-select v-model="state.modelSize"
-                               style="width:250px;"
-                               @change="() => state.pretrainedWeights = `${state.modelSize}.pt`">
-                        <el-option
-                                v-for="item in data.modelSizes"
-                                :key="item.label"
-                                :label="`${item.label} (${item.params} params)`"
-                                :value="item.label">
-                        </el-option>
-                    </el-select>
-                </sly-field>
-                <!--<el-input v-model="state.pretrainedWeights" :disabled="true" style="width:250px;"></el-input>-->
-            </div>
-            <div v-show="state.modelWeightsOptions === 2">
-                <sly-field title="Path to file" description="Copy path in Team Files">
+        <el-tabs type="border-card" class="el-tabs-cards" v-model="state.modelWeightsOptions">
+            <el-tab-pane name="coco">
+                <el-radio slot="label" v-model="state.modelWeightsOptions" label="coco">
+                    Pretrained on COCO
+                </el-radio>
+                <el-table
+                        class="ultra-table"
+                        :data="data.models"
+                        style="width: 100%"
+                >
+                    <el-table-column label="Model" prop="model" sortable>
+                        <template scope="scope">
+                            <el-radio class="radio" v-model="state.selectedModel" :label="scope.row.model">
+                                {{scope.row.model}}
+                            </el-radio>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="Params (M)" prop="params" sortable></el-table-column>
+                    <el-table-column label="Flops (G)" prop="flops" sortable></el-table-column>
+                    <el-table-column label="Top-1 (%)" prop="top1" sortable></el-table-column>
+                    <el-table-column label="Top-5 (%)" prop="top5" sortable></el-table-column>
+                </el-table>
+            </el-tab-pane>
+            <el-tab-pane name="custom">
+                <el-radio slot="label" v-model="state.modelWeightsOptions" label="custom">
+                    Custom weights
+                </el-radio>
+                <sly-field title="Path to weights file" description="Copy path in Team Files">
                     <el-input v-model="state.weightsPath" placeholder="Path to .pt file in Team Files"></el-input>
                 </sly-field>
-            </div>
-        </sly-field>
+            </el-tab-pane>
+        </el-tabs>
+        <!--        <sly-field title="Weights initialization" description="Define how model is initialized before training">-->
+        <!--            <el-radio-group class="mb15" v-model="state.modelWeightsOptions">-->
+        <!--                <el-radio :label="1">Pretrained on COCO</el-radio>-->
+        <!--                <el-radio :label="2">From custom model</el-radio>-->
+        <!--                &lt;!&ndash;                <el-radio :label="3" :disabled="true">Resume training (not implemented yet)</el-radio>&ndash;&gt;-->
+        <!--                &lt;!&ndash;<el-radio :label="3">Random (not recommended)</el-radio>&ndash;&gt;-->
+        <!--            </el-radio-group>-->
+        <!--            <div v-show="state.modelWeightsOptions === 1">-->
+        <!--                <sly-field title="Model size" description="more params => better performance and slower inference time">-->
+        <!--                    <el-select v-model="state.modelSize"-->
+        <!--                               style="width:250px;"-->
+        <!--                               @change="() => state.pretrainedWeights = `${state.modelSize}.pt`">-->
+        <!--                        <el-option-->
+        <!--                                v-for="item in data.modelSizes"-->
+        <!--                                :key="item.label"-->
+        <!--                                :label="`${item.label} (${item.params} params)`"-->
+        <!--                                :value="item.label">-->
+        <!--                        </el-option>-->
+        <!--                    </el-select>-->
+        <!--                </sly-field>-->
+        <!--                &lt;!&ndash;<el-input v-model="state.pretrainedWeights" :disabled="true" style="width:250px;"></el-input>&ndash;&gt;-->
+        <!--            </div>-->
+        <!--            <div v-show="state.modelWeightsOptions === 2">-->
+        <!--        <sly-field title="Path to file" description="Copy path in Team Files">-->
+        <!--            <el-input v-model="state.weightsPath" placeholder="Path to .pt file in Team Files"></el-input>-->
+        <!--        </sly-field>-->
+        <!--            </div>-->
+        <!--        </sly-field>-->
     </sly-card>
 
     <sly-card class="mt15"
