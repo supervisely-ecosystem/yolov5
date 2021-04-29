@@ -66,7 +66,7 @@ def init_splits(PROJECT, data, state):
         "sliderDisabled": False,
     }
 
-    state["splitMethod"] = 1
+    state["splitMethod"] = "random"
 
     state["trainTagName"] = ""
     if globals.project_meta.tag_metas.get("train") is not None:
