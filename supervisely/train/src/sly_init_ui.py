@@ -41,7 +41,7 @@ def init_classes_stats(data, state, project_meta):
     state["classes"] = len(classes_json) * [True]
 
 
-def init_random_split(PROJECT, data, state):
+def init_splits(PROJECT, data, state):
     data["randomSplit"] = [
         {"name": "train", "type": "success"},
         {"name": "val", "type": "primary"},
@@ -67,8 +67,16 @@ def init_random_split(PROJECT, data, state):
     }
 
     state["splitMethod"] = 1
+
     state["trainTagName"] = ""
+    if globals.project_meta.tag_metas.get("train") is not None:
+        state["trainTagName"] = "train"
     state["valTagName"] = ""
+    if globals.project_meta.tag_metas.get("val") is not None:
+        state["valTagName"] = "val"
+
+    state["trainDatasets"] = []
+    state["valDatasets"] = []
 
 
 def init_model_settings(data, state):
@@ -131,7 +139,7 @@ def init_output(data):
 def init(data, state):
     init_input_project(data, globals.project_info)
     init_classes_stats(data, state, globals.project_meta)
-    init_random_split(globals.project_info, data, state)
+    init_splits(globals.project_info, data, state)
     init_model_settings(data, state)
     init_training_hyperparameters(state)
     init_start_state(state)

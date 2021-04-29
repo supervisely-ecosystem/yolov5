@@ -2,7 +2,8 @@
     <sly-card title="1. Input Project" subtitle="This project will be used for training">
         <sly-field title="" description="Project">
             <a slot="title" target="_blank"
-               :href="`/projects/${data.projectId}/datasets`">{{data.projectName}} ({{data.projectImagesCount}} images)</a>
+               :href="`/projects/${data.projectId}/datasets`">{{data.projectName}} ({{data.projectImagesCount}}
+                images)</a>
             <sly-icon slot="icon" :options="{ imageUrl: `${data.projectPreviewUrl}` }"/>
         </sly-field>
     </sly-card>
@@ -40,8 +41,8 @@
               subtitle="Define how to split your data to train/val subsets">
         <el-radio-group class="mb15" v-model="state.splitMethod">
             <el-radio :label="1">Random</el-radio>
-            <el-radio :label="2" disabled>Based on image tags (not implemented yet)</el-radio>
-            <el-radio :label="3" disabled>Train = Val (not implemented yet)</el-radio>
+            <el-radio :label="2">Based on image tags</el-radio>
+            <el-radio :label="3">Based on datasets</el-radio>
         </el-radio-group>
 
         <div v-show="state.splitMethod===1">
@@ -67,17 +68,36 @@
                         <el-slider v-if="scope.row.name === 'train'"
                                    v-model="state.randomSplit.percent.train"
                                    :disabled="state.randomSplit.sliderDisabled"
-                                   show-input :min="1" :max="100"
+                                   show-input :min="1" :max="99"
                                    style="flex:1; max-width: 99%; margin-left: 15px;"
-                                   @input="state.randomSplit.count.train = parseInt(data.totalImagesCount * state.randomSplit.percent.train / 100, 10);
-                                           state.randomSplit.count.val = data.totalImagesCount - state.randomSplit.count.train;
-                                           state.randomSplit.percent.val = 100 - state.randomSplit.percent.train"
+                                   @input="
+                                   state.randomSplit.count.train =
+                                   Math.min(parseInt(data.totalImagesCount * state.randomSplit.percent.train / 100, 10),
+                                            data.totalImagesCount - 1);
+                                   state.randomSplit.count.train = Math.max(state.randomSplit.count.train, 1)
+                                   state.randomSplit.count.val = data.totalImagesCount - state.randomSplit.count.train;
+                                   state.randomSplit.percent.val = 100 - state.randomSplit.percent.train"
                         ></el-slider>
                     </template>
                 </el-table-column>
             </el-table>
         </div>
         <div v-show="state.splitMethod===2">
+            <sly-field title="Notice 1: how to create train/val splits based on tags"
+                       description="Option 1: use app 'tag-train-val-test' from Ecosystem. Option 2: manually assign
+                                    train/val tags to images. Option 3: use other way you want - python SDK, API, ...
+                                    Please, contact tech support if your case is not covered">
+                <sly-icon slot="icon" :options="{ color: '#fba607', bgColor: '#ffe9da', rounded: false }">
+                    <i class="zmdi zmdi-help"></i>
+                </sly-icon>
+            </sly-field>
+            <sly-field title="Notice 2: Train == Validation"
+                       description="Choose the same tag for train/validation to make splits equal. Can be used for debug
+                                    and for tiny projects">
+                <sly-icon slot="icon" :options="{ color: '#fba607', bgColor: '#ffe9da', rounded: false }">
+                    <i class="zmdi zmdi-info"></i>
+                </sly-icon>
+            </sly-field>
             <sly-field title="Train tag" description="all images with this tag are considered as training set">
                 <sly-select-tag
                         :project-id="data.projectId"
@@ -95,7 +115,27 @@
             <div>If image does not have such tags, it will be assigned to training set</div>
         </div>
         <div v-show="state.splitMethod===3">
-            <span style="color: green">All images are in both training and validation sets</span>
+            <sly-field title="Notice: Train == Validation"
+                       description="Choose the same dataset(s) for train/validation to make splits equal. Can be used for debug
+                                    and for tiny projects">
+                <sly-icon slot="icon" :options="{ color: '#fba607', bgColor: '#ffe9da', rounded: false }">
+                    <i class="zmdi zmdi-info"></i>
+                </sly-icon>
+            </sly-field>
+            <sly-field title="Train dataset(s)" description="all images in selected dataset(s) are considered as training set">
+                <sly-select-dataset
+                        :project-id="data.projectId"
+                        :datasets.sync="state.trainDatasets"
+                        :options="{'multiple': true, 'showLabel': false}">
+                </sly-select-dataset>
+            </sly-field>
+            <sly-field title="Validation dataset(s)" description="all images in selected dataset(s) are considered as validation set">
+                <sly-select-dataset
+                        :project-id="data.projectId"
+                        :datasets.sync="state.valDatasets"
+                        :options="{'multiple': true, 'showLabel': false}">
+                </sly-select-dataset>
+            </sly-field>
         </div>
     </sly-card>
 

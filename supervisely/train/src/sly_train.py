@@ -101,10 +101,8 @@ def main():
     my_app.run(data=data, state=state)
 
 
-# @TODO: change pip requirements to quickly skip them (already installed)
-# @TODO: handle soft stop event
-
 # New features:
+# @TODO: handle soft stop event
 # @TODO: adam or SGD opt?
 # @TODO: train == val - handle case in data_config.yaml to avoid data duplication
 # @TODO: resume training

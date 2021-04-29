@@ -16,7 +16,7 @@ local_artifacts_dir = None
 remote_artifacts_dir = None
 
 project_info = None
-project_meta = None
+project_meta: sly.ProjectMeta = None
 
 
 root_source_path = str(Path(sys.argv[0]).parents[3])
