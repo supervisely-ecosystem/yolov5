@@ -29,14 +29,9 @@
         #yolov5-train .el-tabs.el-tabs-cards .el-tabs__item { flex: 1; margin-bottom: -3px; padding: 9px 16px 13px;
         height: auto; line-height: normal; border-radius: 4px; }
     </sly-style>
-    <sly-card title="1. Input Project" subtitle="This project will be used for training">
-        <sly-field title="" description="Project">
-            <a slot="title" target="_blank"
-               :href="`/projects/${data.projectId}/datasets`">{{data.projectName}} ({{data.projectImagesCount}}
-                images)</a>
-            <sly-icon slot="icon" :options="{ imageUrl: `${data.projectPreviewUrl}` }"/>
-        </sly-field>
-    </sly-card>
+
+    <div>input_project.html</div>
+
     <sly-card class="mt15"
               title="2. Training classes"
               subtitle="Select classes, that should be used for training. Training supports only classes of shape
@@ -192,7 +187,10 @@
                 <table class="beautiful-table">
                     <thead>
                         <tr>
-                            <th>Model</th>
+                            <th>
+                                <div>Model</div>
+                                <div>pixels</div>
+                            </th>
                             <th>Params (P)</th>
                             <th>Params (V)</th>
                         </tr>

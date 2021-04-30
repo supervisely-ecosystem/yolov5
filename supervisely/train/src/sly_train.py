@@ -81,6 +81,23 @@ def train(api: sly.Api, task_id, context, state, app_logger):
     my_app.stop()
 
 
+def compile_template(main_file, parts_directory, res_path):
+    with open(main_file, 'r') as file:
+        template = file.read()
+
+    result = str(template)
+    files = sly.fs.list_files(parts_directory, [".html"])
+    for path in files:
+        name = sly.fs.get_file_name_with_ext(path)
+        with open(path, 'r') as file:
+            html = file.read()
+        result = result.replace(f"<div>{name}</div>", html)
+
+    with open(res_path, "w") as file:
+        file.write(result)
+    return res_path
+
+
 def main():
     sly.logger.info("Script arguments", extra={
         "context.teamId": team_id,
@@ -95,10 +112,16 @@ def main():
     # read project information and meta (classes + tags)
     init_project_info_and_meta()
 
+    # compile html template to a single file from multiple parts
+    template_path = os.path.join(g.root_source_path, "supervisely/train/src/gui.html")
+    parts_dir = os.path.join(g.root_source_path, "supervisely/train/src/gui_parts")
+    res_path = os.path.join(my_app.data_dir, "gui.html")
+    compile_template(template_path, parts_dir, res_path)
+
     # init data for UI widgets
     ui.init(data, state)
 
-    my_app.run(data=data, state=state)
+    my_app.run(template_path=res_path, data=data, state=state)
 
 
 # New features:
