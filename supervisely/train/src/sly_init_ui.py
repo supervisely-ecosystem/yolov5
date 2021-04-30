@@ -15,13 +15,6 @@ empty_gallery = {
 }
 
 
-def init_input_project(data, project_info):
-    data["projectId"] = globals.project_id
-    data["projectName"] = project_info.name
-    data["projectImagesCount"] = project_info.items_count
-    data["projectPreviewUrl"] = globals.api.image.preview_url(project_info.reference_image_url, 100, 100)
-
-
 def init_classes_stats(data, state, project_meta):
     stats = globals.api.project.get_stats(globals.project_id)
     class_images = {}
@@ -140,7 +133,6 @@ def init_output(data):
 
 
 def init(data, state):
-    init_input_project(data, globals.project_info)
     init_classes_stats(data, state, globals.project_meta)
     init_splits(globals.project_info, data, state)
     init_model_settings(data, state)

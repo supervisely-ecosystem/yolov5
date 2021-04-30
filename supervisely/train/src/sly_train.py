@@ -1,18 +1,16 @@
 import os
 import supervisely_lib as sly
 
-from sly_train_globals import init_project_info_and_meta, \
-                              my_app, task_id, \
-                              team_id, workspace_id, project_id, \
-                              root_source_path, scratch_str, finetune_str
+import supervisely.train.src.sly_train_globals as g
 
-# to import correct values
-# project_info, project_meta, \
-# local_artifacts_dir, remote_artifacts_dir
-import sly_train_globals as g
+from supervisely.train.src.sly_train_globals import \
+    init_project_info_and_meta,\
+    my_app, task_id, \
+    team_id, workspace_id, project_id, \
+    root_source_path, scratch_str, finetune_str
 
+import ui.ui as ui
 from sly_train_val_split import train_val_split
-import sly_init_ui as ui
 from sly_prepare_data import filter_and_transform_labels
 from sly_train_utils import init_script_arguments
 from sly_utils import get_progress_cb, upload_artifacts
@@ -81,23 +79,6 @@ def train(api: sly.Api, task_id, context, state, app_logger):
     my_app.stop()
 
 
-def compile_template(main_file, parts_directory, res_path):
-    with open(main_file, 'r') as file:
-        template = file.read()
-
-    result = str(template)
-    files = sly.fs.list_files(parts_directory, [".html"])
-    for path in files:
-        name = sly.fs.get_file_name_with_ext(path)
-        with open(path, 'r') as file:
-            html = file.read()
-        result = result.replace(f"<div>{name}</div>", html)
-
-    with open(res_path, "w") as file:
-        file.write(result)
-    return res_path
-
-
 def main():
     sly.logger.info("Script arguments", extra={
         "context.teamId": team_id,
@@ -114,9 +95,9 @@ def main():
 
     # compile html template to a single file from multiple parts
     template_path = os.path.join(g.root_source_path, "supervisely/train/src/gui.html")
-    parts_dir = os.path.join(g.root_source_path, "supervisely/train/src/gui_parts")
+    parts_dir = os.path.join(g.root_source_path, "supervisely/train/src/ui")
     res_path = os.path.join(my_app.data_dir, "gui.html")
-    compile_template(template_path, parts_dir, res_path)
+    my_app.compile_template(template_path, parts_dir, res_path)
 
     # init data for UI widgets
     ui.init(data, state)

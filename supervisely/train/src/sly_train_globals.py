@@ -14,7 +14,6 @@ task_id = my_app.task_id
 
 local_artifacts_dir = None
 remote_artifacts_dir = None
-
 project_info = None
 project_meta: sly.ProjectMeta = None
 
@@ -22,6 +21,11 @@ project_meta: sly.ProjectMeta = None
 root_source_path = str(Path(sys.argv[0]).parents[3])
 sly.logger.info(f"Root source directory: {root_source_path}")
 sys.path.append(root_source_path)
+
+source_path = str(Path(sys.argv[0]).parents[0])
+sly.logger.info(f"Source directory: {source_path}")
+sys.path.append(source_path)
+
 
 # script_path = str(Path(sys.argv[0]).parents[3]))
 # root_app_dir = script_path.parent.parent.absolute()
