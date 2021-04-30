@@ -93,16 +93,12 @@ def main():
     # read project information and meta (classes + tags)
     init_project_info_and_meta()
 
-    # compile html template to a single file from multiple parts
-    template_path = os.path.join(g.root_source_path, "supervisely/train/src/gui.html")
-    parts_dir = os.path.join(g.root_source_path, "supervisely/train/src/ui")
-    res_path = os.path.join(my_app.data_dir, "gui.html")
-    my_app.compile_template(template_path, parts_dir, res_path)
+    my_app.compile_template(g.root_source_path)
 
     # init data for UI widgets
     ui.init(data, state)
 
-    my_app.run(template_path=res_path, data=data, state=state)
+    my_app.run(data=data, state=state)
 
 
 # New features:
