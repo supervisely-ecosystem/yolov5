@@ -1,0 +1,95 @@
+<sly-card class="mt15"
+          title="4. Model settings"
+          subtitle="Choose model size or how weights should be initialized">
+    <el-tabs type="border-card" class="el-tabs-cards" v-model="state.weightsInitialization">
+        <el-tab-pane name="coco">
+            <el-radio slot="label" v-model="state.weightsInitialization" label="coco">
+                Pretrained on COCO
+                <div>Default pretrained checkpoints provided by authors of YOLOv5</div>
+            </el-radio>
+            <table class="beautiful-table">
+                <thead>
+                <tr>
+                    <th v-for="row in data.modelColumns">
+                        <div v-html="row['title']"></div>
+                        <div style="color: #7f858e; font-weight: normal; font-size: 12px;">
+                            {{row["subtitle"]}}
+                        </div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="model in data.models">
+                    <td v-for="column in data.modelColumns">
+                        <div v-if="column.key === 'Model'">
+                            <el-radio class="radio" v-model="state.selectedModel" :label="model[column.key]">
+                                {{model[column.key]}}
+                            </el-radio>
+                        </div>
+                        <div v-else>
+                            {{model[column.key]}}
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!--                <el-table-->
+            <!--                        class="ultra-table"-->
+            <!--                        :data="data.models"-->
+            <!--                        style="width: 100%"-->
+            <!--                >-->
+            <!--                    <el-table-column label="Model" prop="model" sortable>-->
+            <!--                        <template scope="scope">-->
+            <!--                            <el-radio class="radio" v-model="state.selectedModel" :label="scope.row.model">-->
+            <!--                                {{scope.row.model}}-->
+            <!--                            </el-radio>-->
+            <!--                        </template>-->
+            <!--                    </el-table-column>-->
+            <!--                    <el-table-column label="In size (pixels)" prop="size pixels" sortable></el-table-column>-->
+            <!--                    <el-table-column label="mAP_val 0.5:0.95" prop="mAP_val 0.5_0.95" sortable></el-table-column>-->
+            <!--                    <el-table-column label="mAP_test 0.5:0.95" prop="mAP_test 0.5_0.95" sortable></el-table-column>-->
+            <!--                    <el-table-column label="mAP_val 0.5" prop="mAP_val 0.5" sortable></el-table-column>-->
+            <!--                    <el-table-column label="speed v100 (ms)" prop="speed v100 (ms)" sortable></el-table-column>-->
+            <!--                    <el-table-column label="params (M)" prop="params (M)" sortable></el-table-column>-->
+            <!--                    <el-table-column label="FLOPS 640 (B)" prop="FLOPS 640 (B)" sortable></el-table-column>-->
+            <!--                </el-table>-->
+        </el-tab-pane>
+        <el-tab-pane name="custom">
+            <el-radio slot="label" v-model="state.weightsInitialization" label="custom">
+                Custom weights
+            </el-radio>
+            <sly-field title="Path to weights file" description="Copy path in Team Files">
+                <el-input v-model="state.weightsPath" placeholder="Path to .pt file in Team Files"></el-input>
+            </sly-field>
+        </el-tab-pane>
+    </el-tabs>
+    <!--        <sly-field title="Weights initialization" description="Define how model is initialized before training">-->
+    <!--            <el-radio-group class="mb15" v-model="state.modelWeightsOptions">-->
+    <!--                <el-radio :label="1">Pretrained on COCO</el-radio>-->
+    <!--                <el-radio :label="2">From custom model</el-radio>-->
+    <!--                &lt;!&ndash;                <el-radio :label="3" :disabled="true">Resume training (not implemented yet)</el-radio>&ndash;&gt;-->
+    <!--                &lt;!&ndash;<el-radio :label="3">Random (not recommended)</el-radio>&ndash;&gt;-->
+    <!--            </el-radio-group>-->
+    <!--            <div v-show="state.modelWeightsOptions === 1">-->
+    <!--                <sly-field title="Model size" description="more params => better performance and slower inference time">-->
+    <!--                    <el-select v-model="state.modelSize"-->
+    <!--                               style="width:250px;"-->
+    <!--                               @change="() => state.pretrainedWeights = `${state.modelSize}.pt`">-->
+    <!--                        <el-option-->
+    <!--                                v-for="item in data.modelSizes"-->
+    <!--                                :key="item.label"-->
+    <!--                                :label="`${item.label} (${item.params} params)`"-->
+    <!--                                :value="item.label">-->
+    <!--                        </el-option>-->
+    <!--                    </el-select>-->
+    <!--                </sly-field>-->
+    <!--                &lt;!&ndash;<el-input v-model="state.pretrainedWeights" :disabled="true" style="width:250px;"></el-input>&ndash;&gt;-->
+    <!--            </div>-->
+    <!--            <div v-show="state.modelWeightsOptions === 2">-->
+    <!--        <sly-field title="Path to file" description="Copy path in Team Files">-->
+    <!--            <el-input v-model="state.weightsPath" placeholder="Path to .pt file in Team Files"></el-input>-->
+    <!--        </sly-field>-->
+    <!--            </div>-->
+    <!--        </sly-field>-->
+</sly-card>

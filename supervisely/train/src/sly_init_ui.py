@@ -15,24 +15,6 @@ empty_gallery = {
 }
 
 
-def init_model_settings(data, state):
-    data["models"] = get_models_list()
-    # data["modelSizes"] = [
-    #     {"label": "yolov5s", "config": "yolov5s.yaml", "params": "7.3M"},
-    #     {"label": "yolov5m", "config": "yolov5m.yaml", "params": "21.4M"},
-    #     {"label": "yolov5l", "config": "yolov5l.yaml", "params": "47.0M"},
-    #     {"label": "yolov5x", "config": "yolov5x.yaml", "params": "87.7M"},
-    # ]
-    # state["modelSize"] = data["modelSizes"][0]["label"]
-    state["selectedModel"] = ""
-    state["modelWeightsOptions"] = "" # "coco"
-    state["pretrainedWeights"] = "" #f'{data["modelSizes"][0]["label"]}.pt'
-
-    # @TODO: for debug
-    #state["weightsPath"] = "/yolov5_train/coco128_002/2390/weights/best.pt"
-    state["weightsPath"] = ""
-
-
 def init_training_hyperparameters(state):
     state["epochs"] = 10
     state["batchSize"] = 16
