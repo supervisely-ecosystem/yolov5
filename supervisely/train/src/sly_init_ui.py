@@ -14,43 +14,6 @@ empty_gallery = {
     }
 }
 
-def init_splits(PROJECT, data, state):
-    data["randomSplit"] = [
-        {"name": "train", "type": "success"},
-        {"name": "val", "type": "primary"},
-        {"name": "total", "type": "gray"},
-    ]
-    data["totalImagesCount"] = PROJECT.items_count
-
-    train_percent = 80
-    train_count = int(PROJECT.items_count / 100 * train_percent)
-    state["randomSplit"] = {
-        "count": {
-            "total": PROJECT.items_count,
-            "train": train_count,
-            "val": PROJECT.items_count - train_count
-        },
-        "percent": {
-            "total": 100,
-            "train": train_percent,
-            "val": 100 - train_percent
-        },
-        "shareImagesBetweenSplits": False,
-        "sliderDisabled": False,
-    }
-
-    state["splitMethod"] = "random"
-
-    state["trainTagName"] = ""
-    if globals.project_meta.tag_metas.get("train") is not None:
-        state["trainTagName"] = "train"
-    state["valTagName"] = ""
-    if globals.project_meta.tag_metas.get("val") is not None:
-        state["valTagName"] = "val"
-
-    state["trainDatasets"] = []
-    state["valDatasets"] = []
-
 
 def init_model_settings(data, state):
     data["models"] = get_models_list()
