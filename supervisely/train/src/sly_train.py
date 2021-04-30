@@ -7,7 +7,7 @@ from supervisely.train.src.sly_train_globals import \
     init_project_info_and_meta,\
     my_app, task_id, \
     team_id, workspace_id, project_id, \
-    root_source_path, scratch_str, finetune_str
+    root_source_dir, scratch_str, finetune_str
 
 import ui.ui as ui
 from sly_train_val_split import train_val_split
@@ -93,7 +93,7 @@ def main():
     # read project information and meta (classes + tags)
     init_project_info_and_meta()
 
-    my_app.compile_template(g.root_source_path)
+    my_app.compile_template(g.root_source_dir)
 
     # init data for UI widgets
     ui.init(data, state)

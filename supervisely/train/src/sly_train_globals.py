@@ -18,9 +18,9 @@ project_info = None
 project_meta: sly.ProjectMeta = None
 
 
-root_source_path = str(Path(sys.argv[0]).parents[3])
-sly.logger.info(f"Root source directory: {root_source_path}")
-sys.path.append(root_source_path)
+root_source_dir = str(Path(sys.argv[0]).parents[3])
+sly.logger.info(f"Root source directory: {root_source_dir}")
+sys.path.append(root_source_dir)
 
 source_path = str(Path(sys.argv[0]).parents[0])
 sly.logger.info(f"Source directory: {source_path}")
@@ -40,8 +40,8 @@ def init_project_info_and_meta():
     project_meta = sly.ProjectMeta.from_json(project_meta_json)
 
 
-with open(os.path.join(root_source_path, "data/hyp.scratch.yaml"), 'r') as file:
+with open(os.path.join(root_source_dir, "data/hyp.scratch.yaml"), 'r') as file:
     scratch_str = file.read()  # yaml.safe_load(
 
-with open(os.path.join(root_source_path, "data/hyp.finetune.yaml"), 'r') as file:
+with open(os.path.join(root_source_dir, "data/hyp.finetune.yaml"), 'r') as file:
     finetune_str = file.read()  # yaml.safe_load(
