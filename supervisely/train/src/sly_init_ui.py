@@ -3,7 +3,7 @@ import supervisely_lib as sly
 
 import sly_train_globals as globals
 import sly_metrics as metrics
-from models_description import get_models_list
+#from models_description import get_models_list
 
 
 empty_gallery = {
@@ -13,22 +13,6 @@ empty_gallery = {
         "layout": []
     }
 }
-
-
-def init_training_hyperparameters(state):
-    state["epochs"] = 10
-    state["batchSize"] = 16
-    state["imgSize"] = 640
-    state["multiScale"] = False
-    state["singleClass"] = False
-    state["device"] = '0'
-    state["workers"] = 8 # 0 - for debug
-    state["activeTabName"] = "General"
-    state["hyp"] = {
-        "scratch": globals.scratch_str,
-        "finetune": globals.finetune_str,
-    }
-    state["hypRadio"] = "scratch"
 
 
 def init_start_state(state):

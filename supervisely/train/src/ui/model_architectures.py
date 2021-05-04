@@ -115,14 +115,7 @@ def get_table_columns():
 def init(data, state):
     data["models"] = get_models_list()
     data["modelColumns"] = get_table_columns()
-    # data["modelSizes"] = [
-    #     {"label": "yolov5s", "config": "yolov5s.yaml", "params": "7.3M"},
-    #     {"label": "yolov5m", "config": "yolov5m.yaml", "params": "21.4M"},
-    #     {"label": "yolov5l", "config": "yolov5l.yaml", "params": "47.0M"},
-    #     {"label": "yolov5x", "config": "yolov5x.yaml", "params": "87.7M"},
-    # ]
-    # state["modelSize"] = data["modelSizes"][0]["label"]
-    state["selectedModel"] = None
+    state["selectedModel"] = "YOLOv5s"
     state["weightsInitialization"] = "coco"
     state["pretrainedWeights"] = "" #f'{data["modelSizes"][0]["label"]}.pt'
 

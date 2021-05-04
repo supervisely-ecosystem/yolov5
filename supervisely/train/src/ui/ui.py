@@ -3,6 +3,7 @@ import supervisely.train.src.ui.input_project as input_project
 import supervisely.train.src.ui.training_classes as training_classes
 import supervisely.train.src.ui.train_val_split as train_val_split
 import supervisely.train.src.ui.model_architectures as model_architectures
+import supervisely.train.src.ui.traning_hyperparameters as traning_hyperparameters
 
 
 def init(data, state):
@@ -10,3 +11,4 @@ def init(data, state):
     training_classes.init(g.api, data, state, g.project_id, g.project_meta)
     train_val_split.init(g.project_info, g.project_meta, data, state)
     model_architectures.init(data, state)
+    traning_hyperparameters.init(state)
