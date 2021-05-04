@@ -24,19 +24,19 @@ def init_chart(title, names, xs, ys, smoothing=None):
 def init(data, state):
     demo_x = [[], []] #[[1, 2, 3, 4], [2, 4, 6, 8]]
     demo_y = [[], []] #[[10, 15, 13, 17], [16, 5, 11, 9]]
-    data["mBox"] = init_chart("Box Loss",
-                              names=["train", "val"],
-                              xs=demo_x,
-                              ys=demo_y,
-                              smoothing=0.6)
+    data["mGIoU"] = init_chart("GIoU",
+                               names=["train", "val"],
+                               xs=demo_x,
+                               ys=demo_y,
+                               smoothing=0.6)
 
-    data["mObjectness"] = init_chart("Obj Loss",
+    data["mObjectness"] = init_chart("Objectness",
                                      names=["train", "val"],
                                      xs=demo_x,
                                      ys=demo_y,
                                      smoothing=0.6)
 
-    data["mClassification"] = init_chart("Cls Loss",
+    data["mClassification"] = init_chart("Classification",
                                          names=["train", "val"],
                                          xs=demo_x,
                                          ys=demo_y,
@@ -58,8 +58,9 @@ def send_metrics(epoch, epochs, metrics):
     sly.logger.debug(f"Metrics: epoch {epoch} / {epochs}", extra={"metrics": metrics})
 
     fields = [
-        {"field": "data.mBox.series[0].data", "payload": [[epoch, metrics["train/box_loss"]]], "append": True},
-        {"field": "data.mBox.series[1].data", "payload": [[epoch, metrics["val/box_loss"]]], "append": True},
+        #@TODO: replace metric name in metrics dict
+        {"field": "data.mGIoU.series[0].data", "payload": [[epoch, metrics["????train/box_loss"]]], "append": True},
+        {"field": "data.mGIoU.series[1].data", "payload": [[epoch, metrics["????val/box_loss"]]], "append": True},
 
         {"field": "data.mObjectness.series[0].data", "payload": [[epoch, metrics["train/obj_loss"]]], "append": True},
         {"field": "data.mObjectness.series[1].data", "payload": [[epoch, metrics["val/obj_loss"]]], "append": True},
