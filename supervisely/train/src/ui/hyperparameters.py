@@ -16,3 +16,4 @@ def init(state):
         "finetune": g.finetune_str,
     }
     state["hypRadio"] = "scratch"
+    state["optimizer"] = "SGD"

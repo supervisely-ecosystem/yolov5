@@ -29,6 +29,14 @@
                description="Maximum number of dataloader workers, use 0 for debug">
         <el-input-number v-model="state.workers" :min="0"></el-input-number>
     </sly-field>
+    <sly-field title="Optimizer"
+               description="Setup corresponding learning rate for Adam in additional configuration, default values are
+                            provided for SGD">
+        <el-select v-model="state.optimizer" placeholder="Select optimizer">
+            <el-option key="SGD" label="SGD" value="SGD"></el-option>
+            <el-option key="Adam" label="Adam" value="Adam"></el-option>
+        </el-select>
+    </sly-field>
 
     <sly-field title="Additional configuration"
                description="Tune learning rate, augmentations and others or just keep default values">

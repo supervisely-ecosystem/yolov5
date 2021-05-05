@@ -44,6 +44,7 @@ from supervisely.train.src.sly_metrics import send_metrics
 import supervisely_lib as sly
 from supervisely_lib import logger
 
+
 def train(hyp, opt, device, tb_writer=None):
     logger.info('hyperparameters', extra=hyp)
     save_dir, epochs, batch_size, total_batch_size, weights, rank = \

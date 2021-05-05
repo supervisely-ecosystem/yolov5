@@ -45,6 +45,8 @@ def init_script_arguments(state, yolov5_format_dir, input_project_name):
 
     if "workers" in state:
         sys.argv.extend(["--workers", str(state["workers"])])
+    if state["optimizer"] == "Adam":
+        sys.argv.append("--adam")
 
     training_dir = os.path.join(my_app.data_dir, 'experiment', input_project_name)
     experiment_name = str(task_id)

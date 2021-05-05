@@ -102,10 +102,10 @@ def main():
 
 
 # New features:
+# @TODO: check empty validation split if unlabeled images will be skipped
 # @TODO: change values for state.splitMethod
 # @TODO: change values for modelWeightsOptions
 # @TODO: handle soft stop event
-# @TODO: adam or SGD opt?
 # @TODO: train == val - handle case in data_config.yaml to avoid data duplication
 # @TODO: resume training
 # @TODO: repeat dataset (for small lemons)
