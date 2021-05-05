@@ -47,10 +47,26 @@ def train(api: sly.Api, task_id, context, state, app_logger):
     if state["unlabeledImages"] == "ignore":
         sly.Project.remove_items_without_objects(project_dir, inplace=True)
 
+    # split to train / validation sets
+    train_set = None
+    val_set = None
+    split_method = state["splitMethod"]
+    if split_method == "random":
+        train_count = state["randomSplit"]["count"]["train"]
+        val_count = state["randomSplit"]["count"]["val"]
+        train_set, val_set = sly.Project.get_train_val_splits_by_count(project_dir, train_count, val_count)
+    elif split_method == "tags":
+        pass
+    else:
+        raise ValueError(f"Unknown split method: {split_method}")
+
+    return
+
     # prepare directory for data in YOLOv5 format (nn will use it for training)
     yolov5_format_dir = os.path.join(my_app.data_dir, "train_data")
     sly.fs.mkdir(yolov5_format_dir)
     sly.fs.clean_dir(yolov5_format_dir)  # useful for debug, has no effect in production
+
 
     # split data to train/val sets, filter objects by classes, convert Supervisely project to YOLOv5 format (COCO)
     train_split, val_split = train_val_split(project_dir, state)

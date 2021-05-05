@@ -24,4 +24,13 @@
         <el-table-column prop="imagesCount" label="Images count" sortable width="150"></el-table-column>
         <el-table-column prop="objectsCount" label="Objects count" sortable width="180"></el-table-column>
     </el-table>
+
+    <el-button type="primary"
+               :disabled="state.selectedClasses.length === 0 ||
+                              (state.modelWeightsOptions === 2 && state.weightsPath === '') ||
+                              state.started === true"
+               @click="state.started = true; command('train')">
+        Start training
+    </el-button>
+
 </sly-card>
