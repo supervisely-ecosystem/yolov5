@@ -15,7 +15,11 @@ def init(api: sly.Api, data, state, project_id, project_meta: sly.ProjectMeta):
         obj_class["imagesCount"] = class_images[obj_class["title"]]
         obj_class["objectsCount"] = class_objects[obj_class["title"]]
 
+    unlabeled_count = 0
+    for ds_counter in stats["images"]["datasets"]:
+        unlabeled_count += ds_counter["imagesNotMarked"]
+
     data["classes"] = classes_json
     state["selectedClasses"] = []
-
     state["classes"] = len(classes_json) * [True]
+    data["unlabeledCount"] = unlabeled_count

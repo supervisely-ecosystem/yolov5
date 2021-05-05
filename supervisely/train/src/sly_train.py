@@ -104,7 +104,6 @@ def main():
 # New features:
 # @TODO: change values for state.splitMethod
 # @TODO: change values for modelWeightsOptions
-
 # @TODO: handle soft stop event
 # @TODO: adam or SGD opt?
 # @TODO: train == val - handle case in data_config.yaml to avoid data duplication

@@ -115,6 +115,9 @@
                title="What to do with unlabeled images"
                description="Sometimes unlabeled images may be used to reduce noise in predictions, sometimes it is
                a mistake in training data">
+        <div class="mt5 mb5" v-if="data.unlabeledCount > 0">
+            ⚠️ There are {{data.unlabeledCount}} unlabeled images in project
+        </div>
         <el-select v-model="state.unlabeledImages" placeholder="Select" style="width: 250px;">
             <el-option key="keep" label="keep unlabeled images" value="keep"></el-option>
             <el-option key="ignore" label="ignore unlabeled images" value="ignore"></el-option>
