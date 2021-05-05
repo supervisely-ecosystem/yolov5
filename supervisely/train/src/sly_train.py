@@ -38,7 +38,7 @@ def train(api: sly.Api, task_id, context, state, app_logger):
     sly.fs.mkdir(project_dir)
     sly.fs.clean_dir(project_dir)  # useful for debug, has no effect in production
 
-    # download Sypervisely project (using cache)
+    # download and preprocess Sypervisely project (using cache)
     sly.download_project(api, project_id, project_dir, cache=my_app.cache,
                          progress_cb=get_progress_cb("Download data (using cache)", g.project_info.items_count * 2))
     sly.Project.to_detection_task(project_dir, inplace=True)
@@ -46,9 +46,8 @@ def train(api: sly.Api, task_id, context, state, app_logger):
     sly.Project.remove_classes_except(project_dir, classes_to_keep=train_classes, inplace=True)
     if state["unlabeledImages"] == "ignore":
         sly.Project.remove_items_without_objects(project_dir, inplace=True)
-    sly.upload_project(project_dir, api, workspace_id, project_name="delme")
 
-    # prepare directory for transformed data (nn will use it for training)
+    # prepare directory for data in YOLOv5 format (nn will use it for training)
     yolov5_format_dir = os.path.join(my_app.data_dir, "train_data")
     sly.fs.mkdir(yolov5_format_dir)
     sly.fs.clean_dir(yolov5_format_dir)  # useful for debug, has no effect in production
