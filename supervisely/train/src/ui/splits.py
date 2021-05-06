@@ -65,4 +65,7 @@ def get_train_val_sets(project_dir, state):
 
 
 def verify_train_val_sets(train_set, val_set):
-    raise NotImplementedError()
+    if len(train_set) == 0:
+        raise ValueError("Train set is empty, check or change split configuration")
+    if len(val_set) == 0:
+        raise ValueError("Val set is empty, check or change split configuration")
