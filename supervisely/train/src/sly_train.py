@@ -10,11 +10,10 @@ from supervisely.train.src.sly_train_globals import \
     root_source_dir, scratch_str, finetune_str
 
 import ui.ui as ui
-from sly_train_val_split import train_val_split
-from sly_prepare_data import filter_and_transform_labels
 from sly_train_utils import init_script_arguments
 from sly_utils import get_progress_cb, upload_artifacts
 from supervisely.train.src.ui.splits import get_train_val_sets, verify_train_val_sets
+import supervisely.train.src.yolov5_format as yolov5_format
 
 import train as train_yolov5
 
@@ -43,7 +42,7 @@ def train(api: sly.Api, task_id, context, state, app_logger):
         download_progress = get_progress_cb("Download data (using cache)", g.project_info.items_count * 2)
         sly.download_project(api, project_id, project_dir, cache=my_app.cache, progress_cb=download_progress)
 
-        # transform to rectangles, filter classes, clean unlabeled images (optional)
+        # preprocessing: transform labels to bboxes, filter classes, ...
         sly.Project.to_detection_task(project_dir, inplace=True)
         train_classes = state["selectedClasses"]
         sly.Project.remove_classes_except(project_dir, classes_to_keep=train_classes, inplace=True)
@@ -57,20 +56,18 @@ def train(api: sly.Api, task_id, context, state, app_logger):
         my_app.show_modal_window(f"Oops! Something went wrong, please try again or contact tech support. "
                                  f"Find more info in the app logs. Error: {repr(e)}", level="error")
 
-    return
-
     # prepare directory for data in YOLOv5 format (nn will use it for training)
-    yolov5_format_dir = os.path.join(my_app.data_dir, "train_data")
-    sly.fs.mkdir(yolov5_format_dir)
-    sly.fs.clean_dir(yolov5_format_dir)  # useful for debug, has no effect in production
+    train_data_dir = os.path.join(my_app.data_dir, "train_data")
+    sly.fs.mkdir(train_data_dir)
+    sly.fs.clean_dir(train_data_dir)  # useful for debug, has no effect in production
 
-
-    # split data to train/val sets, filter objects by classes, convert Supervisely project to YOLOv5 format (COCO)
-    train_split, val_split = train_val_split(project_dir, state)
-    progress_cb = get_progress_cb("Convert Supervisely to YOLOv5 format", g.project_info.items_count)
-    filter_and_transform_labels(project_dir, train_classes, train_split, val_split, yolov5_format_dir, progress_cb)
+    # convert Supervisely project to YOLOv5 format
+    progress_cb = get_progress_cb("Convert Supervisely to YOLOv5 format", len(train_set) + len(val_set))
+    yolov5_format.transform(project_dir, train_data_dir, train_set, val_set, progress_cb)
 
     # download initial weights from team files
+    #download manually or get from cache
+    #attempt_download
     if state["modelWeightsOptions"] == 2:  # transfer learning from custom weights
         weights_path_remote = state["weightsPath"]
         weights_path_local = os.path.join(my_app.data_dir, sly.fs.get_file_name_with_ext(weights_path_remote))
@@ -79,7 +76,7 @@ def train(api: sly.Api, task_id, context, state, app_logger):
                           progress_cb=get_progress_cb("Download weights", file_info.sizeb, is_size=True))
 
     # init sys.argv for main training script
-    init_script_arguments(state, yolov5_format_dir, g.project_info.name)
+    init_script_arguments(state, train_data_dir, g.project_info.name)
 
     # start train script
     get_progress_cb("YOLOv5: Scanning data ", 1)(1)
@@ -119,12 +116,10 @@ def main():
 
 
 # New features:
-# @TODO: check empty validation split if unlabeled images will be skipped
-# @TODO: change values for state.splitMethod
+# @TODO: log every N-th epoch
 # @TODO: change values for modelWeightsOptions
 # @TODO: handle soft stop event
 # @TODO: train == val - handle case in data_config.yaml to avoid data duplication
 # @TODO: resume training
-# @TODO: repeat dataset (for small lemons)
 if __name__ == "__main__":
     sly.main_wrapper("main", main)
