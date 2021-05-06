@@ -14,7 +14,7 @@ from sly_train_val_split import train_val_split
 from sly_prepare_data import filter_and_transform_labels
 from sly_train_utils import init_script_arguments
 from sly_utils import get_progress_cb, upload_artifacts
-
+from supervisely.train.src.ui.splits import get_train_val_sets, verify_train_val_sets
 
 import train as train_yolov5
 
@@ -31,34 +31,31 @@ def restore_hyp(api: sly.Api, task_id, context, state, app_logger):
 @my_app.callback("train")
 @sly.timeit
 def train(api: sly.Api, task_id, context, state, app_logger):
-    api.app.set_field(task_id, "state.activeNames", ["labels", "train", "pred", "metrics"]) #"logs",
+    try:
+        api.app.set_field(task_id, "state.activeNames", ["labels", "train", "pred", "metrics"]) #"logs",
 
-    # prepare directory for original Supervisely project
-    project_dir = os.path.join(my_app.data_dir, "sly_project")
-    sly.fs.mkdir(project_dir)
-    sly.fs.clean_dir(project_dir)  # useful for debug, has no effect in production
+        # prepare directory for original Supervisely project
+        project_dir = os.path.join(my_app.data_dir, "sly_project")
+        sly.fs.mkdir(project_dir)
+        sly.fs.clean_dir(project_dir)  # useful for debug, has no effect in production
 
-    # download and preprocess Sypervisely project (using cache)
-    sly.download_project(api, project_id, project_dir, cache=my_app.cache,
-                         progress_cb=get_progress_cb("Download data (using cache)", g.project_info.items_count * 2))
-    sly.Project.to_detection_task(project_dir, inplace=True)
-    train_classes = state["selectedClasses"]
-    sly.Project.remove_classes_except(project_dir, classes_to_keep=train_classes, inplace=True)
-    if state["unlabeledImages"] == "ignore":
-        sly.Project.remove_items_without_objects(project_dir, inplace=True)
+        # download and preprocess Sypervisely project (using cache)
+        download_progress = get_progress_cb("Download data (using cache)", g.project_info.items_count * 2)
+        sly.download_project(api, project_id, project_dir, cache=my_app.cache, progress_cb=download_progress)
 
-    # split to train / validation sets
-    train_set = None
-    val_set = None
-    split_method = state["splitMethod"]
-    if split_method == "random":
-        train_count = state["randomSplit"]["count"]["train"]
-        val_count = state["randomSplit"]["count"]["val"]
-        train_set, val_set = sly.Project.get_train_val_splits_by_count(project_dir, train_count, val_count)
-    elif split_method == "tags":
-        pass
-    else:
-        raise ValueError(f"Unknown split method: {split_method}")
+        # transform to rectangles, filter classes, clean unlabeled images (optional)
+        sly.Project.to_detection_task(project_dir, inplace=True)
+        train_classes = state["selectedClasses"]
+        sly.Project.remove_classes_except(project_dir, classes_to_keep=train_classes, inplace=True)
+        if state["unlabeledImages"] == "ignore":
+            sly.Project.remove_items_without_objects(project_dir, inplace=True)
+
+        # split to train / validation sets (paths to images and annotations)
+        train_set, val_set = get_train_val_sets(project_dir, state)
+        verify_train_val_sets(train_set, val_set)
+    except Exception as e:
+        my_app.show_modal_window(f"Oops! Something went wrong, please try again or contact tech support. "
+                                 f"Find more info in the app logs. Error: {repr(e)}", level="error")
 
     return
 

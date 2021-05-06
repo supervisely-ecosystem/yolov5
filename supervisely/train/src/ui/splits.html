@@ -78,7 +78,14 @@
                         :options="{'showLabel': false}">
                 </sly-select-tag>
             </sly-field>
-            <div>If image does not have such tags, it will be assigned to training set</div>
+            <sly-field title="Images without selected tags"
+                       description="Choose what to do with untagged images">
+                <el-select v-model="state.untaggedImages" placeholder="Select" style="width: 280px;">
+                    <el-option key="ignore" label="ignore untagged images" value="ignore"></el-option>
+                    <el-option key="train" label="add untagged images to train set" value="train"></el-option>
+                    <el-option key="val" label="add untagged images to val set" value="val"></el-option>
+                </el-select>
+            </sly-field>
         </el-tab-pane>
         <el-tab-pane name="datasets">
             <el-radio slot="label" v-model="state.splitMethod" label="datasets">
@@ -115,9 +122,9 @@
                title="What to do with unlabeled images"
                description="Sometimes unlabeled images may be used to reduce noise in predictions, sometimes it is
                a mistake in training data">
-<!--        <div class="mt5 mb5" v-if="data.unlabeledCount > 0">-->
-<!--            ⚠️ There are {{data.unlabeledCount}} unlabeled images in project-->
-<!--        </div>-->
+        <!--        <div class="mt5 mb5" v-if="data.unlabeledCount > 0">-->
+        <!--            ⚠️ There are {{data.unlabeledCount}} unlabeled images in project-->
+        <!--        </div>-->
         <el-select v-model="state.unlabeledImages" placeholder="Select" style="width: 250px;">
             <el-option key="keep" label="keep unlabeled images" value="keep"></el-option>
             <el-option key="ignore" label="ignore unlabeled images" value="ignore"></el-option>
