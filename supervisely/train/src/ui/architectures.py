@@ -117,7 +117,7 @@ def init(data, state):
     data["modelColumns"] = get_table_columns()
     state["selectedModel"] = "YOLOv5s"
     state["weightsInitialization"] = "coco"
-    state["pretrainedWeights"] = "" #f'{data["modelSizes"][0]["label"]}.pt'
+    #state["pretrainedWeights"] = "" #f'{data["modelSizes"][0]["label"]}.pt'
 
     # @TODO: for debug
     #state["weightsPath"] = "/yolov5_train/coco128_002/2390/weights/best.pt"

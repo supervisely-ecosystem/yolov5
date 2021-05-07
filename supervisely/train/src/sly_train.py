@@ -67,13 +67,17 @@ def train(api: sly.Api, task_id, context, state, app_logger):
 
     # download initial weights from team files
     #download manually or get from cache
+
     #attempt_download
-    if state["modelWeightsOptions"] == 2:  # transfer learning from custom weights
+    if state["weightsInitialization"] == "custom":  # transfer learning from custom weights
         weights_path_remote = state["weightsPath"]
         weights_path_local = os.path.join(my_app.data_dir, sly.fs.get_file_name_with_ext(weights_path_remote))
         file_info = api.file.get_info_by_path(team_id, weights_path_remote)
         api.file.download(team_id, weights_path_remote, weights_path_local, my_app.cache,
                           progress_cb=get_progress_cb("Download weights", file_info.sizeb, is_size=True))
+    else:
+        # initialize weights from coco
+        pass
 
     # init sys.argv for main training script
     init_script_arguments(state, train_data_dir, g.project_info.name)

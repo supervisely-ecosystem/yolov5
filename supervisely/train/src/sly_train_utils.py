@@ -25,12 +25,11 @@ def init_script_arguments(state, yolov5_format_dir, input_project_name):
         return
     sys.argv.extend(["--hyp", hyp])
 
-    weights = ""  # random (not tested)
-    if state["modelWeightsOptions"] == 1:
-        weights = state["pretrainedWeights"]
+    if state["weightsInitialization"] == "coco":
+        weights = f"{state['selectedModel']}.pt"
         cfg = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../../models', f"{state['modelSize']}.yaml")
         sys.argv.extend(["--cfg", cfg])
-    elif state["modelWeightsOptions"] == 2:
+    else:
         weights = state["weightsPath"]
     sys.argv.extend(["--weights", weights])
 
