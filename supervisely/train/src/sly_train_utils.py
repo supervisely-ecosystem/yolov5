@@ -49,6 +49,7 @@ def init_script_arguments(state, yolov5_format_dir, input_project_name):
 
     experiment_name = str(task_id)
 
+    #@TODO: add methods to SDK to clean dir ...
     runs_dir = os.path.join(my_app.data_dir, 'runs')
     sly.fs.mkdir(runs_dir)
     sly.fs.clean_dir(runs_dir)
