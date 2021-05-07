@@ -101,6 +101,7 @@ def main():
 
 
 # @TODO: doublecheck inference
+# @TODO: add to readme - open_app.lnk
 # New features:
 # @TODO: resume training
 # @TODO: save checkpoint every N-th epochs
