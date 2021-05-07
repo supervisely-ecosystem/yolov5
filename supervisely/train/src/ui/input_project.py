@@ -1,4 +1,4 @@
-import supervisely.train.src.sly_train_globals as g
+import sly_train_globals as g
 
 
 def init(data):

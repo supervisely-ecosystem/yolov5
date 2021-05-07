@@ -1,5 +1,5 @@
 import supervisely_lib as sly
-import supervisely.train.src.sly_train_globals as globals
+import sly_train_globals as globals
 
 
 def init_chart(title, names, xs, ys, smoothing=None):

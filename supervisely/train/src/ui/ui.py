@@ -1,11 +1,11 @@
-import supervisely.train.src.sly_train_globals as g
-import supervisely.train.src.ui.input_project as input_project
-import supervisely.train.src.ui.classes as training_classes
-import supervisely.train.src.ui.splits as train_val_split
-import supervisely.train.src.ui.architectures as model_architectures
-import supervisely.train.src.ui.hyperparameters as hyperparameters
-import supervisely.train.src.ui.monitoring as monitoring
-import supervisely.train.src.ui.artifacts as artifacts
+import sly_train_globals as g
+import input_project as input_project
+import classes as training_classes
+import splits as train_val_split
+import architectures as model_architectures
+import hyperparameters as hyperparameters
+import monitoring as monitoring
+import artifacts as artifacts
 
 
 def init(data, state):

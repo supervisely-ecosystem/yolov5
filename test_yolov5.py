@@ -17,7 +17,7 @@ from utils.metrics import ap_per_class, ConfusionMatrix
 from utils.plots import plot_images, output_to_target, plot_study_txt
 from utils.torch_utils import select_device, time_synchronized
 
-from supervisely.train.src.sly_train_utils import upload_pred_vis
+from sly_train_utils import upload_pred_vis
 import supervisely_lib as sly
 
 

@@ -1,5 +1,5 @@
 import supervisely_lib as sly
-import supervisely.train.src.sly_metrics as metrics
+import sly_metrics as metrics
 
 
 empty_gallery = {

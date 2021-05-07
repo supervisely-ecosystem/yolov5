@@ -37,8 +37,8 @@ from utils.plots import plot_images, plot_labels, plot_results, plot_evolution
 from utils.torch_utils import ModelEMA, select_device, intersect_dicts, torch_distributed_zero_first, is_parallel
 from utils.wandb_logging.wandb_utils import WandbLogger, check_wandb_resume
 
-from supervisely.train.src.sly_train_utils import send_epoch_log, upload_label_vis, upload_train_data_vis
-from supervisely.train.src.sly_metrics import send_metrics
+from sly_train_utils import send_epoch_log, upload_label_vis, upload_train_data_vis
+from sly_metrics import send_metrics
 
 #logger = logging.getLogger(__name__)
 import supervisely_lib as sly
