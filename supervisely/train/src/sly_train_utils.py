@@ -11,6 +11,8 @@ from sly_train_globals import my_app, api, task_id, team_id
 
 def init_script_arguments(state, yolov5_format_dir, input_project_name):
     global local_artifacts_dir, remote_artifacts_dir
+    sys.argv.append("--sly")
+
     data_path = os.path.join(yolov5_format_dir, 'data_config.yaml')
     sys.argv.extend(["--data", data_path])
 
@@ -26,12 +28,11 @@ def init_script_arguments(state, yolov5_format_dir, input_project_name):
     sys.argv.extend(["--hyp", hyp])
 
     if state["weightsInitialization"] == "coco":
-        weights = f"{state['selectedModel']}.pt"
-        cfg = os.path.join(g.root_source_dir, f"models/{state['selectedModel']}.yaml")
+        model_name = state['selectedModel'].lower()
+        _sub_path = "models/hub" if model_name.endswith('6') else "models"
+        cfg = os.path.join(g.root_source_dir, _sub_path, f"{model_name}.yaml")
         sys.argv.extend(["--cfg", cfg])
-    else:
-        weights = state["weightsPath"]
-    sys.argv.extend(["--weights", weights])
+    sys.argv.extend(["--weights", state["weightsPath"]])
 
     sys.argv.extend(["--epochs", str(state["epochs"])])
     sys.argv.extend(["--batch-size", str(state["batchSize"])])
@@ -47,23 +48,16 @@ def init_script_arguments(state, yolov5_format_dir, input_project_name):
     if state["optimizer"] == "Adam":
         sys.argv.append("--adam")
 
-    experiment_name = str(task_id)
-
-    #@TODO: add methods to SDK to clean dir ...
     runs_dir = os.path.join(my_app.data_dir, 'runs')
-    sly.fs.mkdir(runs_dir)
-    sly.fs.clean_dir(runs_dir)
-    g.local_artifacts_dir = os.path.join(runs_dir, experiment_name)
-
-    remote_artifacts_dir = os.path.join("/yolov5_train", input_project_name, experiment_name)
-    _exp_index = 1
-    while api.file.dir_exists(team_id, remote_artifacts_dir):
-        remote_artifacts_dir = os.path.join("/yolov5_train", input_project_name, f"{experiment_name}_{_exp_index:03d}")
-    g.remote_artifacts_dir = remote_artifacts_dir
-
     sys.argv.extend(["--project", runs_dir])
+    sly.fs.mkdir(runs_dir, remove_content_if_exists=True)  # for debug, does nothing in production
+
+    experiment_name = str(task_id)
     sys.argv.extend(["--name", experiment_name])
-    sys.argv.append("--sly")
+
+    g.local_artifacts_dir = os.path.join(runs_dir, experiment_name)
+    g.remote_artifacts_dir = os.path.join("/yolov5_train", input_project_name, experiment_name)
+    g.remote_artifacts_dir = api.file.get_free_dir_name(team_id, g.remote_artifacts_dir)
 
 
 def send_epoch_log(epoch, epochs, progress):

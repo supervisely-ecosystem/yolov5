@@ -1,3 +1,10 @@
+import errno
+import os
+import supervisely.train.src.sly_train_globals as g
+from supervisely.train.src.sly_utils import get_progress_cb
+import supervisely_lib as sly
+
+
 def get_models_list():
     return [
         {
@@ -115,10 +122,31 @@ def get_table_columns():
 def init(data, state):
     data["models"] = get_models_list()
     data["modelColumns"] = get_table_columns()
-    state["selectedModel"] = "YOLOv5s"
+    state["selectedModel"] = "YOLOv5m6"  # "YOLOv5s" #@TODO: for debug
     state["weightsInitialization"] = "coco"
-    #state["pretrainedWeights"] = "" #f'{data["modelSizes"][0]["label"]}.pt'
 
     # @TODO: for debug
     #state["weightsPath"] = "/yolov5_train/coco128_002/2390/weights/best.pt"
     state["weightsPath"] = ""
+
+
+def prepare_weights(state):
+    if state["weightsInitialization"] == "custom":
+        # download custom weights
+        weights_path_remote = state["weightsPath"]
+        if not weights_path_remote.endswith(".pt"):
+            raise ValueError(f"Weights file has unsupported extension {sly.fs.get_file_ext(weights_path_remote)}. "
+                             f"Supported: '.pt'")
+        weights_path_local = os.path.join(g.my_app.data_dir, sly.fs.get_file_name_with_ext(weights_path_remote))
+        file_info = g.api.file.get_info_by_path(g.team_id, weights_path_remote)
+        if file_info is None:
+            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), weights_path_remote)
+        progress_cb = get_progress_cb("Download weights", file_info.sizeb, is_size=True)
+        g.api.file.download(g.team_id, weights_path_remote, weights_path_local, g.my_app.cache, progress_cb)
+
+        state["_weightsPath"] = weights_path_remote
+        state["weightsPath"] = weights_path_local
+    else:
+        model_name = state['selectedModel'].lower()
+        state["weightsPath"] = f"{model_name}.pt"
+        sly.logger.info("Pretrained COCO weights will be added automatically")

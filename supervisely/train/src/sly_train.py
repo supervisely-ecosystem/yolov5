@@ -4,7 +4,6 @@ import supervisely_lib as sly
 import supervisely.train.src.sly_train_globals as g
 
 from supervisely.train.src.sly_train_globals import \
-    init_project_info_and_meta,\
     my_app, task_id, \
     team_id, workspace_id, project_id, \
     root_source_dir, scratch_str, finetune_str
@@ -14,6 +13,7 @@ from sly_train_utils import init_script_arguments
 from sly_utils import get_progress_cb, upload_artifacts
 from supervisely.train.src.ui.splits import get_train_val_sets, verify_train_val_sets
 import supervisely.train.src.yolov5_format as yolov5_format
+from supervisely.train.src.ui.architectures import prepare_weights
 
 import train as train_yolov5
 
@@ -31,12 +31,11 @@ def restore_hyp(api: sly.Api, task_id, context, state, app_logger):
 @sly.timeit
 def train(api: sly.Api, task_id, context, state, app_logger):
     try:
-        api.app.set_field(task_id, "state.activeNames", ["labels", "train", "pred", "metrics"]) #"logs",
+        prepare_weights(state)
 
         # prepare directory for original Supervisely project
         project_dir = os.path.join(my_app.data_dir, "sly_project")
-        sly.fs.mkdir(project_dir)
-        sly.fs.clean_dir(project_dir)  # useful for debug, has no effect in production
+        sly.fs.mkdir(project_dir, remove_content_if_exists=True)  # clean content for debug, has no effect in prod
 
         # download and preprocess Sypervisely project (using cache)
         download_progress = get_progress_cb("Download data (using cache)", g.project_info.items_count * 2)
@@ -58,31 +57,17 @@ def train(api: sly.Api, task_id, context, state, app_logger):
 
     # prepare directory for data in YOLOv5 format (nn will use it for training)
     train_data_dir = os.path.join(my_app.data_dir, "train_data")
-    sly.fs.mkdir(train_data_dir)
-    sly.fs.clean_dir(train_data_dir)  # useful for debug, has no effect in production
+    sly.fs.mkdir(train_data_dir, remove_content_if_exists=True)  # clean content for debug, has no effect in prod
 
     # convert Supervisely project to YOLOv5 format
     progress_cb = get_progress_cb("Convert Supervisely to YOLOv5 format", len(train_set) + len(val_set))
     yolov5_format.transform(project_dir, train_data_dir, train_set, val_set, progress_cb)
 
-    # download initial weights from team files
-    #download manually or get from cache
-
-    #attempt_download
-    if state["weightsInitialization"] == "custom":  # transfer learning from custom weights
-        weights_path_remote = state["weightsPath"]
-        weights_path_local = os.path.join(my_app.data_dir, sly.fs.get_file_name_with_ext(weights_path_remote))
-        file_info = api.file.get_info_by_path(team_id, weights_path_remote)
-        api.file.download(team_id, weights_path_remote, weights_path_local, my_app.cache,
-                          progress_cb=get_progress_cb("Download weights", file_info.sizeb, is_size=True))
-    else:
-        # initialize weights from coco
-        pass
-
     # init sys.argv for main training script
     init_script_arguments(state, train_data_dir, g.project_info.name)
 
     # start train script
+    api.app.set_field(task_id, "state.activeNames", ["labels", "train", "pred", "metrics"])  # "logs",
     get_progress_cb("YOLOv5: Scanning data ", 1)(1)
     train_yolov5.main()
 
@@ -108,9 +93,6 @@ def main():
     state = {}
     data["taskId"] = task_id
 
-    # read project information and meta (classes + tags)
-    init_project_info_and_meta()
-
     my_app.compile_template(g.root_source_dir)
 
     # init data for UI widgets
@@ -121,9 +103,7 @@ def main():
 
 # New features:
 # @TODO: log every N-th epoch
-# @TODO: change values for modelWeightsOptions
-# @TODO: handle soft stop event
-# @TODO: train == val - handle case in data_config.yaml to avoid data duplication
+# checkpoints (--save_period)
 # @TODO: resume training
 if __name__ == "__main__":
     sly.main_wrapper("main", main)

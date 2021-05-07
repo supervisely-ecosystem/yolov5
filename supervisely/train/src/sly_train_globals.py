@@ -14,8 +14,8 @@ task_id = my_app.task_id
 
 local_artifacts_dir = None
 remote_artifacts_dir = None
-project_info = None
-project_meta: sly.ProjectMeta = None
+project_info = api.project.get_info_by_id(project_id)
+project_meta = sly.ProjectMeta.from_json(api.project.get_meta(project_id))
 
 
 root_source_dir = str(Path(sys.argv[0]).parents[3])
@@ -31,13 +31,6 @@ sys.path.append(source_path)
 # root_app_dir = script_path.parent.parent.absolute()
 # sly.logger.info(f"Root app directory: {root_app_dir}")
 # sys.path.append(root_app_dir)
-
-
-def init_project_info_and_meta():
-    global project_info, project_meta
-    project_info = api.project.get_info_by_id(project_id)
-    project_meta_json = api.project.get_meta(project_id)
-    project_meta = sly.ProjectMeta.from_json(project_meta_json)
 
 
 with open(os.path.join(root_source_dir, "data/hyp.scratch.yaml"), 'r') as file:
