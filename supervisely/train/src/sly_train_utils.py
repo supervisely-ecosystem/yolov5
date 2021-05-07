@@ -27,7 +27,7 @@ def init_script_arguments(state, yolov5_format_dir, input_project_name):
 
     if state["weightsInitialization"] == "coco":
         weights = f"{state['selectedModel']}.pt"
-        cfg = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../../models', f"{state['modelSize']}.yaml")
+        cfg = os.path.join(g.root_source_dir, f"models/{state['selectedModel']}.yaml")
         sys.argv.extend(["--cfg", cfg])
     else:
         weights = state["weightsPath"]
@@ -47,29 +47,22 @@ def init_script_arguments(state, yolov5_format_dir, input_project_name):
     if state["optimizer"] == "Adam":
         sys.argv.append("--adam")
 
-    training_dir = os.path.join(my_app.data_dir, 'experiment', input_project_name)
     experiment_name = str(task_id)
-    local_artifacts_dir = os.path.join(training_dir, experiment_name)
-    _exp_index = 1
-    while sly.fs.dir_exists(local_artifacts_dir):
-        experiment_name = "{}_{:03d}".format(task_id, _exp_index)
-        local_artifacts_dir = os.path.join(training_dir, experiment_name)
-        _exp_index += 1
-    g.local_artifacts_dir = local_artifacts_dir
 
-    sys.argv.extend(["--project", training_dir])
-    sys.argv.extend(["--name", experiment_name])
+    runs_dir = os.path.join(my_app.data_dir, 'runs')
+    sly.fs.mkdir(runs_dir)
+    sly.fs.clean_dir(runs_dir)
+    g.local_artifacts_dir = os.path.join(runs_dir, experiment_name)
 
-    sys.argv.append("--sly")
-
-    remote_experiment_name = str(task_id)
-    remote_artifacts_dir = os.path.join("/yolov5_train", input_project_name, remote_experiment_name)
+    remote_artifacts_dir = os.path.join("/yolov5_train", input_project_name, experiment_name)
     _exp_index = 1
     while api.file.dir_exists(team_id, remote_artifacts_dir):
-        remote_experiment_name = "{}_{:03d}".format(task_id, _exp_index)
-        remote_artifacts_dir = os.path.join("/yolov5_train", input_project_name, remote_experiment_name)
-        _exp_index += 1
+        remote_artifacts_dir = os.path.join("/yolov5_train", input_project_name, f"{experiment_name}_{_exp_index:03d}")
     g.remote_artifacts_dir = remote_artifacts_dir
+
+    sys.argv.extend(["--project", runs_dir])
+    sys.argv.extend(["--name", experiment_name])
+    sys.argv.append("--sly")
 
 
 def send_epoch_log(epoch, epochs, progress):
