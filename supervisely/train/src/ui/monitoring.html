@@ -60,7 +60,7 @@
                         style="width: 450px;"
                         @input="(val)=>{
                                 state.smoothing = val;
-                                data.mBox.options.smoothingWeight = val;
+                                data.mGIoU.options.smoothingWeight = val;
                                 data.mObjectness.options.smoothingWeight = val;
                                 data.mClassification.options.smoothingWeight = val;
                             }"
