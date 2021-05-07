@@ -1,5 +1,5 @@
 # pip install -r requirements.txt
-supervisely==6.1.73
+supervisely==6.1.74
 
 # base ----------------------------------------
 #matplotlib>=3.2.2
