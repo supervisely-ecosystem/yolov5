@@ -1,9 +1,9 @@
 import os
 import supervisely_lib as sly
 
-import supervisely.train.src.sly_train_globals as g
+import sly_train_globals as g
 
-from supervisely.train.src.sly_train_globals import \
+from sly_train_globals import \
     my_app, task_id, \
     team_id, workspace_id, project_id, \
     root_source_dir, scratch_str, finetune_str
@@ -11,10 +11,10 @@ from supervisely.train.src.sly_train_globals import \
 import ui.ui as ui
 from sly_train_utils import init_script_arguments
 from sly_utils import get_progress_cb, upload_artifacts
-from supervisely.train.src.ui.splits import get_train_val_sets, verify_train_val_sets
-import supervisely.train.src.yolov5_format as yolov5_format
-from supervisely.train.src.ui.architectures import prepare_weights
-from supervisely.train.src.ui.artifacts import set_task_output
+from ui.splits import get_train_val_sets, verify_train_val_sets
+import yolov5_format as yolov5_format
+from ui.architectures import prepare_weights
+from ui.artifacts import set_task_output
 import train as train_yolov5
 
 
@@ -99,7 +99,7 @@ def main():
 
     my_app.run(data=data, state=state)
 
-
+# @TODO: double check inference
 # New features:
 # @TODO: resume training
 # @TODO: save checkpoint every N-th epochs
