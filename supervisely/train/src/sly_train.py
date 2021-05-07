@@ -14,7 +14,7 @@ from sly_utils import get_progress_cb, upload_artifacts
 from supervisely.train.src.ui.splits import get_train_val_sets, verify_train_val_sets
 import supervisely.train.src.yolov5_format as yolov5_format
 from supervisely.train.src.ui.architectures import prepare_weights
-
+from supervisely.train.src.ui.artifacts import set_output
 import train as train_yolov5
 
 
@@ -75,7 +75,7 @@ def train(api: sly.Api, task_id, context, state, app_logger):
     upload_artifacts(g.local_artifacts_dir, g.remote_artifacts_dir)
 
     # show path to the artifacts directory in Team Files
-    ui.set_output()
+    set_output()
 
     # stop application
     get_progress_cb("Finished, app is stopped automatically", 1)(1)
