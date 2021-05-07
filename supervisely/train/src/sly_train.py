@@ -103,7 +103,6 @@ def main():
 
 # New features:
 # @TODO: log every N-th epoch
-# checkpoints (--save_period)
 # @TODO: resume training
 if __name__ == "__main__":
     sly.main_wrapper("main", main)
