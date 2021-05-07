@@ -7,7 +7,7 @@ def init(data):
     data["outputName"] = None
 
 
-def set_output():
+def set_task_output():
     file_info = g.api.file.get_info_by_path(g.team_id, os.path.join(g.remote_artifacts_dir, 'results.png'))
     fields = [
         {"field": "data.outputUrl", "payload": g.api.file.get_url(file_info.id)},

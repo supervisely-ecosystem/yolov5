@@ -27,14 +27,18 @@ sly.logger.info(f"Source directory: {source_path}")
 sys.path.append(source_path)
 
 
-# script_path = str(Path(sys.argv[0]).parents[3]))
-# root_app_dir = script_path.parent.parent.absolute()
-# sly.logger.info(f"Root app directory: {root_app_dir}")
-# sys.path.append(root_app_dir)
-
-
 with open(os.path.join(root_source_dir, "data/hyp.scratch.yaml"), 'r') as file:
     scratch_str = file.read()  # yaml.safe_load(
 
 with open(os.path.join(root_source_dir, "data/hyp.finetune.yaml"), 'r') as file:
     finetune_str = file.read()  # yaml.safe_load(
+
+
+runs_dir = os.path.join(my_app.data_dir, 'runs')
+sly.fs.mkdir(runs_dir, remove_content_if_exists=True)  # for debug, does nothing in production
+experiment_name = str(task_id)
+local_artifacts_dir = os.path.join(runs_dir, experiment_name)
+sly.logger.info(f"All training artifacts will be saved to local directory {local_artifacts_dir}")
+remote_artifacts_dir = os.path.join("/yolov5_train", project_info.name, experiment_name)
+remote_artifacts_dir = api.file.get_free_dir_name(team_id, remote_artifacts_dir)
+sly.logger.info(f"After training artifacts will be uploaded to Team Files: {remote_artifacts_dir}")

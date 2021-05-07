@@ -59,9 +59,8 @@ def send_metrics(epoch, epochs, metrics, log_period=1):
 
     if epoch % log_period == 0 or epoch == epochs:
         fields = [
-            #@TODO: replace metric name in metrics dict
-            {"field": "data.mGIoU.series[0].data", "payload": [[epoch, metrics["????train/box_loss"]]], "append": True},
-            {"field": "data.mGIoU.series[1].data", "payload": [[epoch, metrics["????val/box_loss"]]], "append": True},
+            {"field": "data.mGIoU.series[0].data", "payload": [[epoch, metrics["train/box_loss"]]], "append": True},
+            {"field": "data.mGIoU.series[1].data", "payload": [[epoch, metrics["val/box_loss"]]], "append": True},
 
             {"field": "data.mObjectness.series[0].data", "payload": [[epoch, metrics["train/obj_loss"]]], "append": True},
             {"field": "data.mObjectness.series[1].data", "payload": [[epoch, metrics["val/obj_loss"]]], "append": True},

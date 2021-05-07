@@ -16,15 +16,10 @@ def init_script_arguments(state, yolov5_format_dir, input_project_name):
     data_path = os.path.join(yolov5_format_dir, 'data_config.yaml')
     sys.argv.extend(["--data", data_path])
 
-    try:
-        hyp_content = yaml.safe_load(state["hyp"][state["hypRadio"]])
-        hyp = os.path.join(my_app.data_dir, 'hyp.custom.yaml')
-        with open(hyp, 'w') as f:
-            f.write(state["hyp"][state["hypRadio"]])
-    except yaml.YAMLError as e:
-        sly.logger.error(repr(e))
-        api.app.set_field(task_id, "state.started", False)
-        return
+    hyp_content = yaml.safe_load(state["hyp"][state["hypRadio"]])
+    hyp = os.path.join(my_app.data_dir, 'hyp.custom.yaml')
+    with open(hyp, 'w') as f:
+        f.write(state["hyp"][state["hypRadio"]])
     sys.argv.extend(["--hyp", hyp])
 
     if state["weightsInitialization"] == "coco":
@@ -49,17 +44,8 @@ def init_script_arguments(state, yolov5_format_dir, input_project_name):
         sys.argv.append("--adam")
 
     sys.argv.extend(["--metrics_period", str(state["metricsPeriod"])])
-
-    runs_dir = os.path.join(my_app.data_dir, 'runs')
-    sys.argv.extend(["--project", runs_dir])
-    sly.fs.mkdir(runs_dir, remove_content_if_exists=True)  # for debug, does nothing in production
-
-    experiment_name = str(task_id)
-    sys.argv.extend(["--name", experiment_name])
-
-    g.local_artifacts_dir = os.path.join(runs_dir, experiment_name)
-    g.remote_artifacts_dir = os.path.join("/yolov5_train", input_project_name, experiment_name)
-    g.remote_artifacts_dir = api.file.get_free_dir_name(team_id, g.remote_artifacts_dir)
+    sys.argv.extend(["--project", g.runs_dir])
+    sys.argv.extend(["--name", g.experiment_name])
 
 
 def send_epoch_log(epoch, epochs, progress):

@@ -14,7 +14,7 @@ from sly_utils import get_progress_cb, upload_artifacts
 from supervisely.train.src.ui.splits import get_train_val_sets, verify_train_val_sets
 import supervisely.train.src.yolov5_format as yolov5_format
 from supervisely.train.src.ui.architectures import prepare_weights
-from supervisely.train.src.ui.artifacts import set_output
+from supervisely.train.src.ui.artifacts import set_task_output
 import train as train_yolov5
 
 
@@ -51,31 +51,30 @@ def train(api: sly.Api, task_id, context, state, app_logger):
         # split to train / validation sets (paths to images and annotations)
         train_set, val_set = get_train_val_sets(project_dir, state)
         verify_train_val_sets(train_set, val_set)
+
+        # prepare directory for data in YOLOv5 format (nn will use it for training)
+        train_data_dir = os.path.join(my_app.data_dir, "train_data")
+        sly.fs.mkdir(train_data_dir, remove_content_if_exists=True)  # clean content for debug, has no effect in prod
+
+        # convert Supervisely project to YOLOv5 format
+        progress_cb = get_progress_cb("Convert Supervisely to YOLOv5 format", len(train_set) + len(val_set))
+        yolov5_format.transform(project_dir, train_data_dir, train_set, val_set, progress_cb)
+
+        # init sys.argv for main training script
+        init_script_arguments(state, train_data_dir, g.project_info.name)
+
+        # start train script
+        api.app.set_field(task_id, "state.activeNames", ["labels", "train", "pred", "metrics"])  # "logs",
+        get_progress_cb("YOLOv5: Scanning data ", 1)(1)
+        train_yolov5.main()
+
+        # upload artifacts directory to Team Files
+        upload_artifacts(g.local_artifacts_dir, g.remote_artifacts_dir)
+        set_task_output()
     except Exception as e:
         my_app.show_modal_window(f"Oops! Something went wrong, please try again or contact tech support. "
                                  f"Find more info in the app logs. Error: {repr(e)}", level="error")
-
-    # prepare directory for data in YOLOv5 format (nn will use it for training)
-    train_data_dir = os.path.join(my_app.data_dir, "train_data")
-    sly.fs.mkdir(train_data_dir, remove_content_if_exists=True)  # clean content for debug, has no effect in prod
-
-    # convert Supervisely project to YOLOv5 format
-    progress_cb = get_progress_cb("Convert Supervisely to YOLOv5 format", len(train_set) + len(val_set))
-    yolov5_format.transform(project_dir, train_data_dir, train_set, val_set, progress_cb)
-
-    # init sys.argv for main training script
-    init_script_arguments(state, train_data_dir, g.project_info.name)
-
-    # start train script
-    api.app.set_field(task_id, "state.activeNames", ["labels", "train", "pred", "metrics"])  # "logs",
-    get_progress_cb("YOLOv5: Scanning data ", 1)(1)
-    train_yolov5.main()
-
-    # upload artifacts directory to Team Files
-    upload_artifacts(g.local_artifacts_dir, g.remote_artifacts_dir)
-
-    # show path to the artifacts directory in Team Files
-    set_output()
+        api.app.set_field(task_id, "state.started", False)
 
     # stop application
     get_progress_cb("Finished, app is stopped automatically", 1)(1)
@@ -102,7 +101,7 @@ def main():
 
 
 # New features:
-# @TODO: log every N-th epoch
 # @TODO: resume training
+# @TODO: save checkpoint every N-th epochs
 if __name__ == "__main__":
     sly.main_wrapper("main", main)
