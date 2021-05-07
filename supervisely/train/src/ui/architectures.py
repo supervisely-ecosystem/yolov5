@@ -122,7 +122,7 @@ def get_table_columns():
 def init(data, state):
     data["models"] = get_models_list()
     data["modelColumns"] = get_table_columns()
-    state["selectedModel"] = "YOLOv5m6"  # "YOLOv5s" #@TODO: for debug
+    state["selectedModel"] = "YOLOv5s"
     state["weightsInitialization"] = "coco"
 
     # @TODO: for debug

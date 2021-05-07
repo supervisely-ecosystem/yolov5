@@ -414,7 +414,7 @@ def train(hyp, opt, device, tb_writer=None):
                     metrics[tag] = x
 
             if opt.sly:
-                send_metrics(epoch, epochs, metrics)
+                send_metrics(epoch, epochs, metrics, opt.metrics_period)
 
             # Update best mAP
             fi = fitness(np.array(results).reshape(1, -1))  # weighted combination of [P, R, mAP@.5, mAP@.5-.95]
@@ -525,6 +525,8 @@ def main():
     parser.add_argument('--save_period', type=int, default=-1, help='Log model after every "save_period" epoch')
     parser.add_argument('--artifact_alias', type=str, default="latest", help='version of dataset artifact to be used')
     parser.add_argument('--sly', action='store_true', help='for Supervisely App integration')
+    parser.add_argument('--metrics_period', type=int, default=1, help='Log metrics to Supervisely every "metrics_period" epochs')
+
     opt = parser.parse_args()
     print("Input arguments:", opt)
 

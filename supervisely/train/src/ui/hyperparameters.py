@@ -17,3 +17,4 @@ def init(state):
     }
     state["hypRadio"] = "scratch"
     state["optimizer"] = "SGD"
+    state["metricsPeriod"] = 1

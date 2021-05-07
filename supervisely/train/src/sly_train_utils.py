@@ -48,6 +48,8 @@ def init_script_arguments(state, yolov5_format_dir, input_project_name):
     if state["optimizer"] == "Adam":
         sys.argv.append("--adam")
 
+    sys.argv.extend(["--metrics_period", str(state["metricsPeriod"])])
+
     runs_dir = os.path.join(my_app.data_dir, 'runs')
     sys.argv.extend(["--project", runs_dir])
     sly.fs.mkdir(runs_dir, remove_content_if_exists=True)  # for debug, does nothing in production

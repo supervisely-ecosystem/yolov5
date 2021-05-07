@@ -29,6 +29,14 @@
                description="Maximum number of dataloader workers, use 0 for debug">
         <el-input-number v-model="state.workers" :min="0"></el-input-number>
     </sly-field>
+    <sly-field title="Logging frequency"
+               description="How often metrics should be logged, increase if training data is small">
+        <div class="fflex">
+            <span class="mr5">Log metrics every </span>
+            <el-input-number v-model="state.metricsPeriod" :min="1" :max="state.epochs"></el-input-number>
+            <span class="ml5">epochs</span>
+        </div>
+    </sly-field>
     <sly-field title="Optimizer"
                description="Setup corresponding learning rate for Adam in additional configuration, default values are
                             provided for SGD">
