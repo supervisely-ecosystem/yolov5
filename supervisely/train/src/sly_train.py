@@ -8,13 +8,13 @@ from sly_train_globals import \
     team_id, workspace_id, project_id, \
     root_source_dir, scratch_str, finetune_str
 
-import ui.ui as ui
+import ui as ui
 from sly_train_utils import init_script_arguments
 from sly_utils import get_progress_cb, upload_artifacts
-from ui.splits import get_train_val_sets, verify_train_val_sets
+from splits import get_train_val_sets, verify_train_val_sets
 import yolov5_format as yolov5_format
-from ui.architectures import prepare_weights
-from ui.artifacts import set_task_output
+from architectures import prepare_weights
+from artifacts import set_task_output
 import train as train_yolov5
 
 
