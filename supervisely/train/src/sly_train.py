@@ -99,7 +99,8 @@ def main():
 
     my_app.run(data=data, state=state)
 
-# @TODO: double check inference
+
+# @TODO: doublecheck inference
 # New features:
 # @TODO: resume training
 # @TODO: save checkpoint every N-th epochs
