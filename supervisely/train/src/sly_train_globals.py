@@ -26,6 +26,9 @@ source_path = str(Path(sys.argv[0]).parents[0])
 sly.logger.info(f"Source directory: {source_path}")
 sys.path.append(source_path)
 
+ui_sources_dir = os.path.join(source_path, "ui")
+sys.path.append(ui_sources_dir)
+sly.logger.info(f"Added to sys.path: {ui_sources_dir}")
 
 with open(os.path.join(root_source_dir, "data/hyp.scratch.yaml"), 'r') as file:
     scratch_str = file.read()  # yaml.safe_load(
