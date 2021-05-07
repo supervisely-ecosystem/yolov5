@@ -46,6 +46,8 @@ from supervisely_lib import logger
 
 
 def train(hyp, opt, device, tb_writer=None):
+    train_batches_uploaded = False
+
     logger.info('hyperparameters', extra=hyp)
     save_dir, epochs, batch_size, total_batch_size, weights, rank = \
         Path(opt.save_dir), opt.epochs, opt.batch_size, opt.total_batch_size, opt.weights, opt.global_rank
@@ -208,7 +210,6 @@ def train(hyp, opt, device, tb_writer=None):
                                        hyp=hyp, cache=opt.cache_images and not opt.notest, rect=True, rank=-1,
                                        world_size=opt.world_size, workers=opt.workers,
                                        pad=0.5, prefix=colorstr('val: '))[0]
-
         if not opt.resume:
             labels = np.concatenate(dataset.labels, 0)
             c = torch.tensor(labels[:, 0])  # classes
@@ -216,6 +217,8 @@ def train(hyp, opt, device, tb_writer=None):
             # model._initialize_biases(cf.to(device))
             if plots:
                 plot_labels(labels, names, save_dir, loggers)
+                if opt.sly:
+                    upload_label_vis()
                 if tb_writer:
                     tb_writer.add_histogram('classes', c, 0)
 
@@ -354,13 +357,18 @@ def train(hyp, opt, device, tb_writer=None):
                 # Plot
                 if plots and ni < 3:
                     f = save_dir / f'train_batch{ni}.jpg'  # filename
-                    Thread(target=plot_images, args=(imgs, targets, paths, f), daemon=True).start()
+                    plot_images(imgs, targets, paths, f)
+                    #Thread(target=plot_images, args=(imgs, targets, paths, f), daemon=True).start()
                     # if tb_writer:
                     #     tb_writer.add_image(f, result, dataformats='HWC', global_step=epoch)
                     #     tb_writer.add_graph(torch.jit.trace(model, imgs, strict=False), [])  # add model graph
                 elif plots and ni == 10 and wandb_logger.wandb:
                     wandb_logger.log({"Mosaics": [wandb_logger.wandb.Image(str(x), caption=x.name) for x in
                                                   save_dir.glob('train*.jpg') if x.exists()]})
+                if plots and ni == 10 and opt.sly:
+                    train_batches_uploaded = True
+                    upload_train_data_vis()
+
 
             # end batch ------------------------------------------------------------------------------------------------
         # end epoch ----------------------------------------------------------------------------------------------------
@@ -387,7 +395,8 @@ def train(hyp, opt, device, tb_writer=None):
                                                  plots=plots and final_epoch,
                                                  wandb_logger=wandb_logger,
                                                  compute_loss=compute_loss,
-                                                 is_coco=is_coco)
+                                                 is_coco=is_coco,
+                                                 opt_sly=opt.sly)
 
             # Write
             with open(results_file, 'a') as f:
@@ -444,6 +453,11 @@ def train(hyp, opt, device, tb_writer=None):
                 del ckpt
 
         # end epoch ----------------------------------------------------------------------------------------------------
+
+    if plots and opt.sly and train_batches_uploaded is False:
+        train_batches_uploaded = True
+        upload_train_data_vis()
+
     # end training
     if rank in [-1, 0]:
         # Plots
