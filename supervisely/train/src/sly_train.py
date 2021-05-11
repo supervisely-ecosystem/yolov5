@@ -51,6 +51,8 @@ def train(api: sly.Api, task_id, context, state, app_logger):
         # split to train / validation sets (paths to images and annotations)
         train_set, val_set = get_train_val_sets(project_dir, state)
         verify_train_val_sets(train_set, val_set)
+        sly.logger.info(f"Train set: {len(train_set)} images")
+        sly.logger.info(f"Val set: {len(val_set)} images")
 
         # prepare directory for data in YOLOv5 format (nn will use it for training)
         train_data_dir = os.path.join(my_app.data_dir, "train_data")
