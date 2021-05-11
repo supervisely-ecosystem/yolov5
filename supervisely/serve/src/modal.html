@@ -3,50 +3,56 @@
         .beautiful-table { border-collapse: collapse; }
         .beautiful-table tr:nth-child(2n) { background-color: #f6f8fa; }
         .beautiful-table td, .beautiful-table th {
-            border: 1px solid #dfe2e5;
-            padding: 6px 13px;
-            text-align: center;
-            line-height: 20px;
+        border: 1px solid #dfe2e5;
+        padding: 6px 13px;
+        text-align: center;
+        line-height: 20px;
         }
     </sly-style>
-    <sly-field title="Choose model" description="Use custom weights or pretrained checkpoints">
-        <el-radio-group class="mb15" v-model="state.modelWeightsOptions">
-            <el-radio label="pretrained">Pretrained on COCO</el-radio>
-            <el-radio label="custom">Custom model</el-radio>
-        </el-radio-group>
-        <div v-show="state.modelWeightsOptions === 'pretrained'">
-            <table class="beautiful-table">
-                <thead>
-                <tr>
-                    <th v-for="row in state.modelColumns">
-                        <div v-html="row['title']"></div>
-                        <div style="color: #7f858e; font-weight: normal; font-size: 12px;">
-                            {{row["subtitle"]}}
-                        </div>
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="model in state.models">
-                    <td v-for="column in state.modelColumns">
-                        <div v-if="column.key === 'Model'">
-                            <el-radio class="radio" v-model="state.selectedModel" :label="model[column.key]">
+    <sly-field title="Choose model weights" description="Use custom weights or pretrained on COCO">
+        <el-tabs type="border-card" class="el-tabs-cards" v-model="state.modelWeightsOptions">
+            <el-tab-pane name="coco">
+                <el-radio slot="label" v-model="state.modelWeightsOptions" label="pretrained">
+                    Pretrained on COCO
+                </el-radio>
+                <table class="beautiful-table">
+                    <thead>
+                    <tr>
+                        <th v-for="row in state.modelColumns">
+                            <div v-html="row['title']"></div>
+                            <div style="color: #7f858e; font-weight: normal; font-size: 12px;">
+                                {{row["subtitle"]}}
+                            </div>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="model in state.models">
+                        <td v-for="column in state.modelColumns">
+                            <div v-if="column.key === 'Model'">
+                                <el-radio class="radio" v-model="state.selectedModel" :label="model[column.key]">
+                                    {{model[column.key]}}
+                                </el-radio>
+                            </div>
+                            <div v-else>
                                 {{model[column.key]}}
-                            </el-radio>
-                        </div>
-                        <div v-else>
-                            {{model[column.key]}}
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <div v-show="state.modelWeightsOptions === 'custom'">
-            <sly-field title="Weights path" description="Copy path in Team Files">
-                <el-input v-model="state.weightsPath" placeholder="Path to .pt file in Team Files"></el-input>
-            </sly-field>
-        </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </el-tab-pane>
+        </el-tabs>
+        <el-tab-pane name="custom">
+            <el-tab-pane name="coco">
+                <el-radio slot="label" v-model="state.modelWeightsOptions" label="custom">
+                    Custom
+                </el-radio>
+                <sly-field title="Weights path" description="Copy path in Team Files">
+                    <el-input v-model="state.weightsPath" placeholder="Path to .pt file in Team Files"></el-input>
+                </sly-field>
+            </el-tab-pane>
+        </el-tab-pane>
     </sly-field>
     <sly-field title="Choose Device" description="Cuda device number (i.e. 0, 1, 2 or 3) or cpu">
         <el-input v-model="state.device" style="width:250px;"></el-input>
