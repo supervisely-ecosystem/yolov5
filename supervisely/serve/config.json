@@ -10,7 +10,7 @@
   "docker_image": "supervisely/base-pytorch:6.0.21",
   "main_script": "supervisely/serve/src/sly_serve.py",
   "modal_template": "supervisely/serve/src/modal.html",
-  "modal_width": 550,
+  "modal_width": 700,
   "modal_template_state": {
     "modelWeightsOptions": "pretrained",
     "selectedModel": "YOLOv5s",
