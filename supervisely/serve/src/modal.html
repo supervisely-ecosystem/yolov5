@@ -5,14 +5,40 @@
             <el-radio label="custom">Custom model</el-radio>
         </el-radio-group>
         <div v-show="state.modelWeightsOptions === 'pretrained'">
-            <sly-field title="Model size" description="more params => better performance">
-                <el-select v-model="state.modelSize" style="width:250px;">
-                    <el-option key="yolov5s.pt" label="yolov5s.pt (7.3M params)" value="yolov5s.pt"></el-option>
-                    <el-option key="yolov5m.pt" label="yolov5m.pt (21.4M params)" value="yolov5m.pt"></el-option>
-                    <el-option key="yolov5l.pt" label="yolov5l.pt (47.0M params)" value="yolov5l.pt"></el-option>
-                    <el-option key="yolov5x.pt" label="yolov5x.pt (87.7M params)" value="yolov5x.pt"></el-option>
-                </el-select>
-            </sly-field>
+            <table class="beautiful-table">
+                <thead>
+                <tr>
+                    <th v-for="row in state.modelColumns">
+                        <div v-html="row['title']"></div>
+                        <div style="color: #7f858e; font-weight: normal; font-size: 12px;">
+                            {{row["subtitle"]}}
+                        </div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="model in state.models">
+                    <td v-for="column in state.modelColumns">
+                        <div v-if="column.key === 'Model'">
+                            <el-radio class="radio" v-model="state.selectedModel" :label="model[column.key]">
+                                {{model[column.key]}}
+                            </el-radio>
+                        </div>
+                        <div v-else>
+                            {{model[column.key]}}
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <!--            <sly-field title="Model size" description="more params => better performance">-->
+            <!--                <el-select v-model="state.modelSize" style="width:250px;">-->
+            <!--                    <el-option key="yolov5s.pt" label="yolov5s.pt (7.3M params)" value="yolov5s.pt"></el-option>-->
+            <!--                    <el-option key="yolov5m.pt" label="yolov5m.pt (21.4M params)" value="yolov5m.pt"></el-option>-->
+            <!--                    <el-option key="yolov5l.pt" label="yolov5l.pt (47.0M params)" value="yolov5l.pt"></el-option>-->
+            <!--                    <el-option key="yolov5x.pt" label="yolov5x.pt (87.7M params)" value="yolov5x.pt"></el-option>-->
+            <!--                </el-select>-->
+            <!--            </sly-field>-->
         </div>
         <div v-show="state.modelWeightsOptions === 'custom'">
             <sly-field title="Weights path" description="Copy path in Team Files">

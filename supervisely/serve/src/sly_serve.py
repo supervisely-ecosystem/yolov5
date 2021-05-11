@@ -19,7 +19,7 @@ WORKSPACE_ID = int(os.environ['context.workspaceId'])
 meta: sly.ProjectMeta = None
 
 modelWeightsOptions = os.environ['modal.state.modelWeightsOptions']
-pretrained_weights = os.environ['modal.state.modelSize']
+pretrained_weights = os.environ['modal.state.selectedModel'].lower()
 custom_weights = os.environ['modal.state.weightsPath']
 
 
@@ -169,7 +169,7 @@ def preprocess(api: sly.Api, task_id, context, state, app_logger):
     progress = sly.Progress("Downloading weights", 1, is_size=True, need_info_log=True)
     local_path = os.path.join(my_app.data_dir, "weights.pt")
     if modelWeightsOptions == "pretrained":
-        url = os.path.join("https://github.com/ultralytics/yolov5/releases/download/v4.0/", pretrained_weights)
+        url = os.path.join("https://github.com/ultralytics/yolov5/releases/download/v5.0/", pretrained_weights)
         final_weights = url
         sly.fs.download(url, local_path, my_app.cache, progress)
     elif modelWeightsOptions == "custom":
