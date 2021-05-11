@@ -1,4 +1,14 @@
 <div>
+    <sly-style>
+        .beautiful-table { border-collapse: collapse; }
+        .beautiful-table tr:nth-child(2n) { background-color: #f6f8fa; }
+        .beautiful-table td, .beautiful-table th {
+            border: 1px solid #dfe2e5;
+            padding: 6px 13px;
+            text-align: center;
+            line-height: 20px;
+        }
+    </sly-style>
     <sly-field title="Choose model" description="Use custom weights or pretrained checkpoints">
         <el-radio-group class="mb15" v-model="state.modelWeightsOptions">
             <el-radio label="pretrained">Pretrained on COCO</el-radio>
@@ -31,14 +41,6 @@
                 </tr>
                 </tbody>
             </table>
-            <!--            <sly-field title="Model size" description="more params => better performance">-->
-            <!--                <el-select v-model="state.modelSize" style="width:250px;">-->
-            <!--                    <el-option key="yolov5s.pt" label="yolov5s.pt (7.3M params)" value="yolov5s.pt"></el-option>-->
-            <!--                    <el-option key="yolov5m.pt" label="yolov5m.pt (21.4M params)" value="yolov5m.pt"></el-option>-->
-            <!--                    <el-option key="yolov5l.pt" label="yolov5l.pt (47.0M params)" value="yolov5l.pt"></el-option>-->
-            <!--                    <el-option key="yolov5x.pt" label="yolov5x.pt (87.7M params)" value="yolov5x.pt"></el-option>-->
-            <!--                </el-select>-->
-            <!--            </sly-field>-->
         </div>
         <div v-show="state.modelWeightsOptions === 'custom'">
             <sly-field title="Weights path" description="Copy path in Team Files">
