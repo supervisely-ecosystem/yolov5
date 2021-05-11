@@ -29,6 +29,7 @@ model = None
 half = None
 device = None
 imgsz = None
+stride = None
 
 
 settings_path = os.path.join(root_source_path, "supervisely/serve/custom_settings.yaml")
@@ -98,7 +99,7 @@ def inference_image_path(image_path, context, state, app_logger):
             }
         rect = results[0]
         image = sly.image.crop(image, rect)
-    ann_json = inference(model, half, device, imgsz, image, meta,
+    ann_json = inference(model, half, device, imgsz, stride, image, meta,
                          conf_thres=conf_thres, iou_thres=iou_thres, augment=augment,
                          debug_visualization=debug_visualization)
     return ann_json
@@ -181,7 +182,7 @@ def preprocess(api: sly.Api, task_id, context, state, app_logger):
         raise ValueError("Unknown weights option {!r}".format(modelWeightsOptions))
 
     # load model on device
-    model, half, device, imgsz = load_model(local_path, device=DEVICE_STR)
+    model, half, device, imgsz, stride = load_model(local_path, device=DEVICE_STR)
     meta = construct_model_meta(model)
     sly.logger.info("Model has been successfully deployed")
 
