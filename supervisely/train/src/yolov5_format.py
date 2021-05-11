@@ -82,14 +82,20 @@ def _transform_set(set_name, data_yaml, project_meta, items, progress_cb):
     res_labels_dir = data_yaml[f"labels_{set_name}"]
     classes_names = data_yaml["names"]
 
+    used_names = set()
     for batch in sly.batched(items, batch_size=max(int(len(items) / 50), 10)):
         for item in batch:
             ann = sly.Annotation.load_json_file(item.ann_path, project_meta)
-            save_ann_path = os.path.join(res_labels_dir, f"{sly.fs.get_file_name(item.name)}.txt")
-            _transform_annotation(ann, classes_names, save_ann_path)
+            _item_name = sly._utils.generate_free_name(used_names, sly.fs.get_file_name(item.name))
+            used_names.add(_item_name)
 
-            save_img_path = os.path.join(res_images_dir, sly.fs.get_file_name_with_ext(item.img_path))
-            sly.fs.hardlink_or_copy_file(item.img_path, save_img_path)  # to speedup and save drive space
+            _ann_name = f"{_item_name}.txt"
+            _img_name = f"{_item_name}{sly.fs.get_file_ext(item.img_path)}"
+
+            save_ann_path = os.path.join(res_labels_dir, _ann_name)
+            _transform_annotation(ann, classes_names, save_ann_path)
+            save_img_path = os.path.join(res_images_dir, _img_name)
+            sly.fs.copy_file(item.img_path, save_img_path)  # hardlink not working with yolov5 ds caches
         progress_cb(len(batch))
 
 
