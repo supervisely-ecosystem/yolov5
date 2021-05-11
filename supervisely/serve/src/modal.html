@@ -11,7 +11,7 @@
     </sly-style>
     <sly-field title="Choose model weights" description="Use custom weights or pretrained on COCO">
         <el-tabs type="border-card" class="el-tabs-cards" v-model="state.modelWeightsOptions">
-            <el-tab-pane name="coco">
+            <el-tab-pane name="pretrained">
                 <el-radio slot="label" v-model="state.modelWeightsOptions" label="pretrained">
                     Pretrained on COCO
                 </el-radio>
@@ -44,14 +44,12 @@
             </el-tab-pane>
         </el-tabs>
         <el-tab-pane name="custom">
-            <el-tab-pane name="coco">
-                <el-radio slot="label" v-model="state.modelWeightsOptions" label="custom">
-                    Custom
-                </el-radio>
-                <sly-field title="Weights path" description="Copy path in Team Files">
-                    <el-input v-model="state.weightsPath" placeholder="Path to .pt file in Team Files"></el-input>
-                </sly-field>
-            </el-tab-pane>
+            <el-radio slot="label" v-model="state.modelWeightsOptions" label="custom">
+                Custom
+            </el-radio>
+            <sly-field title="Weights path" description="Copy path in Team Files">
+                <el-input v-model="state.weightsPath" placeholder="Path to .pt file in Team Files"></el-input>
+            </sly-field>
         </el-tab-pane>
     </sly-field>
     <sly-field title="Choose Device" description="Cuda device number (i.e. 0, 1, 2 or 3) or cpu">
