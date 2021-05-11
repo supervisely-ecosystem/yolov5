@@ -169,7 +169,7 @@ def preprocess(api: sly.Api, task_id, context, state, app_logger):
     progress = sly.Progress("Downloading weights", 1, is_size=True, need_info_log=True)
     local_path = os.path.join(my_app.data_dir, "weights.pt")
     if modelWeightsOptions == "pretrained":
-        url = os.path.join("https://github.com/ultralytics/yolov5/releases/download/v5.0/", pretrained_weights)
+        url = f"https://github.com/ultralytics/yolov5/releases/download/v5.0/{pretrained_weights}.pt"
         final_weights = url
         sly.fs.download(url, local_path, my_app.cache, progress)
     elif modelWeightsOptions == "custom":
