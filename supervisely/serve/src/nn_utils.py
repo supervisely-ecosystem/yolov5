@@ -34,9 +34,8 @@ def construct_model_meta(model):
     return meta
 
 
-def load_model(weights_path, imgsz=640, device='cpu'):
+def load_model(weights_path, imgsz=640, device='cpu', half_precision=False):
     device = select_device(device)
-    half = device.type != 'cpu'  # half precision only supported on CUDA
 
     # Load model
     model = attempt_load(weights_path, map_location=device)  # load FP32 model
@@ -48,8 +47,11 @@ def load_model(weights_path, imgsz=640, device='cpu'):
     else:
         sly.logger.warning(f"Image size is not found in model checkpoint. Use default: {IMG_SIZE}")
         imgsz = IMG_SIZE
-    imgsz = check_img_size(imgsz, s=model.stride.max())  # check img_size
 
+    gs = max(int(model.stride.max()), 32)  # grid size (max stride)
+    imgsz = check_img_size(imgsz, s=gs)  # check img_size
+
+    half = device.type != 'cpu' and half_precision  # half precision only supported on CUDA
     if half:
         model.half()  # to FP16
 
