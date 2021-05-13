@@ -168,7 +168,8 @@ def debug_inference():
 @my_app.callback("preprocess")
 @sly.timeit
 def preprocess(api: sly.Api, task_id, context, state, app_logger):
-    global model, half, device, imgsz, stride, meta, final_weights
+    global model, half, device, imgsz, meta, final_weights
+    global stride
 
     # download weights
     progress = sly.Progress("Downloading weights", 1, is_size=True, need_info_log=True)
