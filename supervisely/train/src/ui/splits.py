@@ -44,6 +44,7 @@ def init(project_info, project_meta: sly.ProjectMeta, data, state):
 
 def get_train_val_sets(project_dir, state):
     split_method = state["splitMethod"]
+    sly.logger.info(f"Split method for train/val is '{split_method}'")
     if split_method == "random":
         train_count = state["randomSplit"]["count"]["train"]
         val_count = state["randomSplit"]["count"]["val"]
