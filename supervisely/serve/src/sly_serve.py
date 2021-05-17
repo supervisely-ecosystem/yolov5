@@ -204,6 +204,7 @@ def main():
     my_app.run(initial_events=[{"command": "preprocess"}])
 
 
+#@TODO: move inference methods to SDK
 #@TODO: augment inference
 #@TODO: https://pypi.org/project/cachetools/
 if __name__ == "__main__":
