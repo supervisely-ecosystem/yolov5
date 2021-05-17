@@ -48,4 +48,4 @@ Watch short video for more details:
 
 # Screenshot
 
-<img src="https://i.imgur.com/uwzrkR7.png"/>
+<img src="https://i.imgur.com/eiROUgb.png"/>
