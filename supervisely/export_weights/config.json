@@ -1,5 +1,5 @@
 {
-  "name": "Serve YOLOv5",
+  "name": "Convert YOLOv5 weights",
   "type": "app",
   "categories": [
     "yolov5",
