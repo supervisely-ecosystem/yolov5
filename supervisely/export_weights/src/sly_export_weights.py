@@ -29,6 +29,8 @@ TEAM_ID = int(os.environ['context.teamId'])
 WORKSPACE_ID = int(os.environ['context.workspaceId'])
 
 custom_weights = os.environ['modal.state.weightsPath']
+modelWeightsOptions = os.environ['modal.state.modelWeightsOptions']
+pretrained_weights = os.environ['modal.state.selectedModel'].lower()
 DEVICE_STR = os.environ['modal.state.device']
 
 final_weights = None
