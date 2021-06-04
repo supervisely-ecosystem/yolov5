@@ -35,7 +35,6 @@ TEAM_ID = int(os.environ['context.teamId'])
 WORKSPACE_ID = int(os.environ['context.workspaceId'])
 
 customWeightsPath = os.environ['modal.state.weightsPath']
-modelWeightsOptions = os.environ['modal.state.modelWeightsOptions']
 DEVICE_STR = os.environ['modal.state.device']
 _img_size = int(os.environ['modal.state.imageSize'])
 final_weights = None
@@ -179,15 +178,17 @@ def export_weights(api: sly.Api, task_id, context, state, app_logger):
 
     weights_path = os.path.join(my_app.data_dir, customWeightsPath)  # get_file_name_with_ext()
     try:
-        api.file.download(team_id=TEAM_ID, remote_path=customWeightsPath, local_save_path=weights_path)
+        api.file.download(team_id=TEAM_ID,
+                          remote_path=customWeightsPath,
+                          local_save_path=weights_path)
     except:
         pass
 
-    img_size *= 2 if len(img_size) == 1 else 1  # expand
+    img_size *= 2 if len(img_size) == 1 else 1
     set_logging()
     t = time.time()
-    device = select_device(DEVICE_STR)
-    model = attempt_load(weights_path, map_location=device)
+    device = select_device(device=DEVICE_STR)
+    model = attempt_load(weights=weights_path, map_location=device)
     model = model.train()
     gs = int(max(model.stride))  # grid size (max stride)
     img_size = [check_img_size(x, gs) for x in img_size]  # verify img_size are gs-multiples
