@@ -13,7 +13,8 @@
   "modal_width": 700,
   "modal_template_state": {
     "device": "0",
-    "weightsPath": ""
+    "weightsPath": "",
+    "imageSize": "640"
   },
   "task_location": "application_sessions",
   "icon": "https://i.imgur.com/2U6HufM.png",
