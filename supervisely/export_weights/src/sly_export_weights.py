@@ -19,8 +19,14 @@ sys.path.append(root_source_path)
 import models
 from utils.general import colorstr, check_img_size, check_requirements, file_size, set_logging
 from utils.torch_utils import select_device
-from models.experimental import attempt_load
+from models.experimental import Ensemble #, attempt_load
 from utils.activations import Hardswish, SiLU
+# from utils.google_utils import attempt_download
+from models.common import Conv, DWConv
+import subprocess
+import time
+from pathlib import Path
+import requests
 
 
 my_app = sly.AppService()
@@ -28,11 +34,10 @@ my_app = sly.AppService()
 TEAM_ID = int(os.environ['context.teamId'])
 WORKSPACE_ID = int(os.environ['context.workspaceId'])
 
-custom_weights = os.environ['modal.state.weightsPath']
+customWeightsPath = os.environ['modal.state.weightsPath']
 modelWeightsOptions = os.environ['modal.state.modelWeightsOptions']
-pretrained_weights = os.environ['modal.state.selectedModel'].lower()
 DEVICE_STR = os.environ['modal.state.device']
-
+_img_size = int(os.environ['modal.state.imageSize'])
 final_weights = None
 ts = None
 
@@ -101,43 +106,92 @@ def export_to_core_ml(weights, img):
         print(f'{prefix} export failure: {e}')
 
 
+def attempt_load(weights, map_location=None):
+    # Loads an ensemble of models weights=[a,b,c] or a single model weights=[a] or weights=a
+    model = Ensemble()
+    for w in weights if isinstance(weights, list) else [weights]:
+        attempt_download(w)
+        ckpt = torch.load(w, map_location=map_location)  # load
+        model.append(ckpt['ema' if ckpt.get('ema') else 'model'].float().fuse().eval())  # FP32 model
+
+    # Compatibility updates
+    for m in model.modules():
+        if type(m) in [nn.Hardswish, nn.LeakyReLU, nn.ReLU, nn.ReLU6, nn.SiLU]:
+            m.inplace = True  # pytorch 1.7.0 compatibility
+        elif type(m) is Conv:
+            m._non_persistent_buffers_set = set()  # pytorch 1.6.0 compatibility
+
+    if len(model) == 1:
+        return model[-1]  # return model
+    else:
+        print('Ensemble created with %s\n' % weights)
+        for k in ['names', 'stride']:
+            setattr(model, k, getattr(model[-1], k))
+        return model  # return ensemble
+
+
+def attempt_download(file, repo='ultralytics/yolov5'):
+    # Attempt file download if does not exist
+    file = Path(str(file).strip().replace("'", ''))
+
+    if not file.exists():
+        try:
+            response = requests.get(f'https://api.github.com/repos/{repo}/releases/latest').json()  # github api
+            assets = [x['name'] for x in response['assets']]  # release assets, i.e. ['yolov5s.pt', 'yolov5m.pt', ...]
+            tag = response['tag_name']  # i.e. 'v1.0'
+        except:  # fallback plan
+            assets = ['yolov5s.pt', 'yolov5m.pt', 'yolov5l.pt', 'yolov5x.pt',
+                      'yolov5s6.pt', 'yolov5m6.pt', 'yolov5l6.pt', 'yolov5x6.pt']
+            try:
+                tag = subprocess.check_output('git tag', shell=True, stderr=subprocess.STDOUT).decode().split()[-1]
+            except:
+                tag = 'v5.0'  # current release
+
+        name = file.name
+        if name in assets:
+            msg = f'{file} missing, try downloading from https://github.com/{repo}/releases/'
+            redundant = False  # second download option
+            try:  # GitHub
+                url = f'https://github.com/{repo}/releases/download/{tag}/{name}'
+                print(f'Downloading {url} to {file}...')
+                torch.hub.download_url_to_file(url, file)
+                assert file.exists() and file.stat().st_size > 1E6  # check
+            except Exception as e:  # GCP
+                print(f'Download error: {e}')
+                assert redundant, 'No secondary mirror'
+                url = f'https://storage.googleapis.com/{repo}/ckpt/{name}'
+                print(f'Downloading {url} to {file}...')
+                os.system(f'curl -L {url} -o {file}')  # torch.hub.download_url_to_file(url, weights)
+            finally:
+                if not file.exists() or file.stat().st_size < 1E6:  # check
+                    file.unlink(missing_ok=True)  # remove partial downloads
+                    print(f'ERROR: Download failure: {msg}')
+                print('')
+                return
+
+
 @my_app.callback("export_weights")
 @sly.timeit
 def export_weights(api: sly.Api, task_id, context, state, app_logger):
     batch_size = 1
-    device = 'cpu'
-    dynamic = False
-    img_size = [640, 640]
-    simplify = False
-    # weights = './yolov5s.pt'
+    img_size = [_img_size, _img_size]
     grid = True
 
-    storage_dir = my_app.data_dir
-    cur_files_path = custom_weights
-    archive_path = os.path.join(storage_dir, get_file_name_with_ext(cur_files_path))
-    sly.logger.info('storage_dir is '.format(storage_dir))
-    # input_dir = os.path.join(storage_dir, get_file_name(cur_files_path))  # extract_dir
-    api.file.download(TEAM_ID, cur_files_path, archive_path)
+    weights_path = os.path.join(my_app.data_dir, customWeightsPath)  # get_file_name_with_ext()
+    try:
+        api.file.download(team_id=TEAM_ID, remote_path=customWeightsPath, local_save_path=weights_path)
+    except:
+        pass
 
     img_size *= 2 if len(img_size) == 1 else 1  # expand
     set_logging()
     t = time.time()
-
-    # Load PyTorch model
-    device = select_device(device)
-    weights = os.path.join(storage_dir, get_file_name_with_ext(cur_files_path))
-    model = attempt_load(weights, map_location=device)  # load FP32 model
+    device = select_device(DEVICE_STR)
+    model = attempt_load(weights_path, map_location=device)
     model = model.train()
-    # labels = model.names`
-
-    # Checks
     gs = int(max(model.stride))  # grid size (max stride)
     img_size = [check_img_size(x, gs) for x in img_size]  # verify img_size are gs-multiples
-
-    # Input
     img = torch.zeros(batch_size, 3, *img_size).to(device)  # image size(1,3,320,192) iDetection
-
-    # Update model
     for k, m in model.named_modules():
         m._non_persistent_buffers_set = set()  # pytorch 1.6.0 compatibility
         if isinstance(m, models.common.Conv):  # assign export-friendly activations
@@ -145,16 +199,17 @@ def export_weights(api: sly.Api, task_id, context, state, app_logger):
                 m.act = Hardswish()
             elif isinstance(m.act, nn.SiLU):
                 m.act = SiLU()
-        # elif isinstance(m, models.yolo.Detect):
-        #     m.forward = m.forward_export  # assign forward (optional)
     model.model[-1].export = not grid  # set Detect() layer grid export
     for _ in range(2):
         y = model(img)  # dry runs
-    print(f"\n{colorstr('PyTorch:')} starting from {weights} ({file_size(weights):.1f} MB)")
+    print(f"\n{colorstr('PyTorch:')} starting from {weights_path} ({file_size(weights_path):.1f} MB)")
 
-    export_to_torch_script(weights, img, model)
-    export_to_onnx(weights, img, model, dynamic, simplify)
-    export_to_core_ml(weights, img)
+    # @TODO: fix export_to_onnx for cuda:0
+    # ========================================================================
+    export_to_torch_script(weights_path, img, model)                         #
+    export_to_onnx(weights_path, img, model, dynamic=False, simplify=False)  #
+    export_to_core_ml(weights_path, img)                                     #
+    # ========================================================================
 
     # Finish
     print(f'\nExport complete ({time.time() - t:.2f}s). Visualize with https://github.com/lutzroeder/netron.')
@@ -165,7 +220,7 @@ def main():
     sly.logger.info("Script arguments", extra={
         "context.teamId": TEAM_ID,
         "context.workspaceId": WORKSPACE_ID,
-        "modal.state.weightsPath": custom_weights
+        "modal.state.weightsPath": customWeightsPath
     })
 
     my_app.run(initial_events=[{"command": "export_weights"}])
