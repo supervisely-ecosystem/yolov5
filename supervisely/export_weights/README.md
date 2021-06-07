@@ -27,7 +27,7 @@ App exports pretrained YOLO v5 model weights to Torchscript(.torchscript.pt), ON
    Training app saves results to the directory: `/yolov5_train/<training project name>/<session id>/weights`. 
    For example: `/yolov5_train/lemons_annotated/2577/weights/best.pt`
 
-<img src="" width="800"/>
+<img src="https://i.imgur.com/O6B8gKI.png"/>
 
 2. Paste path to modal window
 
