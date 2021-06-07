@@ -14,13 +14,13 @@
     "device": "0",
     "imageSize": "640"
   },
-  "task_location": "application_sessions",
+  "task_location": "workspace_tasks",
   "icon": "https://i.imgur.com/2U6HufM.png",
   "icon_cover": true,
   "isolate": true,
   "need_gpu": false,
   "headless": true,
-  "instance_version": "6.4.15",
+  "instance_version": "6.4.16",
   "context_menu": {
     "target": ["files_file"]
   }
