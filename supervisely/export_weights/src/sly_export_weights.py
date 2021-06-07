@@ -1,15 +1,8 @@
-"""Exports a YOLOv5 *.pt model to ONNX and TorchScript formats
-Usage:
-    $ export PYTHONPATH="$PWD" && python models/export.py --weights yolov5s.pt --img 640 --batch 1
-"""
-
 import supervisely_lib as sly
-# import supervisely_lib.io.fs
 from supervisely_lib.io.fs import download, file_exists, get_file_name, get_file_name_with_ext
 import os
 import pathlib
 import sys
-import time
 import torch
 import torch.nn as nn
 
@@ -29,7 +22,7 @@ my_app = sly.AppService()
 TEAM_ID = int(os.environ['context.teamId'])
 WORKSPACE_ID = int(os.environ['context.workspaceId'])
 
-customWeightsPath = os.environ['modal.state.weightsPath']
+customWeightsPath = os.environ['modal.state.slyFile']
 DEVICE_STR = os.environ['modal.state.device']
 _img_size = int(os.environ['modal.state.imageSize'])
 final_weights = None
@@ -106,22 +99,17 @@ def export_weights(api: sly.Api, task_id, context, state, app_logger):
     batch_size = 1
     img_size = [_img_size, _img_size]
     grid = True
-
-    # get_file_name_with_ext()
-    remote_path = customWeightsPath  # "/yolov5_train/Lemons (Annotated)/4109/weights/best.pt"
+    remote_path = customWeightsPath
     weights_path = os.path.join(my_app.data_dir, get_file_name_with_ext(remote_path))
     try:
         api.file.download(team_id=TEAM_ID,
-                          remote_path=remote_path,  # customWeightsPath,  # путь в team_files
-                          local_save_path=weights_path)   # путь в папку с текущей task
-        print('downloaded')
+                          remote_path=remote_path,
+                          local_save_path=weights_path)
     except:
-        print('pass')
         raise FileNotFoundError('FileNotFoundError')
 
     img_size *= 2 if len(img_size) == 1 else 1
     set_logging()
-    t = time.time()
     device = select_device(device=DEVICE_STR)
     model = attempt_load(weights=weights_path, map_location=device)
     model = model.train()
@@ -155,8 +143,6 @@ def export_weights(api: sly.Api, task_id, context, state, app_logger):
         if '.onnx' in file_path or '.mlmodel' in file_path or '.torchscript' in file_path:
             api.file.upload(team_id=TEAM_ID, src=file_path, dst=remote_file_path)
 
-    # Finish
-    print(f'\nExport complete ({time.time() - t:.2f}s). Visualize with https://github.com/lutzroeder/netron.')
     my_app.stop()
 
 

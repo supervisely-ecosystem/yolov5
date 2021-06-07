@@ -12,14 +12,13 @@
   "main_script": "supervisely/export_weights/src/sly_export_weights.py",
   "modal_template_state": {
     "device": "0",
-    "weightsPath": "",
     "imageSize": "640"
   },
   "task_location": "application_sessions",
   "icon": "https://i.imgur.com/2U6HufM.png",
   "icon_cover": true,
   "isolate": true,
-  "need_gpu": true,
+  "need_gpu": false,
   "headless": true,
   "instance_version": "6.4.15",
   "context_menu": {
