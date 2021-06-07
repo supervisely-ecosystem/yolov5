@@ -41,7 +41,7 @@ def export_to_torch_script(weights, img, model):
         # print(f'{prefix} export success, saved as {f} ({file_size(f):.1f} MB)')
     except Exception as e:
         # print(f'{prefix} export failure: {e}')
-        raise FileNotFoundError()
+        raise FileNotFoundError(e)
 
 
 def export_to_onnx(weights, img, model, dynamic, simplify):
