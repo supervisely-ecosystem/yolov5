@@ -4,6 +4,7 @@ Usage:
 """
 
 import supervisely_lib as sly
+# import supervisely_lib.io.fs
 from supervisely_lib.io.fs import download, file_exists, get_file_name, get_file_name_with_ext
 import os
 import pathlib
@@ -11,7 +12,6 @@ import sys
 import time
 import torch
 import torch.nn as nn
-from torch.utils.mobile_optimizer import optimize_for_mobile
 
 root_source_path = str(pathlib.Path(sys.argv[0]).parents[3])
 sly.logger.info(f"Root source directory: {root_source_path}")
@@ -19,14 +19,9 @@ sys.path.append(root_source_path)
 import models
 from utils.general import colorstr, check_img_size, check_requirements, file_size, set_logging
 from utils.torch_utils import select_device
-from models.experimental import Ensemble #, attempt_load
+from models.experimental import attempt_load
 from utils.activations import Hardswish, SiLU
-# from utils.google_utils import attempt_download
 from models.common import Conv, DWConv
-import subprocess
-import time
-from pathlib import Path
-import requests
 
 
 my_app = sly.AppService()
@@ -105,70 +100,6 @@ def export_to_core_ml(weights, img):
         print(f'{prefix} export failure: {e}')
 
 
-def attempt_load(weights, map_location=None):
-    # Loads an ensemble of models weights=[a,b,c] or a single model weights=[a] or weights=a
-    model = Ensemble()
-    for w in weights if isinstance(weights, list) else [weights]:
-        attempt_download(w)
-        ckpt = torch.load(w, map_location=map_location)  # load
-        model.append(ckpt['ema' if ckpt.get('ema') else 'model'].float().fuse().eval())  # FP32 model
-
-    # Compatibility updates
-    for m in model.modules():
-        if type(m) in [nn.Hardswish, nn.LeakyReLU, nn.ReLU, nn.ReLU6, nn.SiLU]:
-            m.inplace = True  # pytorch 1.7.0 compatibility
-        elif type(m) is Conv:
-            m._non_persistent_buffers_set = set()  # pytorch 1.6.0 compatibility
-
-    if len(model) == 1:
-        return model[-1]  # return model
-    else:
-        print('Ensemble created with %s\n' % weights)
-        for k in ['names', 'stride']:
-            setattr(model, k, getattr(model[-1], k))
-        return model  # return ensemble
-
-
-def attempt_download(file, repo='ultralytics/yolov5'):
-    # Attempt file download if does not exist
-    file = Path(str(file).strip().replace("'", ''))
-
-    if not file.exists():
-        try:
-            response = requests.get(f'https://api.github.com/repos/{repo}/releases/latest').json()  # github api
-            assets = [x['name'] for x in response['assets']]  # release assets, i.e. ['yolov5s.pt', 'yolov5m.pt', ...]
-            tag = response['tag_name']  # i.e. 'v1.0'
-        except:  # fallback plan
-            assets = ['yolov5s.pt', 'yolov5m.pt', 'yolov5l.pt', 'yolov5x.pt',
-                      'yolov5s6.pt', 'yolov5m6.pt', 'yolov5l6.pt', 'yolov5x6.pt']
-            try:
-                tag = subprocess.check_output('git tag', shell=True, stderr=subprocess.STDOUT).decode().split()[-1]
-            except:
-                tag = 'v5.0'  # current release
-
-        name = file.name
-        if name in assets:
-            msg = f'{file} missing, try downloading from https://github.com/{repo}/releases/'
-            redundant = False  # second download option
-            try:  # GitHub
-                url = f'https://github.com/{repo}/releases/download/{tag}/{name}'
-                print(f'Downloading {url} to {file}...')
-                torch.hub.download_url_to_file(url, file)
-                assert file.exists() and file.stat().st_size > 1E6  # check
-            except Exception as e:  # GCP
-                print(f'Download error: {e}')
-                assert redundant, 'No secondary mirror'
-                url = f'https://storage.googleapis.com/{repo}/ckpt/{name}'
-                print(f'Downloading {url} to {file}...')
-                os.system(f'curl -L {url} -o {file}')  # torch.hub.download_url_to_file(url, weights)
-            finally:
-                if not file.exists() or file.stat().st_size < 1E6:  # check
-                    file.unlink(missing_ok=True)  # remove partial downloads
-                    print(f'ERROR: Download failure: {msg}')
-                print('')
-                return
-
-
 @my_app.callback("export_weights")
 @sly.timeit
 def export_weights(api: sly.Api, task_id, context, state, app_logger):
@@ -176,13 +107,17 @@ def export_weights(api: sly.Api, task_id, context, state, app_logger):
     img_size = [_img_size, _img_size]
     grid = True
 
-    weights_path = os.path.join(my_app.data_dir, customWeightsPath)  # get_file_name_with_ext()
+    # get_file_name_with_ext()
+    remote_path = customWeightsPath  # "/yolov5_train/Lemons (Annotated)/4109/weights/best.pt"
+    weights_path = os.path.join(my_app.data_dir, get_file_name_with_ext(remote_path))
     try:
         api.file.download(team_id=TEAM_ID,
-                          remote_path=customWeightsPath,
-                          local_save_path=weights_path)
+                          remote_path=remote_path,  # customWeightsPath,  # путь в team_files
+                          local_save_path=weights_path)   # путь в папку с текущей task
+        print('downloaded')
     except:
-        pass
+        print('pass')
+        raise FileNotFoundError('FileNotFoundError')
 
     img_size *= 2 if len(img_size) == 1 else 1
     set_logging()
@@ -211,6 +146,14 @@ def export_weights(api: sly.Api, task_id, context, state, app_logger):
     export_to_onnx(weights_path, img, model, dynamic=False, simplify=False)  #
     export_to_core_ml(weights_path, img)                                     #
     # ========================================================================
+
+    process_folder = str(pathlib.Path(weights_path).parents[0])
+    remote_path_template = str(pathlib.Path(remote_path).parents[0])
+    for file in os.listdir(process_folder):
+        file_path = os.path.join(process_folder, file)
+        remote_file_path = os.path.join(remote_path_template, file)
+        if '.onnx' in file_path or '.mlmodel' in file_path or '.torchscript' in file_path:
+            api.file.upload(team_id=TEAM_ID, src=file_path, dst=remote_file_path)
 
     # Finish
     print(f'\nExport complete ({time.time() - t:.2f}s). Visualize with https://github.com/lutzroeder/netron.')
