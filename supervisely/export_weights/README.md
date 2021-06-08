@@ -26,7 +26,6 @@ App exports pretrained YOLO v5 model weights to Torchscript(.torchscript.pt), ON
 1. App saves converted weight files to the directory: . 
    For example: `/yolov5_train/lemons_annotated/2577/weights/best.pt`
 
-<img src="https://i.imgur.com/l0p7Z8F.png"/>
 <img src="https://i.imgur.com/uzMlQ2e.png"/>
 
 
