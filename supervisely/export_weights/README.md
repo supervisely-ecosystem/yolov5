@@ -1,5 +1,5 @@
 <div align="center" markdown>
-<img src="https://i.imgur.com/ZwzUQh3.png"/>
+<img src="https://i.imgur.com/HQjrdnH.png"/>
 
 # Export YOLOv5 weights
 
