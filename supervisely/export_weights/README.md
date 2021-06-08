@@ -27,6 +27,8 @@ App exports pretrained YOLO v5 model weights to Torchscript(.torchscript.pt), ON
    For example: `/yolov5_train/lemons_annotated/2577/weights/best.pt`
 
 <img src="https://i.imgur.com/l0p7Z8F.png"/>
+<img src="https://i.imgur.com/uzMlQ2e.png"/>
+
 
 2. Paste path to modal window
 
