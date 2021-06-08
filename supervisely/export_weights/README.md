@@ -28,18 +28,12 @@ App exports pretrained YOLO v5 model weights to Torchscript(.torchscript.pt), ON
 
 <img src="https://i.imgur.com/uzMlQ2e.png" width="800px"/>
 
+**Step 3**: Set image size in modal window. Also in advanced section you can change what agent should be used for deploy.
 
-2. Paste path to modal window
+**Step 4**: Press `Run` button. Now application log window will be opened. You can safely close it.
 
-<img src="" width="400"/>
-
-Then
-
-3. Choose device (optional): for GPU just provide device id (`0` or `1` or ...), or type `cpu`. Also in advanced section you can 
-change what agent should be used for deploy.
-
-4. Press `Run` button.
+<img src="https://i.imgur.com/zjXgxhg.png"/>
 
 5. Wait until you see following message in logs: `Model has been successfully deployed`
 
-<img src="" width="800"/>
+<img src=""/>
