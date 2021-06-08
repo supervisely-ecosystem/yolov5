@@ -22,9 +22,8 @@
 App exports pretrained YOLO v5 model weights to Torchscript(.torchscript.pt), ONNX(.onnx), CoreML(.mlmodel) formats. 
 
 # How To Run
-
-1. App saves converted weight files to the directory: . 
-   For example: `/yolov5_train/lemons_annotated/2577/weights/best.pt`
+**Step 1**: Add app to your team from [Ecosystem](https://ecosystem.supervise.ly/apps/import-mot-format) if it is not there.
+**Step 2**: Find your pretrained model weights file in `Team Files`, open file context menue(right click on it) -> `Run App` -> `Export YOLOv5 weights`.
 
 <img src="https://i.imgur.com/uzMlQ2e.png" width="800px"/>
 
