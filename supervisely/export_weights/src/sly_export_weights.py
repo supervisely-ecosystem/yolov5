@@ -23,8 +23,8 @@ TEAM_ID = int(os.environ['context.teamId'])
 WORKSPACE_ID = int(os.environ['context.workspaceId'])
 
 customWeightsPath = os.environ['modal.state.slyFile']
-# DEVICE_STR = os.environ['modal.state.device']
-# _img_size = int(os.environ['modal.state.imageSize'])
+DEVICE_STR = os.environ['modal.state.device'] # DEVICE_STR = 'cpu'
+_img_size = int(os.environ['modal.state.imageSize'])
 final_weights = None
 ts = None
 
@@ -101,8 +101,7 @@ def export_to_core_ml(weights, img):
 @sly.timeit
 def export_weights(api: sly.Api, task_id, context, state, app_logger):
     batch_size = 1
-    img_size = [640, 640]  # [_img_size, _img_size]
-    DEVICE_STR = 'cpu'
+    img_size = [_img_size, _img_size]  # [640, 640]
     grid = True
     remote_path = customWeightsPath
     weights_path = os.path.join(my_app.data_dir, get_file_name_with_ext(remote_path))
@@ -114,7 +113,7 @@ def export_weights(api: sly.Api, task_id, context, state, app_logger):
         raise FileNotFoundError('FileNotFoundError')
 
     img_size *= 2 if len(img_size) == 1 else 1
-    # set_logging()
+    set_logging()
     device = select_device(device=DEVICE_STR)
     model = attempt_load(weights=weights_path, map_location=device)
     model = model.train()
@@ -131,7 +130,7 @@ def export_weights(api: sly.Api, task_id, context, state, app_logger):
     model.model[-1].export = not grid  # set Detect() layer grid export
     for _ in range(2):
         y = model(img)  # dry runs
-    # print(f"\n{colorstr('PyTorch:')} starting from {weights_path} ({file_size(weights_path):.1f} MB)")
+    print(f"\n{colorstr('PyTorch:')} starting from {weights_path} ({file_size(weights_path):.1f} MB)")
 
     # @TODO: fix export_to_onnx for cuda:0
     # ========================================================================
