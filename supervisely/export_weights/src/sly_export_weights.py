@@ -21,9 +21,10 @@ my_app = sly.AppService()
 
 TEAM_ID = int(os.environ['context.teamId'])
 WORKSPACE_ID = int(os.environ['context.workspaceId'])
-
+TASK_ID = int(os.environ['TASK_ID'])
 customWeightsPath = os.environ['modal.state.slyFile']
-DEVICE_STR = os.environ['modal.state.device'] # DEVICE_STR = 'cpu'
+# DEVICE_STR = os.environ['modal.state.device']
+DEVICE_STR = 'cpu'
 _img_size = int(os.environ['modal.state.imageSize'])
 final_weights = None
 ts = None
@@ -146,7 +147,6 @@ def export_weights(api: sly.Api, task_id, context, state, app_logger):
         remote_file_path = os.path.join(remote_path_template, file)
         if '.onnx' in file_path or '.mlmodel' in file_path or '.torchscript' in file_path:
             api.file.upload(team_id=TEAM_ID, src=file_path, dst=remote_file_path)
-
     my_app.stop()
 
 
