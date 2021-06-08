@@ -23,8 +23,7 @@ App exports pretrained YOLO v5 model weights to Torchscript(.torchscript.pt), ON
 
 # How To Run
 
-1. Training app saves artifacts to `Team Files`. Just copy path to weights `.pt` file. 
-   Training app saves results to the directory: `/yolov5_train/<training project name>/<session id>/weights`. 
+1. App saves converted weight files to the directory: . 
    For example: `/yolov5_train/lemons_annotated/2577/weights/best.pt`
 
 <img src="https://i.imgur.com/O6B8gKI.png"/>
