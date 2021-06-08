@@ -31,25 +31,25 @@ ts = None
 
 def export_to_torch_script(weights, img, model):
     global ts
-    # prefix = colorstr('TorchScript:')
+    prefix = colorstr('TorchScript:')
     try:
-        # print(f'\n{prefix} starting export with torch {torch.__version__}...')
+        print(f'\n{prefix} starting export with torch {torch.__version__}...')
         f = weights.replace('.pt', '.torchscript.pt')  # filename
         ts = torch.jit.trace(model, img, strict=False)
         # ts = optimize_for_mobile(ts)  # https://pytorch.org/tutorials/recipes/script_optimized.html
         ts.save(f)
-        # print(f'{prefix} export success, saved as {f} ({file_size(f):.1f} MB)')
+        print(f'{prefix} export success, saved as {f} ({file_size(f):.1f} MB)')
     except Exception as e:
-        # print(f'{prefix} export failure: {e}')
+        print(f'{prefix} export failure: {e}')
         raise FileNotFoundError(e)
 
 
 def export_to_onnx(weights, img, model, dynamic, simplify):
-    # prefix = colorstr('ONNX:')
+    prefix = colorstr('ONNX:')
     try:
         import onnx
 
-        # print(f'{prefix} starting export with onnx {onnx.__version__}...')
+        print(f'{prefix} starting export with onnx {onnx.__version__}...')
         f = weights.replace('.pt', '.onnx')  # filename
         torch.onnx.export(model, img, f, verbose=False, opset_version=12, input_names=['images'],
                           dynamic_axes={'images': {0: 'batch', 2: 'height', 3: 'width'},  # size(1,3,640,640)
@@ -66,34 +66,34 @@ def export_to_onnx(weights, img, model, dynamic, simplify):
                 check_requirements(['onnx-simplifier'])
                 import onnxsim
 
-                # print(f'{prefix} simplifying with onnx-simplifier {onnxsim.__version__}...')
+                print(f'{prefix} simplifying with onnx-simplifier {onnxsim.__version__}...')
                 model_onnx, check = onnxsim.simplify(model_onnx,
                                                      dynamic_input_shape=dynamic,
                                                      input_shapes={'images': list(img.shape)} if dynamic else None)
                 assert check, 'assert check failed'
                 onnx.save(model_onnx, f)
             except Exception as e:
-                # print(f'{prefix} simplifier failure: {e}')
+                print(f'{prefix} simplifier failure: {e}')
                 pass
-        # print(f'{prefix} export success, saved as {f} ({file_size(f):.1f} MB)')
+        print(f'{prefix} export success, saved as {f} ({file_size(f):.1f} MB)')
     except Exception as e:
-        # print(f'{prefix} export failure: {e}')
+        print(f'{prefix} export failure: {e}')
         pass
 
 
 def export_to_core_ml(weights, img):
-    # prefix = colorstr('CoreML:')
+    prefix = colorstr('CoreML:')
     try:
         import coremltools as ct
 
-        # print(f'{prefix} starting export with coremltools {ct.__version__}...')
+        print(f'{prefix} starting export with coremltools {ct.__version__}...')
         # convert model from torchscript and apply pixel scaling as per detect.py
         model = ct.convert(ts, inputs=[ct.ImageType(name='image', shape=img.shape, scale=1 / 255.0, bias=[0, 0, 0])])
         f = weights.replace('.pt', '.mlmodel')  # filename
         model.save(f)
-        # print(f'{prefix} export success, saved as {f} ({file_size(f):.1f} MB)')
+        print(f'{prefix} export success, saved as {f} ({file_size(f):.1f} MB)')
     except Exception as e:
-        # print(f'{prefix} export failure: {e}')
+        print(f'{prefix} export failure: {e}')
         pass
 
 
@@ -102,7 +102,7 @@ def export_to_core_ml(weights, img):
 def export_weights(api: sly.Api, task_id, context, state, app_logger):
     batch_size = 1
     img_size = [640, 640]  # [_img_size, _img_size]
-    DEVICE_STR = '0'
+    DEVICE_STR = 'cpu'
     grid = True
     remote_path = customWeightsPath
     weights_path = os.path.join(my_app.data_dir, get_file_name_with_ext(remote_path))
