@@ -30,7 +30,7 @@ App exports pretrained YOLO v5 model weights to Torchscript(.torchscript.pt), ON
 
 **Step 3**: Set image size in modal window. Also in advanced section you can change what agent should be used for deploy.
 
-<img src="https://i.imgur.com/7q7wLKW.png"/>
+<img src="https://i.imgur.com/7q7wLKW.png" width="800px"/>
 
 **Step 4**: Press `Run` button. Now application log window will be opened. You can safely close it.
 
