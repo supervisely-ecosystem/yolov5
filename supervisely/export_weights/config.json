@@ -18,7 +18,7 @@
   "icon": "https://i.imgur.com/2U6HufM.png",
   "icon_cover": true,
   "isolate": true,
-  "need_gpu": false,
+  "need_gpu": true,
   "headless": true,
   "instance_version": "6.4.16",
   "context_menu": {
