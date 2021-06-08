@@ -23,8 +23,8 @@ TEAM_ID = int(os.environ['context.teamId'])
 WORKSPACE_ID = int(os.environ['context.workspaceId'])
 
 customWeightsPath = os.environ['modal.state.slyFile']
-DEVICE_STR = os.environ['modal.state.device']
-_img_size = int(os.environ['modal.state.imageSize'])
+# DEVICE_STR = os.environ['modal.state.device']
+# _img_size = int(os.environ['modal.state.imageSize'])
 final_weights = None
 ts = None
 
@@ -101,7 +101,8 @@ def export_to_core_ml(weights, img):
 @sly.timeit
 def export_weights(api: sly.Api, task_id, context, state, app_logger):
     batch_size = 1
-    img_size = [_img_size, _img_size]
+    img_size = [640, 640]  # [_img_size, _img_size]
+    DEVICE_STR = '0'
     grid = True
     remote_path = customWeightsPath
     weights_path = os.path.join(my_app.data_dir, get_file_name_with_ext(remote_path))
