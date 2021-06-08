@@ -34,6 +34,6 @@ App exports pretrained YOLO v5 model weights to Torchscript(.torchscript.pt), ON
 
 <img src="https://i.imgur.com/zjXgxhg.png"/>
 
-5. Wait until you see following message in logs: `Model has been successfully deployed`
+5. Result files will be placed to source weight file folder
 
-<img src=""/>
+<img src="https://i.imgur.com/415Ijbk.png"/>
