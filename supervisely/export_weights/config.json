@@ -7,7 +7,7 @@
     "detection",
     "export"
   ],
-  "description": "Export model weights to ONNX, CoreML",
+  "description": "Converting to TorchScript, ONNX, CoreML formats. Result files will be placed to source weight file folder",
   "docker_image": "supervisely/base-pytorch:6.0.22",
   "main_script": "supervisely/export_weights/src/sly_export_weights.py",
   "modal_template": "supervisely/export_weights/src/modal.html",
