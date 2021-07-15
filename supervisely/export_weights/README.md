@@ -54,6 +54,11 @@ import onnx
 import onnxruntime as rt
 import coremltools as ct
 
+
+def to_numpy(tensor):
+    return tensor.detach().cpu().numpy() if tensor.requires_grad else tensor.cpu().numpy()
+
+
 # N - batch size
 # C - number of channels
 # H - image height
@@ -67,10 +72,7 @@ torch_script_model_inference = torch_script_model(tensor)
 ```
 
 **ONNX**
-```
-def to_numpy(tensor):
-    return tensor.detach().cpu().numpy() if tensor.requires_grad else tensor.cpu().numpy()
-    
+```    
 onnx_model = rt.InferenceSession(path_to_onnx_saved_model)
 input_name = onnx_model.get_inputs()[0].name
 label_name = onnx_model.get_outputs()[0].name
