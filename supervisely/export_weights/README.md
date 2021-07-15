@@ -44,7 +44,44 @@ App exports pretrained YOLO v5 model weights to Torchscript(.torchscript.pt), ON
 <img src="https://i.imgur.com/415Ijbk.png"/>
 
 ```
-{
-  test
-}
+import numpy as np
+import torch
+
+# N - batch size
+# C - number of channels
+# H - image height
+# W - image width
+tensor = torch.randn(N,C,H,W)
+
+# TorchScript saved model loading:
+torch_script_model = torch.jit.load(path_to_torch_script_saved_model)
+# and usage:
+torch_script_model_inference = torch_script_model(tensor)
+
+# ONNX saved model loading:
+import onnx
+import onnxruntime as rt
+
+def to_numpy(tensor):
+    return tensor.detach().cpu().numpy() if tensor.requires_grad else tensor.cpu().numpy()
+    
+onnx_model = rt.InferenceSession(path_to_onnx_saved_model)
+input_name = onnx_model.get_inputs()[0].name
+label_name = onnx_model.get_outputs()[0].name
+
+# and usage:
+onnx_model_inference = onnx_model.run([label_name], {input_name: to_numpy(tensor).astype(np.float32)})[0]
+
+# CoreML converted models work only with MacOS Version > 
+# [CoreML](https://coremltools.readme.io/docs) saved model loading:
+import coremltools as ct
+
+core_ml_model = ct.models.MLModel(path_to_core_ml_saved_model)
+
+# and usage:
+e = np.zeros((3,224,224)) 
+d = {} 
+d['data'] = e 
+r = coreml_model.predict(d)
+core_ml_model_inference = core_ml_model.predict({"image": to_numpy(tensor).astype(np.float32)})
 ```
