@@ -83,14 +83,10 @@ and usage:
 [CoreML](https://coremltools.readme.io/docs) saved model loading:
 ```
 import coremltools as ct
-
 core_ml_model = ct.models.MLModel(path_to_core_ml_saved_model)
 ```
 and usage:
 ```
-e = np.zeros((3,224,224)) 
-d = {} 
-d['data'] = e 
-r = coreml_model.predict(d)
-core_ml_model_inference = core_ml_model.predict({"image": to_numpy(tensor).astype(np.float32)})
+converted_tensor = {"image": to_numpy(tensor.squeeze(0).permute(1,2,0)).astype(np.float32)}
+core_ml_model_inference = core_ml_model.predict(converted_tensor)
 ```
