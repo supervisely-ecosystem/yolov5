@@ -43,7 +43,7 @@ App exports pretrained YOLO v5 model weights to Torchscript(.torchscript.pt), ON
 
 <img src="https://i.imgur.com/415Ijbk.png"/>
 
-**Infer models**
+# Infer models
 ```
 import numpy as np
 import torch
@@ -54,7 +54,7 @@ import torch
 # W - image width
 tensor = torch.randn(N,C,H,W)
 ```
-## TorchScript
+**TorchScript**
 saved model loading:
 ```
 torch_script_model = torch.jit.load(path_to_torch_script_saved_model)
@@ -64,7 +64,7 @@ usage:
 torch_script_model_inference = torch_script_model(tensor)
 ```
 
-## ONNX 
+**ONNX**
 saved model loading:
 ```
 import onnx
@@ -82,7 +82,7 @@ usage:
 onnx_model_inference = onnx_model.run([label_name], {input_name: to_numpy(tensor).astype(np.float32)})[0]
 ```
 
-## [CoreML](https://coremltools.readme.io/docs) (converted models work only with MacOS Version > 10)
+**[CoreML](https://coremltools.readme.io/docs) (converted models work only with MacOS Version > 10)**
 saved model loading: 
 ```
 import coremltools as ct
