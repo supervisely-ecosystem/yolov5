@@ -37,7 +37,7 @@ App exports pretrained YOLO v5 model weights to [Torchscript](https://pytorch.or
 
 <img src="https://i.imgur.com/zjXgxhg.png"/>
 
-**Step 5**: Result files will be placed to source weight file folder:
+**Step 5**: Converted model files will be placed to source weight file folder:
  - `{source weights filename}.mlmodel`
  - `{source weights filename}.onnx`
  - `{source weights filename}.torchscript.pt`
