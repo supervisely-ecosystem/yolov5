@@ -73,7 +73,7 @@ label_name = onnx_model.get_outputs()[0].name
 onnx_model_inference = onnx_model.run([label_name], {input_name: to_numpy(tensor).astype(np.float32)})[0]
 
 # CoreML converted models work only with MacOS Version > 
-# [CoreML](https://coremltools.readme.io/docs) saved model loading:
+[CoreML](https://coremltools.readme.io/docs) saved model loading:
 import coremltools as ct
 
 core_ml_model = ct.models.MLModel(path_to_core_ml_saved_model)
