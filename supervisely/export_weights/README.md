@@ -59,10 +59,10 @@ def to_numpy(tensor):
     return tensor.detach().cpu().numpy() if tensor.requires_grad else tensor.cpu().numpy()
 
 
-# N - batch size
-# C - number of channels
-# H - image height
-# W - image width
+N = 1 # batch size
+C = 3 # number of channels
+H = 640 # image height
+W = 640 # image width
 tensor = torch.randn(N,C,H,W)
 ```
 **TorchScript**
