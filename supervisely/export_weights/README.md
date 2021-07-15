@@ -55,8 +55,11 @@ tensor = torch.randn(N,C,H,W)
 ```
 ## TorchScript
 saved model loading:
+
 `torch_script_model = torch.jit.load(path_to_torch_script_saved_model)`
+
 and usage:
+
 `torch_script_model_inference = torch_script_model(tensor)`
 
 ## ONNX 
