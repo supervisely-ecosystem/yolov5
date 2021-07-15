@@ -43,6 +43,7 @@ App exports pretrained YOLO v5 model weights to Torchscript(.torchscript.pt), ON
 
 <img src="https://i.imgur.com/415Ijbk.png"/>
 
+**Infer models**
 ```
 import numpy as np
 import torch
