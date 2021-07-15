@@ -46,7 +46,11 @@ App exports pretrained YOLO v5 model weights to Torchscript(.torchscript.pt), ON
 # Infer models
 ```
 import numpy as np
+
 import torch
+import onnx
+import onnxruntime as rt
+import coremltools as ct
 
 # N - batch size
 # C - number of channels
@@ -64,9 +68,6 @@ torch_script_model_inference = torch_script_model(tensor)
 **ONNX**
 saved model loading and usage:
 ```
-import onnx
-import onnxruntime as rt
-
 def to_numpy(tensor):
     return tensor.detach().cpu().numpy() if tensor.requires_grad else tensor.cpu().numpy()
     
@@ -79,7 +80,6 @@ onnx_model_inference = onnx_model.run([label_name], {input_name: to_numpy(tensor
 **[CoreML](https://coremltools.readme.io/docs) (converted models work only with MacOS Version > 10)**
 saved model loading and usage:
 ```
-import coremltools as ct
 core_ml_model = ct.models.MLModel(path_to_core_ml_saved_model)
 converted_tensor = {"image": to_numpy(tensor.squeeze(0).permute(1,2,0)).astype(np.float32)}
 core_ml_model_inference = core_ml_model.predict(converted_tensor)
