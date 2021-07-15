@@ -82,13 +82,11 @@ and usage:
 
 ## CoreML (converted models work only with MacOS Version > 10)
 [CoreML](https://coremltools.readme.io/docs) saved model loading:
-
 ```
 import coremltools as ct
 
 core_ml_model = ct.models.MLModel(path_to_core_ml_saved_model)
 ```
-
 and usage:
 
 ```
