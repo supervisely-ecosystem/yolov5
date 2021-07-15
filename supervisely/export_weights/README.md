@@ -55,17 +55,14 @@ import torch
 tensor = torch.randn(N,C,H,W)
 ```
 **TorchScript**
-saved model loading:
+saved model loading and usage:
 ```
 torch_script_model = torch.jit.load(path_to_torch_script_saved_model)
-```
-usage:
-```
 torch_script_model_inference = torch_script_model(tensor)
 ```
 
 **ONNX**
-saved model loading:
+saved model loading and usage:
 ```
 import onnx
 import onnxruntime as rt
@@ -76,20 +73,14 @@ def to_numpy(tensor):
 onnx_model = rt.InferenceSession(path_to_onnx_saved_model)
 input_name = onnx_model.get_inputs()[0].name
 label_name = onnx_model.get_outputs()[0].name
-```
-usage:
-```
 onnx_model_inference = onnx_model.run([label_name], {input_name: to_numpy(tensor).astype(np.float32)})[0]
 ```
 
 **[CoreML](https://coremltools.readme.io/docs) (converted models work only with MacOS Version > 10)**
-saved model loading: 
+saved model loading and usage:
 ```
 import coremltools as ct
 core_ml_model = ct.models.MLModel(path_to_core_ml_saved_model)
-```
-usage:
-```
 converted_tensor = {"image": to_numpy(tensor.squeeze(0).permute(1,2,0)).astype(np.float32)}
 core_ml_model_inference = core_ml_model.predict(converted_tensor)
 ```
