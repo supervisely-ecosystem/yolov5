@@ -55,13 +55,9 @@ tensor = torch.randn(N,C,H,W)
 ```
 ## TorchScript
 saved model loading:
-
 `torch_script_model = torch.jit.load(path_to_torch_script_saved_model)`
-
 and usage:
-
-`torch_script_model_inference = torch_script_model(tensor)`
-
+```torch_script_model_inference = torch_script_model(tensor)```
 ## ONNX 
 saved model loading:
 ```
@@ -76,7 +72,7 @@ input_name = onnx_model.get_inputs()[0].name
 label_name = onnx_model.get_outputs()[0].name
 ```
 and usage:
-`onnx_model_inference = onnx_model.run([label_name], {input_name: to_numpy(tensor).astype(np.float32)})[0]`
+```onnx_model_inference = onnx_model.run([label_name], {input_name: to_numpy(tensor).astype(np.float32)})[0]```
 
 ## CoreML (converted models work only with MacOS Version > 10)
 [CoreML](https://coremltools.readme.io/docs) saved model loading:
