@@ -60,6 +60,7 @@ import coremltools as ct
 tensor = torch.randn(N,C,H,W)
 ```
 **TorchScript**
+
 saved model loading and usage:
 ```
 torch_script_model = torch.jit.load(path_to_torch_script_saved_model)
@@ -67,6 +68,7 @@ torch_script_model_inference = torch_script_model(tensor)
 ```
 
 **ONNX**
+
 saved model loading and usage:
 ```
 def to_numpy(tensor):
@@ -79,6 +81,7 @@ onnx_model_inference = onnx_model.run([label_name], {input_name: to_numpy(tensor
 ```
 
 **CoreML (converted models work only with MacOS Version > 10)**
+
 saved model loading and usage:
 ```
 core_ml_model = ct.models.MLModel(path_to_core_ml_saved_model)
