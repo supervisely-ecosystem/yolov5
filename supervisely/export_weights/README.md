@@ -74,7 +74,7 @@ Pass torch_script_model_inference result through [non_max_suppression](https://g
 ```
 output = non_max_suppression(torch_script_model_inference, conf_thres=0.25, iou_thres=0.45, agnostic=False)
 ```
-`output` each row of tensor will have 6 positional values, representing: top, left, bot, right, confidence, label mark
+`output` each row of tensor will have 6 positional values, representing: `top`, `left`, `bot`, `right`, `confidence`, `label mark`
  
 **ONNX**
 ```    
