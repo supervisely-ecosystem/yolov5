@@ -68,7 +68,10 @@ tensor = torch.randn(N,C,H,W)
 **TorchScript**
 ```
 torch_script_model = torch.jit.load(path_to_torch_script_saved_model)
-torch_script_model_inference = torch_script_model(tensor)
+torch_script_model_inference = torch_script_model(tensor)[0]
+
+
+output = [non_max_suppression](https://github.com/supervisely-ecosystem/yolov5/blob/0138090cd8d6f15e088246f16ca3240854bbba12/utils/general.py#L455)(torch_script_model_inference, conf_thres=0.25, iou_thres=0.45, agnostic=False)
 ```
 
 **ONNX**
