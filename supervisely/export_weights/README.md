@@ -6,6 +6,7 @@
 <p align="center">
   <a href="#Overview">Overview</a>
   <a href="#How-To-Use">How To Use</a>
+  <a href="#Infer-models">Infer models</a>
 </p>
 
 [![](https://img.shields.io/badge/supervisely-ecosystem-brightgreen)](https://ecosystem.supervise.ly/apps/supervisely-ecosystem/yolov5/supervisely/export_weights)
@@ -19,7 +20,7 @@
 
 # Overview
 
-App exports pretrained YOLO v5 model weights to Torchscript(.torchscript.pt), ONNX(.onnx), CoreML(.mlmodel) formats. 
+App exports pretrained YOLO v5 model weights to [Torchscript](https://pytorch.org/docs/stable/jit.html?highlight=model%20features)(.torchscript.pt), [ONNX](https://onnx.ai/index.html)(.onnx), [CoreML](https://coremltools.readme.io/docs)(.mlmodel) formats. 
 
 # How To Run
 **Step 1**: Add app to your team from [Ecosystem](https://ecosystem.supervise.ly/apps/import-mot-format) if it is not there.
@@ -36,9 +37,56 @@ App exports pretrained YOLO v5 model weights to Torchscript(.torchscript.pt), ON
 
 <img src="https://i.imgur.com/zjXgxhg.png"/>
 
-5. Result files will be placed to source weight file folder:
+**Step 5**: Converted model files will be placed to source weight file folder:
  - `{source weights filename}.mlmodel`
  - `{source weights filename}.onnx`
  - `{source weights filename}.torchscript.pt`
 
 <img src="https://i.imgur.com/415Ijbk.png"/>
+
+# Infer models
+**saved model loading and usage**
+```
+import numpy as np
+
+import torch
+import onnx
+import onnxruntime as rt
+import coremltools as ct
+
+
+def to_numpy(tensor):
+    return tensor.detach().cpu().numpy() if tensor.requires_grad else tensor.cpu().numpy()
+
+
+N = 1 # batch size
+C = 3 # number of channels
+H = 640 # image height
+W = 640 # image width
+tensor = torch.randn(N,C,H,W)
+```
+**TorchScript**
+```
+torch_script_model = torch.jit.load(path_to_torch_script_saved_model)
+torch_script_model_inference = torch_script_model(tensor)[0]
+```
+Pass torch_script_model_inference result through [non_max_suppression](https://github.com/supervisely-ecosystem/yolov5/blob/0138090cd8d6f15e088246f16ca3240854bbba12/utils/general.py#L455): ([explanation](https://towardsdatascience.com/non-maximum-suppression-nms-93ce178e177c)):
+```
+output = non_max_suppression(torch_script_model_inference, conf_thres=0.25, iou_thres=0.45, agnostic=False)
+```
+Each row of `output` tensor will have 6 positional values, representing: `top`, `left`, `bot`, `right`, `confidence`, `label mark`
+ 
+**ONNX**
+```    
+onnx_model = rt.InferenceSession(path_to_onnx_saved_model)
+input_name = onnx_model.get_inputs()[0].name
+label_name = onnx_model.get_outputs()[0].name
+onnx_model_inference = onnx_model.run([label_name], {input_name: to_numpy(tensor).astype(np.float32)})[0]
+```
+
+**CoreML (converted models work only with MacOS Version > 10)**
+```
+core_ml_model = ct.models.MLModel(path_to_core_ml_saved_model)
+converted_tensor = {"image": to_numpy(tensor.squeeze(0).permute(1,2,0)).astype(np.float32)}
+core_ml_model_inference = core_ml_model.predict(converted_tensor)
+```
