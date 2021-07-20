@@ -94,9 +94,7 @@ Each row of `output` tensor will have 6 positional values, representing: `top`, 
 To get fast visualization, use following code:
 ```
 # img0: torch.Tensor([1, 3, 640, 640]) - image(tensor) for inference
-```
-More info about `construct_model_meta` [here](https://github.com/supervisely-ecosystem/yolov5/blob/0138090cd8d6f15e088246f16ca3240854bbba12/supervisely/serve/src/nn_utils.py#L16)
-```
+
 # metadata for YOLOv5
 meta = construct_model_meta(model)
 
@@ -123,3 +121,5 @@ vis = np.copy(img0)
 ann.draw_contour(vis, thickness=2)
 sly.image.write("vis_detection.jpg", vis)
 ```
+
+More info about `construct_model_meta` [here](https://github.com/supervisely-ecosystem/yolov5/blob/0138090cd8d6f15e088246f16ca3240854bbba12/supervisely/serve/src/nn_utils.py#L16)
