@@ -29,7 +29,7 @@ App exports pretrained YOLO v5 model weights to [Torchscript](https://pytorch.or
 
 <img src="https://i.imgur.com/uzMlQ2e.png" width="800px"/>
 
-**Step 3**: Set image size in modal window. Also in advanced section you can change what agent should be used for deploy.
+**Step 3**: Set image size in modal window. Also in advanced section you can change which agent should be used for deploy.
 
 <img src="https://i.imgur.com/7q7wLKW.png" width="600px"/>
 
