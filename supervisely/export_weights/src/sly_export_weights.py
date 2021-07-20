@@ -5,6 +5,11 @@ import pathlib
 import torch
 import torch.nn as nn
 
+import sys
+root_source_path = str(pathlib.Path(sys.argv[0]).parents[3])
+sly.logger.info(f"Root source directory: {root_source_path}")
+sys.path.append(root_source_path)
+
 import models
 from utils.general import colorstr, check_img_size, check_requirements, file_size, set_logging
 from utils.torch_utils import select_device
