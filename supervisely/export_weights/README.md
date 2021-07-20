@@ -63,7 +63,8 @@ H = 640 # image height
 W = 640 # image width
 
 # generate random tensor for inference
-# Tensor valueas have to be distributed in range [0.0, 1.0] (if tensor values distributed in range [0, 255], divide tensor to 255.0) and tensor spartial values must match with model input image's spartial values:
+# Tensor valueas have to be distributed in range [0.0, 1.0] (if tensor values distributed in range [0, 255], 
+divide tensor to 255.0) and tensor spartial values must match with model input image's spartial values:
 
 tensor = torch.randn(N,C,H,W)
 ```
