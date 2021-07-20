@@ -102,7 +102,7 @@ meta = construct_model_meta(model)
 names = model.module.names if hasattr(model, 'module') else model.names
 
 labels = []
-for i, det in enumerate(output):
+for i, det in enumerate(output): # replace output with "torchScript_output" or "onnx_output"
     if det is not None and len(det):
         det[:, :4] = scale_coords(img.shape[2:], det[:, :4], img0.shape).round()
 
