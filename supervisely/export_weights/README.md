@@ -82,7 +82,9 @@ label_name = onnx_model.get_outputs()[0].name
 onnx_model_inference = onnx_model.run([label_name], {input_name: to_numpy(tensor).astype(np.float32)})[0]
 ```
 Pass inference result through [non_max_suppression](https://github.com/supervisely-ecosystem/yolov5/blob/0138090cd8d6f15e088246f16ca3240854bbba12/utils/general.py#L455): ([explanation](https://towardsdatascience.com/non-maximum-suppression-nms-93ce178e177c)) with default settings for YOLOv5: 
-`conf_thres=0.25`, `iou_thres=0.45`, `agnostic=False`:
+ - `conf_thres=0.25`
+ - `iou_thres=0.45`
+ - `agnostic=False`
 ```
 torchScript_output = non_max_suppression(torch_script_model_inference, conf_thres=0.25, iou_thres=0.45, agnostic=False)
 onnx_output = non_max_suppression(onnx_model_inference, conf_thres=0.25, iou_thres=0.45, agnostic=False)
