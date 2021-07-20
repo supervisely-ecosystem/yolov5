@@ -106,13 +106,13 @@ def export_weights(api: sly.Api, task_id, context, state, app_logger):
                 m.act = SiLU()
     model.model[-1].export = not grid
     for _ in range(2):
-        y = model(img)  # dry runs
+        y = model(img)
 
     # @TODO: fix export_to_onnx for cuda:0
     # ========================================================================
-    export_to_torch_script(weights_path, img, model)  #
-    export_to_onnx(weights_path, img, model, dynamic=False, simplify=False)  #
-    export_to_core_ml(weights_path, img)  #
+    export_to_torch_script(weights_path, img, model)
+    export_to_onnx(weights_path, img, model, dynamic=False, simplify=False)
+    # export_to_core_ml(weights_path, img)
     # ========================================================================
 
     process_folder = str(pathlib.Path(weights_path).parents[0])
