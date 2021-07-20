@@ -29,15 +29,11 @@ App exports pretrained YOLO v5 model weights to [Torchscript](https://pytorch.or
 
 <img src="https://i.imgur.com/uzMlQ2e.png" width="800px"/>
 
-**Step 3**: Set image size in modal window. Also in advanced section you can change which agent should be used for deploy.
-
-<img src="https://i.imgur.com/7q7wLKW.png" width="600px"/>
-
-**Step 4**: Press `Run` button. Now application log window will be opened. You can safely close it.
+**Step 3**: Press `Run` button. Now application log window will be opened. You can safely close it.
 
 <img src="https://i.imgur.com/zjXgxhg.png"/>
 
-**Step 5**: Converted model files will be placed to source weight file folder:
+**Step 4**: Converted model files will be placed to source weight file folder:
  - `{source weights filename}.onnx`
  - `{source weights filename}.torchscript.pt`
 
