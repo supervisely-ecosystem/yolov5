@@ -12,7 +12,7 @@
   "main_script": "supervisely/export_weights/src/sly_export_weights.py",
   "modal_template": "supervisely/export_weights/src/modal.html",
   "modal_template_state": {
-    "device": "0",
+    "device": "cpu",
     "imageSize": "640"
   },
   "task_location": "workspace_tasks",
