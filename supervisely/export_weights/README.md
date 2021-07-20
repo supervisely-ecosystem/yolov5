@@ -60,18 +60,18 @@ W = 640 # image width
 
 # generate random tensor for inference
 # Tensor valueas have to be distributed in range [0.0, 1.0] (if tensor values distributed in range [0, 255], 
-divide tensor to 255.0) and tensor spartial values must match with model input image's spartial values:
+# divide tensor to 255.0) and tensor spartial values must match with model input image's spartial values:
 
 tensor = torch.randn(N,C,H,W)
 ```
 **TorchScript**
-```
+```python
 torch_script_model = torch.jit.load(path_to_torch_script_saved_model)
 torch_script_model_inference = torch_script_model(tensor)[0]
 ```
  
 **ONNX**
-```    
+```python    
 onnx_model = rt.InferenceSession(path_to_onnx_saved_model)
 input_name = onnx_model.get_inputs()[0].name
 label_name = onnx_model.get_outputs()[0].name
@@ -81,14 +81,14 @@ Pass inference result through [non_max_suppression](https://github.com/supervise
  - `conf_thres=0.25`
  - `iou_thres=0.45`
  - `agnostic=False`
-```
+```python
 torchScript_output = non_max_suppression(torch_script_model_inference, conf_thres=0.25, iou_thres=0.45, agnostic=False)
 onnx_output = non_max_suppression(onnx_model_inference, conf_thres=0.25, iou_thres=0.45, agnostic=False)
 ```
 Each row of `output` tensor will have 6 positional values, representing: `top`, `left`, `bot`, `right`, `confidence`, `label_mark`
 
 To get fast visualization, use following code:
-```
+```python
 # img0: torch.Tensor([1, 3, 640, 640]) - image(tensor) for inference
 
 # metadata for YOLOv5
