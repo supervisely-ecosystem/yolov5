@@ -7,21 +7,19 @@
     "detection",
     "export"
   ],
-  "description": "Converting to TorchScript, ONNX, CoreML formats. Result files will be placed to source weight file folder",
+  "description": "Converting to TorchScript, ONNX formats. Result files will be placed to source weight file folder",
   "docker_image": "supervisely/base-pytorch:6.0.22",
   "main_script": "supervisely/export_weights/src/sly_export_weights.py",
-  "modal_template": "supervisely/export_weights/src/modal.html",
   "modal_template_state": {
-    "device": "cpu",
-    "imageSize": "640"
+    "device": "cpu"
   },
   "task_location": "workspace_tasks",
   "icon": "https://i.imgur.com/2U6HufM.png",
   "icon_cover": true,
   "isolate": true,
-  "need_gpu": true,
+  "need_gpu": false,
   "headless": true,
-  "instance_version": "6.4.16",
+  "instance_version": "6.4.20",
   "context_menu": {
     "target": ["files_file"]
   }
