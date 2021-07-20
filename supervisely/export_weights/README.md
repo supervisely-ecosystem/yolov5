@@ -37,7 +37,7 @@ App exports pretrained YOLO v5 model weights to [Torchscript](https://pytorch.or
  - `{source weights filename}.onnx`
  - `{source weights filename}.torchscript.pt`
 
-<img src="https://i.imgur.com/415Ijbk.png"/>
+<img src="https://i.imgur.com/Xk2Gzr0.png"/>
 
 # Infer models
 **saved model loading and usage**
