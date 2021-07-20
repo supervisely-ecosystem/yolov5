@@ -24,8 +24,7 @@ WORKSPACE_ID = int(os.environ['context.workspaceId'])
 TASK_ID = int(os.environ['TASK_ID'])
 customWeightsPath = os.environ['modal.state.slyFile']
 device = select_device(device=os.environ['modal.state.device'])
-image_size = int(os.environ['modal.state.imageSize'])
-
+image_size = 640
 ts = None
 batch_size = 1
 grid = True
@@ -90,12 +89,19 @@ def download_weights(path2weights):
 @my_app.callback("export_weights")
 @sly.timeit
 def export_weights(api: sly.Api, task_id, context, state, app_logger):
-    img_size = [image_size, image_size]
     weights_path = download_weights(customWeightsPath)
     model = attempt_load(weights=weights_path, map_location=device)
 
+    if hasattr(model, 'module') and hasattr(model.module, 'img_size'):
+        imgsz = model.module.img_size[0]
+    elif hasattr(model, 'img_size'):
+        imgsz = model.img_size[0]
+    else:
+        sly.logger.warning(f"Image size is not found in model checkpoint. Use default: {image_size}")
+        imgsz = image_size
+
     gs = int(max(model.stride))
-    img_size = [check_img_size(x, gs) for x in img_size]
+    img_size = [check_img_size(x, gs) for x in [imgsz, imgsz]]
     img = torch.zeros(batch_size, 3, *img_size).to(device)
     for k, m in model.named_modules():
         m._non_persistent_buffers_set = set()
