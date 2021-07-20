@@ -23,7 +23,7 @@ TEAM_ID = int(os.environ['context.teamId'])
 WORKSPACE_ID = int(os.environ['context.workspaceId'])
 TASK_ID = int(os.environ['TASK_ID'])
 customWeightsPath = os.environ['modal.state.slyFile']
-device = select_device(device=os.environ['modal.state.device'])
+device = select_device(device='cpu')
 image_size = 640
 ts = None
 batch_size = 1
