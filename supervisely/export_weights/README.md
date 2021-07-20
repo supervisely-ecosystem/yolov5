@@ -85,7 +85,7 @@ Pass inference result through [non_max_suppression](https://github.com/supervise
 torchScript_output = non_max_suppression(torch_script_model_inference, conf_thres=0.25, iou_thres=0.45, agnostic=False)
 onnx_output = non_max_suppression(onnx_model_inference, conf_thres=0.25, iou_thres=0.45, agnostic=False)
 ```
-Each row of `output` tensor will have 6 positional values, representing: `top`, `left`, `bot`, `right`, `confidence`, `label_mark`
+Each row of `output` tensor will have 6 positional values, representing `top`, `left`, `bot`, `right`, `confidence`, `label_mark` of bounding box with detection
 
 To get fast visualization, use following code:
 ```python
