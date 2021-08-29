@@ -1,3 +1,5 @@
+import json
+
 import torch
 import numpy as np
 import supervisely_lib as sly
@@ -11,6 +13,9 @@ from models.experimental import attempt_load
 from utils.general import check_img_size, non_max_suppression, scale_coords
 from utils.datasets import letterbox
 
+import serve_globals as g
+
+import cv2
 
 CONFIDENCE = "confidence"
 IMG_SIZE = 640
@@ -112,6 +117,63 @@ def inference(model, half, device, imgsz, stride, image: np.ndarray, meta: sly.P
         sly.image.write("vis.jpg", vis)
 
     return ann.to_json()
+
+
+def get_frame_np(api, video_id, frame_index):
+    img_rgb = api.video.frame.download_np(video_id, frame_index)
+    img_bgr = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR)
+    return img_bgr
+
+
+def dump_annotation(ann_path, ann_json):
+    with open(ann_path, 'w') as file:
+        json.dump(ann_json, file, indent=2)
+
+
+def inference_images_dir(images_path, ann_path, context, state, app_logger):
+    sly.fs.clean_dir(ann_path)
+
+    image_names = os.listdir(images_path)
+
+    for image_name in image_names:
+        image_path = os.path.join(images_path, image_name)
+        ann_json = inference_image_path(image_path, context, state, app_logger)
+        dump_annotation(os.path.join(ann_path, f'{image_name}.json'), ann_json)
+
+
+def inference_image_path(image_path, context, state, app_logger):
+    app_logger.debug("Input path", extra={"path": image_path})
+
+    rect = None
+    if "rectangle" in state:
+        top, left, bottom, right = state["rectangle"]
+        rect = sly.Rectangle(top, left, bottom, right)
+
+    settings = state.get("settings", {})
+    for key, value in g.default_settings.items():
+        if key not in settings:
+            app_logger.warn("Field {!r} not found in inference settings. Use default value {!r}".format(key, value))
+    debug_visualization = settings.get("debug_visualization", g.default_settings["debug_visualization"])
+    conf_thres = settings.get("conf_thres", g.default_settings["conf_thres"])
+    iou_thres = settings.get("iou_thres", g.default_settings["iou_thres"])
+    augment = settings.get("augment", g.default_settings["augment"])
+
+    image = sly.image.read(image_path)  # RGB image
+    if rect is not None:
+        canvas_rect = sly.Rectangle.from_size(image.shape[:2])
+        results = rect.crop(canvas_rect)
+        if len(results) != 1:
+            return {
+                "message": "roi rectangle out of image bounds",
+                "roi": state["rectangle"],
+                "img_size": {"height": image.shape[0], "width": image.shape[1]}
+            }
+        rect = results[0]
+        image = sly.image.crop(image, rect)
+    ann_json = inference(g.model, g.half, g.device, g.imgsz, g.stride, image, g.meta,
+                         conf_thres=conf_thres, iou_thres=iou_thres, augment=augment,
+                         debug_visualization=debug_visualization)
+    return ann_json
 
 
 
