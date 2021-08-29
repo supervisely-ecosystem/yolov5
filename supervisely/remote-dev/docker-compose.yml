@@ -1,7 +1,7 @@
 
 version: "2.2"
 services:
-  remote_dev_service:
+  remote_dev_yolo5:
     shm_size: '8gb'
     runtime: nvidia
     build:
