@@ -130,17 +130,18 @@ def preprocess():
     sly.logger.info("Model has been successfully deployed")
 
 
-@g.my_app.callback("track")
+@g.my_app.callback("process_tracker")
 @sly.timeit
-def track_in_video_annotation_tool(api: sly.Api, task_id, context, state, app_logger):
+def process_tracker(api: sly.Api, task_id, context, state, app_logger):
     tracker_container = TrainedTrackerContainer(context)
 
     tracker_container.download_frames()
 
-    nn_utils.inference_images_dir(tracker_container.frames_path,
+    annotations = nn_utils.inference_images_dir(tracker_container.frames_path,
                                   tracker_container.annotations_path,
                                   context, state, app_logger)
 
+    g.my_app.send_response(context["request_id"], data=annotations)
 
     # g.api.video.annotation.append(tracker_container.video_id, annotations)
     # tracker_container.update_progress(len(tracker_container.frames_indexes) - 1)

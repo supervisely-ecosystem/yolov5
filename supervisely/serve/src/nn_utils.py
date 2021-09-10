@@ -131,14 +131,19 @@ def dump_annotation(ann_path, ann_json):
 
 
 def inference_images_dir(images_path, ann_path, context, state, app_logger):
-    sly.fs.clean_dir(ann_path)
+    annotations = {}
 
+    # sly.fs.clean_dir(ann_path)
     image_names = os.listdir(images_path)
 
     for image_name in image_names:
         image_path = os.path.join(images_path, image_name)
         ann_json = inference_image_path(image_path, context, state, app_logger)
-        dump_annotation(os.path.join(ann_path, f'{image_name}.json'), ann_json)
+
+        annotations[image_name] = ann_json
+        # dump_annotation(os.path.join(ann_path, f'{image_name}.json'), ann_json)
+
+    return annotations
 
 
 def inference_image_path(image_path, context, state, app_logger):
