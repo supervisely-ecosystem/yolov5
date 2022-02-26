@@ -71,10 +71,14 @@ def get_custom_inference_settings(api: sly.Api, task_id, context, state, app_log
     my_app.send_response(request_id, data={"settings": default_settings_str})
 
 
-def crop_class_object(inference_image_path):
-    def wrapper(image, context, state, app_logger):
-        if "rectangle_crop" not in state.keys():
-            ann_json = inference_image_path(image, context, state, app_logger)
+def crop_input_before_inference(fn):
+    def wrapper(image_path, context, state, app_logger):
+        assert isinstance(image_path, str)
+        image = sly.image.read(image_path)
+        image_name, image_ext = os.path.splitext(os.path.basename(image_path))
+
+        if "rectangle_crop" not in state.keys() or state["rectangle_crop"] is None:
+            ann_json = fn(image_path, context, state, app_logger)
             return ann_json
 
         # crop image
@@ -82,25 +86,28 @@ def crop_class_object(inference_image_path):
         sly_rect = sly.Rectangle.from_json(selected_figure_bbox)
 
         image_crop = sly.image.crop(image, sly_rect)
+        image_crop_path = os.path.join(my_app.data_dir, sly.rand_str(10) + "_" + image_name + "crop" + "_" + image_ext)
+        sly.image.write(image_crop_path, image_crop)
 
         # get inference from crop
-        ann_json = inference_image_path(image_crop, context, state, app_logger)
+        ann_json = fn(image_crop_path, context, state, app_logger)
 
         # scale ann to original image
         original_height, original_width = image.shape[:2]
         ann_json["size"]["height"], ann_json["size"]["width"] = original_height, original_width
 
-        ext_points = ann_json["objects"][0]["points"]["exterior"]
-        ext_points[0][0] += sly_rect.left
-        ext_points[0][1] += sly_rect.top
-        ext_points[1][0] += sly_rect.left
-        ext_points[1][1] += sly_rect.top
+        for object in ann_json["objects"]:
+            object_ext_points = object["points"]["exterior"]
+            object_ext_points[0][0] += sly_rect.left
+            object_ext_points[0][1] += sly_rect.top
+            object_ext_points[1][0] += sly_rect.left
+            object_ext_points[1][1] += sly_rect.top
         return ann_json
     return wrapper
 
 
-@crop_class_object
-def inference_image_path(image, context, state, app_logger):
+@crop_input_before_inference
+def inference_image_path(image_path, context, state, app_logger):
     settings = state.get("settings", {})
     for key, value in default_settings.items():
         if key not in settings:
@@ -110,6 +117,7 @@ def inference_image_path(image, context, state, app_logger):
     iou_thres = settings.get("iou_thres", default_settings["iou_thres"])
     augment = settings.get("augment", default_settings["augment"])
 
+    image = sly.image.read(image_path)
     ann_json = inference(model, half, device, imgsz, stride, image, meta,
                          conf_thres=conf_thres, iou_thres=iou_thres, augment=augment,
                          debug_visualization=debug_visualization)
@@ -128,8 +136,7 @@ def inference_image_url(api: sly.Api, task_id, context, state, app_logger):
     local_image_path = os.path.join(my_app.data_dir, sly.rand_str(15) + ext)
 
     sly.fs.download(image_url, local_image_path)
-    image = sly.image.read(local_image_path)
-    ann_json = inference_image_path(image, context, state, app_logger)
+    ann_json = inference_image_path(local_image_path, context, state, app_logger)
     sly.fs.silent_remove(local_image_path)
 
     request_id = context["request_id"]
@@ -144,8 +151,7 @@ def inference_image_id(api: sly.Api, task_id, context, state, app_logger):
     image_info = api.image.get_info_by_id(image_id)
     image_path = os.path.join(my_app.data_dir, sly.rand_str(10) + image_info.name)
     api.image.download_path(image_id, image_path)
-    image = sly.image.read(image_path)
-    ann_json = inference_image_path(image, context, state, app_logger)
+    ann_json = inference_image_path(image_path, context, state, app_logger)
     sly.fs.silent_remove(image_path)
     request_id = context["request_id"]
     my_app.send_response(request_id, data=ann_json)
@@ -164,8 +170,7 @@ def inference_batch_ids(api: sly.Api, task_id, context, state, app_logger):
 
     results = []
     for image_path in paths:
-        image = sly.image.read(image_path)
-        ann_json = inference_image_path(image, context, state, app_logger)
+        ann_json = inference_image_path(image_path, context, state, app_logger)
         results.append(ann_json)
         sly.fs.silent_remove(image_path)
 
