@@ -71,42 +71,7 @@ def get_custom_inference_settings(api: sly.Api, task_id, context, state, app_log
     my_app.send_response(request_id, data={"settings": default_settings_str})
 
 
-def crop_input_before_inference(fn):
-    def wrapper(image_path, context, state, app_logger):
-        assert isinstance(image_path, str)
-        image = sly.image.read(image_path)
-        image_name, image_ext = os.path.splitext(os.path.basename(image_path))
-
-        if "rectangle_crop" not in state.keys() or state["rectangle_crop"] is None:
-            ann_json = fn(image_path, context, state, app_logger)
-            return ann_json
-
-        # crop image
-        selected_figure_bbox = state["rectangle_crop"]
-        sly_rect = sly.Rectangle.from_json(selected_figure_bbox)
-
-        image_crop = sly.image.crop(image, sly_rect)
-        image_crop_path = os.path.join(my_app.data_dir, sly.rand_str(10) + "_" + image_name + "crop" + "_" + image_ext)
-        sly.image.write(image_crop_path, image_crop)
-
-        # get inference from crop
-        ann_json = fn(image_crop_path, context, state, app_logger)
-
-        # scale ann to original image
-        original_height, original_width = image.shape[:2]
-        ann_json["size"]["height"], ann_json["size"]["width"] = original_height, original_width
-
-        for object in ann_json["objects"]:
-            object_ext_points = object["points"]["exterior"]
-            object_ext_points[0][0] += sly_rect.left
-            object_ext_points[0][1] += sly_rect.top
-            object_ext_points[1][0] += sly_rect.left
-            object_ext_points[1][1] += sly_rect.top
-        return ann_json
-    return wrapper
-
-
-@crop_input_before_inference
+@sly.crop_input_before_inference
 def inference_image_path(image_path, context, state, app_logger):
     settings = state.get("settings", {})
     for key, value in default_settings.items():
