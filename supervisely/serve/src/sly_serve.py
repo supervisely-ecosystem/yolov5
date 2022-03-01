@@ -71,7 +71,7 @@ def get_custom_inference_settings(api: sly.Api, task_id, context, state, app_log
     my_app.send_response(request_id, data={"settings": default_settings_str})
 
 
-@sly.crop_input_before_inference_and_scale_back_to_original_size
+@sly.crop_input_before_inference_and_scale_ann
 def inference_image_path(image_path, project_meta, context, state, app_logger):
     settings = state.get("settings", {})
     for key, value in default_settings.items():
