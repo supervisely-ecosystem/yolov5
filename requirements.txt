@@ -3,7 +3,7 @@ supervisely==6.7.21
 supervisely[apps]==6.7.21
 # base ----------------------------------------
 PyYAML==5.4.1
-tensorboard==2.4.1
+tensorboard==2.8.0
 tqdm==4.56.0
 
 # plotting ------------------------------------
