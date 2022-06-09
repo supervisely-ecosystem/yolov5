@@ -3,7 +3,7 @@ supervisely[apps]==6.18.1
 
 # base ----------------------------------------
 PyYAML==5.4.1
-tensorboard==2.4.1
+tensorboard==2.9.1
 
 # plotting ------------------------------------
 seaborn==0.11.1
