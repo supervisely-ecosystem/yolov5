@@ -10,7 +10,7 @@ from models.experimental import attempt_load
 from PIL import Image
 from supervisely.io.fs import get_file_name_with_ext
 from torchvision import transforms
-from sly_export_weights import my_app, TEAM_ID
+from sly_globals import my_app, TEAM_ID
 
 
 def to_numpy(tensor):

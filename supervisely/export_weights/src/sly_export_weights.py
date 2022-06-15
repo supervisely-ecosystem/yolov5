@@ -7,36 +7,27 @@ import torch.nn as nn
 
 from pathlib import Path
 import yaml
+from sly_globals import my_app, TEAM_ID, WORKSPACE_ID, customWeightsPath, device, image_size, batch_size, grid, args, ts
 
 import sys
+
 root_source_path = str(pathlib.Path(sys.argv[0]).parents[3])
 sly.logger.info(f"Root source directory: {root_source_path}")
 sys.path.append(root_source_path)
 
+app_source_path = str(pathlib.Path(sys.argv[0]).parents[0])
+sly.logger.info(f"App root source directory: {app_source_path}")
+sys.path.append(app_source_path)
+
 import models
 from app_utils import download_weights
 from utils.general import check_img_size  # , colorstr, check_requirements, file_size, set_logging
-from utils.torch_utils import select_device
 from models.experimental import attempt_load
 from utils.activations import Hardswish, SiLU
 from models.common import Conv, DWConv
 
-my_app = sly.AppService()
-
-TEAM_ID = int(os.environ['context.teamId'])
-WORKSPACE_ID = int(os.environ['context.workspaceId'])
-TASK_ID = int(os.environ['TASK_ID'])
-customWeightsPath = os.environ['modal.state.slyFile']
-device = select_device(device='cpu')
-image_size = 640
-ts = None
-batch_size = 1
-grid = True
-args = dict(my_app=my_app, TEAM_ID=TEAM_ID)
-
 
 def export_to_torch_script(weights, img, model):
-    global ts
     try:
         f = weights.replace('.pt', '.torchscript.pt')  # filename
         ts = torch.jit.trace(model, img, strict=False)
