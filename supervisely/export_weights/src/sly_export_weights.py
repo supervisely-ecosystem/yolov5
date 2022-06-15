@@ -116,13 +116,16 @@ def export_weights(api: sly.Api, task_id, context, state, app_logger):
     process_folder = str(pathlib.Path(weights_path).parents[0])
     remote_path = customWeightsPath
     remote_path_template = str(pathlib.Path(remote_path).parents[0])
+    file_id = None
     for file in os.listdir(process_folder):
         file_path = os.path.join(process_folder, file)
         remote_file_path = os.path.join(remote_path_template, file)
         if '.onnx' in file_path or '.mlmodel' in file_path or '.torchscript' in file_path:
             file_info = api.file.upload(team_id=TEAM_ID, src=file_path, dst=remote_file_path)
-            api.task._set_custom_output(task_id, file_info.id, sly.fs.get_file_name_with_ext(remote_file_path),
-                                        description="Export yolov5 weights", icon="zmdi zmdi-folder")
+            if file_id is None:
+                file_id = file_info.id
+        api.task.set_output_directory(task_id, file_id, os.path.dirname(customWeightsPath),
+                                    description="Export yolov5 weights", icon="zmdi zmdi-folder")
     my_app.stop()
 
 
