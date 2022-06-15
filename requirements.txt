@@ -16,7 +16,7 @@ onnxruntime==1.8.0
 scikit-learn==1.1.1  # for coreml quantization
 numpy==1.19.0
 # extras --------------------------------------
-thop==0.0.31-2005241907  # FLOPS computation
+thop==0.1.0.post2206102148  # FLOPS computation
 pycocotools==2.0.2  # COCO mAP
 
 ffmpeg-python==0.2.0
