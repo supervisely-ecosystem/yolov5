@@ -1,5 +1,5 @@
-import supervisely_lib as sly
-# from supervisely_lib.io.fs import download, file_exists, get_file_name, get_file_name_with_ext
+import supervisely as sly
+# from supervisely.io.fs import download, file_exists, get_file_name, get_file_name_with_ext
 import os
 import pathlib
 import torch

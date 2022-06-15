@@ -8,7 +8,7 @@ import yaml
 # sys.path.append(Path(sys.argv[0]))
 from models.experimental import attempt_load
 from PIL import Image
-from supervisely_lib.io.fs import get_file_name_with_ext
+from supervisely.io.fs import get_file_name_with_ext
 from torchvision import transforms
 
 
