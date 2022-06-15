@@ -72,9 +72,9 @@ def export_to_core_ml(weights, img):
 @my_app.callback("export_weights")
 @sly.timeit
 def export_weights(api: sly.Api, task_id, context, state, app_logger):
-    weights_path = download_weights(customWeightsPath, **args)
+    weights_path = download_weights(customWeightsPath)
     cwp = os.path.join(Path(customWeightsPath).parents[1], 'opt.yaml')
-    configs_path = download_weights(cwp, **args)
+    configs_path = download_weights(cwp)
     model = attempt_load(weights=weights_path, map_location=device)
 
     with open(configs_path, 'r') as stream:
