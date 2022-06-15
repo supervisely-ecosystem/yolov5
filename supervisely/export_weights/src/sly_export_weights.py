@@ -124,9 +124,9 @@ def export_weights(api: sly.Api, task_id, context, state, app_logger):
             file_info = api.file.upload(team_id=TEAM_ID, src=file_path, dst=remote_file_path)
             if file_id is None:
                 file_id = file_info.id
-        if file_id is not None:
-            api.task.set_output_directory(task_id, file_id, os.path.dirname(customWeightsPath),
-                                          description="Export yolov5 weights", icon="zmdi zmdi-folder")
+    if file_id is not None:
+        api.task.set_output_directory(task_id, file_id, os.path.dirname(customWeightsPath),
+                                      description="Export yolov5 weights", icon="zmdi zmdi-folder")
     my_app.stop()
 
 
