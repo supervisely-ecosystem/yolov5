@@ -121,7 +121,6 @@ def export_weights(api: sly.Api, task_id, context, state, app_logger):
         remote_file_path = os.path.join(remote_path_template, file)
         if '.onnx' in file_path or '.mlmodel' in file_path or '.torchscript' in file_path:
             file_info = api.file.upload(team_id=TEAM_ID, src=file_path, dst=remote_file_path)
-
             api.task._set_custom_output(task_id, file_info.id, sly.fs.get_file_name_with_ext(remote_file_path),
                                         description="Export yolov5 weights", icon="zmdi zmdi-folder")
     my_app.stop()
