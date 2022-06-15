@@ -14,7 +14,7 @@ sly.logger.info(f"Root source directory: {root_source_path}")
 sys.path.append(root_source_path)
 
 import models
-from app_utils import download_file
+from app_utils import download_weights
 from utils.general import check_img_size  # , colorstr, check_requirements, file_size, set_logging
 from utils.torch_utils import select_device
 from models.experimental import attempt_load
