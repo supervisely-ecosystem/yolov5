@@ -6,7 +6,7 @@ opencv-python-headless==4.5.5.62
 opencv-python==4.5.5.62
 
 # base ----------------------------------------
-PyYAML==5.4.1
+PyYAML==6.0
 tensorboard==2.4.1
 
 # plotting ------------------------------------
