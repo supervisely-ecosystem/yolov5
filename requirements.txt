@@ -10,7 +10,7 @@ PyYAML==5.4.1
 tensorboard==2.4.1
 
 # plotting ------------------------------------
-seaborn==0.11.1
+seaborn==0.12.0
 
 # export --------------------------------------
 coremltools==4.1
