@@ -2,7 +2,7 @@
 supervisely==6.69.15
 
 opencv-python-headless==4.5.5.62
-opencv-python==4.5.5.62
+opencv-python==4.7.0.68
 
 # base ----------------------------------------
 PyYAML==5.4.1
