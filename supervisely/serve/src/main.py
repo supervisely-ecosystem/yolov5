@@ -9,15 +9,19 @@ import yaml
 from dotenv import load_dotenv
 import torch
 import numpy as np
-import supervisely as sly
 from utils.torch_utils import select_device
 from models.experimental import attempt_load
 from utils.general import check_img_size, non_max_suppression, scale_coords, xywh2xyxy
 from utils.datasets import letterbox
 from pathlib import Path
 
+
 root_source_path = str(Path(__file__).parents[3])
 app_source_path = str(Path(__file__).parents[1])
+
+sys.path.pop(root_source_path)
+import supervisely as sly
+sys.path.append(root_source_path)
 load_dotenv(os.path.join(app_source_path, "local.env"))
 load_dotenv(os.path.expanduser("~/supervisely.env"))
 
