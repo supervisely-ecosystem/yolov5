@@ -1,5 +1,6 @@
 # pip install -r requirements.txt
-supervisely==6.69.15
+#supervisely==6.69.15
+git+https://github.com/supervisely/supervisely.git@support-ui-inference
 
 opencv-python-headless==4.5.5.62
 opencv-python==4.5.5.62

@@ -10,7 +10,6 @@ from dotenv import load_dotenv
 import torch
 import numpy as np
 import supervisely as sly
-from supervisely.geometry.sliding_windows_fuzzy import SlidingWindowsFuzzy
 from utils.torch_utils import select_device
 from models.experimental import attempt_load
 from utils.general import check_img_size, non_max_suppression, scale_coords, xywh2xyxy
@@ -29,14 +28,16 @@ custom_weights = os.environ['modal.state.weightsPath']
 class YOLOv5Model(sly.nn.inference.ObjectDetection):
     def load_on_device(
         self,
+        model_dir: str,
         device: Literal["cpu", "cuda", "cuda:0", "cuda:1", "cuda:2", "cuda:3"] = "cpu",
     ):
         # download weights
         if model_weights_options == "pretrained":
-            self.local_weights_path = self.location
+            model_url = f"https://github.com/ultralytics/yolov5/releases/download/v5.0/{pretrained_weights}.pt"
+            self.local_weights_path = self.download(model_url)
         if model_weights_options == "custom":
-            self.local_weights_path = self.location[0]
-            configs_local_path = self.location[1]
+            self.local_weights_path = self.download(custom_weights)
+            configs_local_path = self.download(os.path.join(Path(custom_weights).parents[1], 'opt.yaml'))
 
         self.device = select_device(device)
         self.half = self.device.type != 'cpu'  # half precision only supported on CUDA
@@ -188,20 +189,22 @@ sly.logger.info("Script arguments", extra={
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print("Using device:", device)
 
-if model_weights_options == "pretrained":
-    location = f"https://github.com/ultralytics/yolov5/releases/download/v5.0/{pretrained_weights}.pt"
-elif model_weights_options == "custom":
-    location = [
-        custom_weights, # model weights
-        os.path.join(Path(custom_weights).parents[1], 'opt.yaml') # model config
-    ]
+# if model_weights_options == "pretrained":
+#     location = f"https://github.com/ultralytics/yolov5/releases/download/v5.0/{pretrained_weights}.pt"
+# elif model_weights_options == "custom":
+#     location = [
+#         custom_weights, # model weights
+#         os.path.join(Path(custom_weights).parents[1], 'opt.yaml') # model config
+#     ]
+
+model_dir = os.path.join(sly.env.get_data_dir(), "models")
 
 m = YOLOv5Model(
-    location=location, 
+    model_dir=model_dir, 
     custom_inference_settings=os.path.join(app_source_path, "custom_settings.yaml"),
     sliding_window_mode = "advanced"
 )
-m.load_on_device(device)
+m.load_on_device(model_dir, device)
 
 if sly.is_production():
     # this code block is running on Supervisely platform in production
