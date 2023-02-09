@@ -183,8 +183,8 @@ class YOLOv5Model(sly.nn.inference.ObjectDetection):
         return predictions
 
 sly.logger.info("Script arguments", extra={
-    "teamId": sly.env.team_id(),
-    "workspaceId": sly.env.workspace_id(),
+    "teamId": sly.io.env.team_id(),
+    "workspaceId": sly.io.env.workspace_id(),
     "modal.state.modelWeightsOptions": model_weights_options,
     "modal.state.modelSize": pretrained_weights,
     "modal.state.weightsPath": custom_weights
@@ -201,7 +201,7 @@ print("Using device:", device)
 #         os.path.join(Path(custom_weights).parents[1], 'opt.yaml') # model config
 #     ]
 
-model_dir = os.path.join(sly.env.get_data_dir(), "models")
+model_dir = os.path.join(sly.app.content.get_data_dir(), "models")
 
 m = YOLOv5Model(
     model_dir=model_dir, 
