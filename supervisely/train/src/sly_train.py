@@ -64,7 +64,7 @@ def train(api: sly.Api, task_id, context, state, app_logger):
         if imgs_after != imgs_before:
             val_count = state["randomSplit"]["count"]["val"]
             val_part = val_count / imgs_before
-            new_val = int(imgs_after * val_part)
+            new_val = round(imgs_after * val_part)
             if new_val < 1:
                 raise ValueError("Val split length == 0 after ignoring images. Please check your data.")
             new_train = imgs_after - new_val
