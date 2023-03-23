@@ -40,24 +40,45 @@ def train(api: sly.Api, task_id, context, state, app_logger):
         # download and preprocess Sypervisely project (using cache)
         download_progress = get_progress_cb("Download data (using cache)", g.project_info.items_count * 2)
         sly.download_project(api, project_id, project_dir, cache=my_app.cache, progress_cb=download_progress)
+        
+        # for test only --------------------------------------------------------------
+        # search for problem images and ignore them
+        images_info = []
+        for dataset_info in api.dataset.get_list(project_id):
+            images_info.extend(api.image.get_list(dataset_info.id))
+        for image_info in images_info:
+            ann_json = api.annotation.download(image_info.id).annotation
+            for object in ann_json["objects"]:
+                if "points" not in object or object["geometryType"] == "polygon":
+                    sly.logger.info(f"Ignoring image with id {image_info.id} since its annotation is not deserializable")
+                    dataset_info = api.dataset.get_info_by_id(image_info.dataset_id)
+                    dataset_dir = os.path.join(project_dir, dataset_info.name)
+                    dataset = sly.Dataset(dataset_dir, mode=sly.OpenMode.READ)
+                    dataset.delete_item(image_info.name)           
+        # when problem images are removed, we can transform project to detection task
+        sly.Project.to_detection_task(project_dir, inplace=True)
+        # ----------------------------------------------------------------------------
 
         # preprocessing: transform labels to bboxes, filter classes, ...
-        try:
-            sly.Project.to_detection_task(project_dir, inplace=True)
-        except ValueError:
-            # search for problem images and ignore them
-            images_info = []
-            for dataset_info in api.dataset.get_list(project_id):
-                images_info.extend(api.image.get_list(dataset_info.id))
-            for image_info in images_info:
-                ann_json = api.annotation.download(image_info.id).annotation
-                for object in ann_json["objects"]:
-                    if "points" not in object:
-                        sly.logger.info(f"Ignoring image with id {image_info.id} since its annotation is not deserializable")
-                        dataset_info = api.dataset.get_info_by_id(image_info.dataset_id)
-                        dataset_dir = os.path.join(project_dir, dataset_info.name)
-                        dataset = sly.Dataset(dataset_dir, mode=sly.OpenMode.READ)
-                        dataset.delete_item(image_info.name)
+        # try:
+        #     sly.Project.to_detection_task(project_dir, inplace=True)
+        # except ValueError:
+        #     # search for problem images and ignore them
+        #     images_info = []
+        #     for dataset_info in api.dataset.get_list(project_id):
+        #         images_info.extend(api.image.get_list(dataset_info.id))
+        #     for image_info in images_info:
+        #         ann_json = api.annotation.download(image_info.id).annotation
+        #         for object in ann_json["objects"]:
+        #             if "points" not in object:
+        #                 sly.logger.info(f"Ignoring image with id {image_info.id} since its annotation is not deserializable")
+        #                 dataset_info = api.dataset.get_info_by_id(image_info.dataset_id)
+        #                 dataset_dir = os.path.join(project_dir, dataset_info.name)
+        #                 dataset = sly.Dataset(dataset_dir, mode=sly.OpenMode.READ)
+        #                 dataset.delete_item(image_info.name)
+        #     # when problem images are removed, we can transform project to detection task
+        #     sly.Project.to_detection_task(project_dir, inplace=True)
+            
 
         train_classes = state["selectedClasses"]
         sly.Project.remove_classes_except(project_dir, classes_to_keep=train_classes, inplace=True)
