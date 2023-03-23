@@ -57,6 +57,19 @@ def train(api: sly.Api, task_id, context, state, app_logger):
                     dataset.delete_item(image_info.name)           
         # when problem images are removed, we can transform project to detection task
         sly.Project.to_detection_task(project_dir, inplace=True)
+        # update train and val sets
+        imgs_before = g.project_info.items_count
+        project = sly.Project(project_dir, sly.OpenMode.READ)
+        imgs_after = project.total_items
+        if imgs_after != imgs_before:
+            val_count = state["randomSplit"]["count"]["val"]
+            val_part = val_count / imgs_before
+            new_val = int(imgs_after * val_part)
+            if new_val < 1:
+                raise ValueError("Val split length == 0 after ignoring images. Please check your data.")
+            new_train = imgs_after - new_val
+            state["randomSplit"]["count"]["train"] = new_train
+            state["randomSplit"]["count"]["val"] = new_val
         # ----------------------------------------------------------------------------
 
         # preprocessing: transform labels to bboxes, filter classes, ...
