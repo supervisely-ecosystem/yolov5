@@ -81,6 +81,10 @@ def send_metrics(epoch, epochs, metrics, log_period=1):
         try:
             globals.api.app.set_fields(globals.task_id, fields)
         except Exception as e:
+            sly.logger.warn(
+            "Unable to send metrics to server",
+            extra={"details": repr(e)},
+        )
             # search for problem metric values
             for key, value in metrics.items():
                 if not math.isfinite(value): # if value is NaN, infinity or negative infinity
