@@ -1,5 +1,6 @@
 import supervisely as sly
 import sly_train_globals as globals
+import math
 
 
 def init_chart(title, names, xs, ys, smoothing=None):
@@ -58,6 +59,9 @@ def send_metrics(epoch, epochs, metrics, log_period=1):
     sly.logger.debug(f"Metrics: epoch {epoch + 1} / {epochs}", extra={"metrics": metrics})
 
     if epoch % log_period == 0 or epoch + 1 == epochs:
+        # for debug only
+        metrics["train/box_loss"] = math.nan
+        metrics["metrics/recall"] = math.inf
         fields = [
             {"field": "data.mGIoU.series[0].data", "payload": [[epoch, metrics["train/box_loss"]]], "append": True},
             {"field": "data.mGIoU.series[1].data", "payload": [[epoch, metrics["val/box_loss"]]], "append": True},
@@ -74,4 +78,30 @@ def send_metrics(epoch, epochs, metrics, log_period=1):
             {"field": "data.mMAP.series[0].data", "payload": [[epoch, metrics["metrics/mAP_0.5"]]], "append": True},
             {"field": "data.mMAP.series[1].data", "payload": [[epoch, metrics["metrics/mAP_0.5:0.95"]]], "append": True},
         ]
-        globals.api.app.set_fields(globals.task_id, fields)
+        try:
+            globals.api.app.set_fields(globals.task_id, fields)
+        except Exception as e:
+            # search for problem metric values
+            for key, value in metrics.items():
+                if not math.isfinite(value): # if value is NaN, infinity or negative infinity
+                    sly.logger.info(f"{key} value is NaN, infinity or negative infinity, setting this value to 0")
+                    metrics[key] = 0
+            # update fields
+            fields = [
+                {"field": "data.mGIoU.series[0].data", "payload": [[epoch, metrics["train/box_loss"]]], "append": True},
+                {"field": "data.mGIoU.series[1].data", "payload": [[epoch, metrics["val/box_loss"]]], "append": True},
+
+                {"field": "data.mObjectness.series[0].data", "payload": [[epoch, metrics["train/obj_loss"]]], "append": True},
+                {"field": "data.mObjectness.series[1].data", "payload": [[epoch, metrics["val/obj_loss"]]], "append": True},
+
+                {"field": "data.mClassification.series[0].data", "payload": [[epoch, metrics["train/cls_loss"]]], "append": True},
+                {"field": "data.mClassification.series[1].data", "payload": [[epoch, metrics["val/cls_loss"]]], "append": True},
+
+                {"field": "data.mPR.series[0].data", "payload": [[epoch, metrics["metrics/precision"]]], "append": True},
+                {"field": "data.mPR.series[1].data", "payload": [[epoch, metrics["metrics/recall"]]], "append": True},
+
+                {"field": "data.mMAP.series[0].data", "payload": [[epoch, metrics["metrics/mAP_0.5"]]], "append": True},
+                {"field": "data.mMAP.series[1].data", "payload": [[epoch, metrics["metrics/mAP_0.5:0.95"]]], "append": True},
+            ]
+            # send updated fields without problem values to server
+            globals.api.app.set_fields(globals.task_id, fields)
