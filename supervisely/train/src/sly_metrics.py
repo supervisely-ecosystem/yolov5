@@ -59,9 +59,6 @@ def send_metrics(epoch, epochs, metrics, log_period=1):
     sly.logger.debug(f"Metrics: epoch {epoch + 1} / {epochs}", extra={"metrics": metrics})
 
     if epoch % log_period == 0 or epoch + 1 == epochs:
-        # for debug only
-        metrics["train/box_loss"] = math.nan
-        metrics["metrics/recall"] = math.inf
         fields = [
             {"field": "data.mGIoU.series[0].data", "payload": [[epoch, metrics["train/box_loss"]]], "append": True},
             {"field": "data.mGIoU.series[1].data", "payload": [[epoch, metrics["val/box_loss"]]], "append": True},
