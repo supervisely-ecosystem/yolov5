@@ -78,34 +78,4 @@ def send_metrics(epoch, epochs, metrics, log_period=1):
             {"field": "data.mMAP.series[0].data", "payload": [[epoch, metrics["metrics/mAP_0.5"]]], "append": True},
             {"field": "data.mMAP.series[1].data", "payload": [[epoch, metrics["metrics/mAP_0.5:0.95"]]], "append": True},
         ]
-        try:
-            globals.api.app.set_fields(globals.task_id, fields)
-        except Exception as e:
-            sly.logger.warn(
-            "Unable to send metrics to server",
-            extra={"details": repr(e)},
-        )
-            # search for problem metric values
-            for key, value in metrics.items():
-                if not math.isfinite(value): # if value is NaN, infinity or negative infinity
-                    sly.logger.info(f"{key} value is NaN, infinity or negative infinity, setting this value to 0")
-                    metrics[key] = 0
-            # update fields
-            fields = [
-                {"field": "data.mGIoU.series[0].data", "payload": [[epoch, metrics["train/box_loss"]]], "append": True},
-                {"field": "data.mGIoU.series[1].data", "payload": [[epoch, metrics["val/box_loss"]]], "append": True},
-
-                {"field": "data.mObjectness.series[0].data", "payload": [[epoch, metrics["train/obj_loss"]]], "append": True},
-                {"field": "data.mObjectness.series[1].data", "payload": [[epoch, metrics["val/obj_loss"]]], "append": True},
-
-                {"field": "data.mClassification.series[0].data", "payload": [[epoch, metrics["train/cls_loss"]]], "append": True},
-                {"field": "data.mClassification.series[1].data", "payload": [[epoch, metrics["val/cls_loss"]]], "append": True},
-
-                {"field": "data.mPR.series[0].data", "payload": [[epoch, metrics["metrics/precision"]]], "append": True},
-                {"field": "data.mPR.series[1].data", "payload": [[epoch, metrics["metrics/recall"]]], "append": True},
-
-                {"field": "data.mMAP.series[0].data", "payload": [[epoch, metrics["metrics/mAP_0.5"]]], "append": True},
-                {"field": "data.mMAP.series[1].data", "payload": [[epoch, metrics["metrics/mAP_0.5:0.95"]]], "append": True},
-            ]
-            # send updated fields without problem values to server
-            globals.api.app.set_fields(globals.task_id, fields)
+        globals.api.app.set_fields(globals.task_id, fields)

@@ -423,7 +423,20 @@ def train(hyp, opt, device, tb_writer=None):
                     metrics[tag] = x
 
             if opt.sly:
-                send_metrics(epoch, epochs, metrics, opt.metrics_period)
+                try:
+                    send_metrics(epoch, epochs, metrics, opt.metrics_period)
+                except Exception as e:
+                    sly.logger.warn(
+                    "Unable to send metrics to server",
+                    extra={"details": repr(e)},
+                )
+                    # search for problem metric values and set their values to zero
+                    for key, value in metrics.items():
+                        if not math.isfinite(value): # if value is NaN, infinity or negative infinity
+                            sly.logger.info(f"{key} value is NaN, infinity or negative infinity, setting this value to 0")
+                            metrics[key] = 0
+                    # send updated metrics to server
+                    send_metrics(epoch, epochs, metrics, opt.metrics_period)
 
             # Update best mAP
             fi = fitness(np.array(results).reshape(1, -1))  # weighted combination of [P, R, mAP@.5, mAP@.5-.95]
