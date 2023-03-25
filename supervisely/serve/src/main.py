@@ -1,21 +1,26 @@
 import os
 import sys
+
 try:
     from typing import Literal
 except:
     from typing_extensions import Literal
-from typing import List, Dict, Any
+
+from pathlib import Path
+from typing import Any, Dict, List
+
+import numpy as np
+import torch
 import yaml
 from dotenv import load_dotenv
-import torch
-import numpy as np
-import supervisely as sly
 from supervisely.geometry.sliding_windows_fuzzy import SlidingWindowsFuzzy
-from utils.torch_utils import select_device
+
+import supervisely as sly
 from models.experimental import attempt_load
-from utils.general import check_img_size, non_max_suppression, scale_coords, xywh2xyxy
-from utils.datasets import letterbox
-from pathlib import Path
+from utils.dataloaders import letterbox
+from utils.general import (check_img_size, non_max_suppression, scale_boxes,
+                           xywh2xyxy)
+from utils.torch_utils import select_device
 
 root_source_path = str(Path(__file__).parents[3])
 app_source_path = str(Path(__file__).parents[1])
@@ -26,7 +31,7 @@ model_weights_options = os.environ['modal.state.modelWeightsOptions']
 pretrained_weights = os.environ['modal.state.selectedModel'].lower()
 custom_weights = os.environ['modal.state.weightsPath']
 
-pretrained_weights_url = f"https://github.com/ultralytics/yolov5/releases/download/v5.0/{pretrained_weights}.pt"
+pretrained_weights_url = f"https://github.com/ultralytics/yolov5/releases/download/v7.0/{pretrained_weights}.pt"
 
 class YOLOv5Model(sly.nn.inference.ObjectDetection):
     def load_on_device(
@@ -134,7 +139,7 @@ class YOLOv5Model(sly.nn.inference.ObjectDetection):
         predictions = []
         for det in output:
             if det is not None and len(det) > 0:
-                det[:, :4] = scale_coords(img.shape[2:], det[:, :4], img0.shape).round()
+                det[:, :4] = scale_boxes(img.shape[2:], det[:, :4], img0.shape).round()
 
                 for *xyxy, conf, cls in reversed(det):
                     bbox = [int(xyxy[1]), int(xyxy[0]), int(xyxy[3]), int(xyxy[2])]
@@ -172,7 +177,7 @@ class YOLOv5Model(sly.nn.inference.ObjectDetection):
         conf, j = inf_out[:, 5:].max(1, keepdim=True) # best class
         det = torch.cat((box, conf, j.float()), 1)[conf.view(-1) > conf_thres]
 
-        det[:, :4] = scale_coords(img.shape[2:], det[:, :4], img0.shape).round()
+        det[:, :4] = scale_boxes(img.shape[2:], det[:, :4], img0.shape).round()
 
         for *xyxy, conf, cls in reversed(det):
             bbox = [int(xyxy[1]), int(xyxy[0]), int(xyxy[3]), int(xyxy[2])]
