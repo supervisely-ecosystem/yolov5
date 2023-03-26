@@ -423,10 +423,6 @@ def train(hyp, opt, device, tb_writer=None):
                     metrics[tag] = x
 
             if opt.sly:
-                # for debug only----------------------------------
-                metrics["train/box_loss"] = math.nan
-                metrics["metrics/recall"] = math.inf
-                # ------------------------------------------------
                 try:
                     send_metrics(epoch, epochs, metrics, opt.metrics_period)
                 except Exception as e:
