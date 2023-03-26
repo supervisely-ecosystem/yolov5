@@ -1,6 +1,5 @@
 import supervisely as sly
 import sly_train_globals as globals
-import math
 
 
 def init_chart(title, names, xs, ys, smoothing=None):
