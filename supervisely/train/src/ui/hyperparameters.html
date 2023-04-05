@@ -7,7 +7,7 @@
     <sly-field title="Batch size"
                description="total batch size for all GPUs. Use the largest batch size your GPU allows.
                                 For example: 16 / 24 / 40 / 64 (batch sizes shown for 16 GB devices)">
-        <el-input-number v-model="state.batchSize" :min="6"></el-input-number>
+        <el-input-number v-model="state.batchSize" :min="1"></el-input-number>
     </sly-field>
     <sly-field title="Input image size (in pixels)"
                description="Image is resized to square">
