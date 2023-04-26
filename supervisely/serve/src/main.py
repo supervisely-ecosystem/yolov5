@@ -144,8 +144,12 @@ class YOLOv5Model(sly.nn.inference.ObjectDetection):
         inf_out = self.model(img, augment=augment)[0]
 
         # Apply NMS
+        if "agnostic_nms" in settings:
+            is_agnostic = settings["agnostic_nms"]
+        else:
+            is_agnostic = False
         output = non_max_suppression(
-            inf_out, conf_thres=conf_thres, iou_thres=iou_thres, agnostic=settings["agnostic_nms"]
+            inf_out, conf_thres=conf_thres, iou_thres=iou_thres, agnostic=is_agnostic
         )
 
         predictions = []
