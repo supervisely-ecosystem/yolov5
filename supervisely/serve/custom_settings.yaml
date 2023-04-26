@@ -9,3 +9,6 @@ augment: False
 
 # save image with predictions (for developers)
 debug_visualization: False
+
+# whether to use agnostic nms or not
+agnostic_nms: False
