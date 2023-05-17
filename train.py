@@ -581,10 +581,8 @@ def train(hyp, opt, device, tb_writer=None):
 
             if opt.sly:
                 try:
-                    sly.logger.info("Trying to send metrics...")
                     send_metrics(epoch, epochs, metrics, opt.metrics_period)
                 except Exception as e:
-                    sly.logger.info("Trying to fix problem with sending metrics...")
                     sly.logger.warn(
                         "Unable to send metrics to server",
                         extra={"details": repr(e)},
