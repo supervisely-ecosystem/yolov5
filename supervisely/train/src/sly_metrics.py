@@ -48,6 +48,7 @@ def send_metrics(epoch, epochs, metrics, log_period=1):
                 sly.logger.info(
                     f"{key} value is not serializable, trying to transform value to float..."
                 )
+                print(value)
                 value = float(value)
                 if not math.isfinite(value):  # if transforming to float did not help
                     sly.logger.info(
