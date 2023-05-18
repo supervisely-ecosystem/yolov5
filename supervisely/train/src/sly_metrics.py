@@ -46,9 +46,15 @@ def send_metrics(epoch, epochs, metrics, log_period=1):
         for key, value in metrics.items():
             if not math.isfinite(value):  # if value is NaN, infinity or negative infinity
                 sly.logger.info(
-                    f"{key} value is NaN, infinity or negative infinity, setting this value to 0"
+                    f"{key} value is not serializable, trying to transform value to float..."
                 )
-                metrics[key] = 0
+                value = float(value)
+                if not math.isfinite(value):  # if transforming to float did not help
+                    sly.logger.info(
+                        f"{key} value is NaN, infinity or negative infinity, setting this value to 0"
+                    )
+                    value = 0
+                metrics[key] = value
         fields = [
             {
                 "field": "data.mGIoU.series[0].data",
