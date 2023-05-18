@@ -1,6 +1,5 @@
 # pip install -r requirements.txt
-# supervisely==6.69.70
-git+https://github.com/supervisely/supervisely.git@inf_image_async
+supervisely==6.72.12
 
 opencv-python-headless==4.5.5.62
 opencv-python==4.5.5.62
