@@ -68,7 +68,6 @@ from supervisely import logger
 
 def train(hyp, opt, device, tb_writer=None):
 
-    # device = torch.device("cpu")
     train_batches_uploaded = False
 
     logger.info("hyperparameters", extra=hyp)
