@@ -250,3 +250,5 @@ crashlytics-build.properties
 fabric.properties
 
 supervisely_lib
+
+app_debug_data/
