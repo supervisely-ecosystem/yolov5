@@ -1,5 +1,4 @@
 # Dataset utils and dataloaders
-
 import glob
 import logging
 import math
@@ -455,11 +454,7 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
         # Cache dataset labels, check images and read shapes
         x = {}  # dict
         nm, nf, ne, nc = 0, 0, 0, 0  # number missing, found, empty, duplicate
-        from supervisely import logger
-        logger("################ pbar init ###############")
         pbar = tqdm(zip(self.img_files, self.label_files), desc='Scanning images', total=len(self.img_files))
-        logger("################ pbar ###############",type(pbar))
-        logger("################ iterable ###############", pbar.iterable)
         for i, (im_file, lb_file) in enumerate(pbar):
             try:
                 # verify images
