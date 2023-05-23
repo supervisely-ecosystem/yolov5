@@ -18,6 +18,8 @@ ui_sources_dir = os.path.join(source_path, "ui")
 sys.path.append(ui_sources_dir)
 sly.logger.info(f"Added to sys.path: {ui_sources_dir}")
 
+print("sys.path:", sys.path)
+
 load_dotenv(os.path.join(root_source_dir, "supervisely", "train", "debug.env"))
 load_dotenv(os.path.join(root_source_dir, "supervisely", "train", "secret_debug.env"), override=True)
 

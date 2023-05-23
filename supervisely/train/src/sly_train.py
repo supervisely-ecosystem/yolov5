@@ -16,6 +16,10 @@ import yolov5_format as yolov5_format
 from architectures import prepare_weights
 from artifacts import set_task_output
 import train as train_yolov5
+print("train_yolov5:", train_yolov5)
+print("os.getcwd():", os.getcwd())
+import sys
+print("sys.path:", sys.path)
 
 
 @my_app.callback("restore_hyp")
