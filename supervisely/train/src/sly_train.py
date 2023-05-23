@@ -20,6 +20,7 @@ print("os.getcwd():", os.getcwd())
 import sys
 sys.path.insert(0, "/app/repo")
 print("sys.path:", sys.path)
+print("os.environ:", os.environ)
 
 import train as train_yolov5
 print("train_yolov5:", train_yolov5)
