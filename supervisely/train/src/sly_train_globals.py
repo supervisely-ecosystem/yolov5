@@ -18,7 +18,8 @@ ui_sources_dir = os.path.join(source_path, "ui")
 sys.path.append(ui_sources_dir)
 sly.logger.info(f"Added to sys.path: {ui_sources_dir}")
 
-python_path = os.environ.get("PYTHONPATH", "/app/repo")
+# currently PYTHONPATH is ":/app/repo"
+python_path = os.environ.get("PYTHONPATH", "/app/repo").replace(":", "")
 sys.path.insert(0, python_path)
 
 
