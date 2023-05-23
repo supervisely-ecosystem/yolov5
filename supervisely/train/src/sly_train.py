@@ -15,12 +15,14 @@ from splits import get_train_val_sets, verify_train_val_sets
 import yolov5_format as yolov5_format
 from architectures import prepare_weights
 from artifacts import set_task_output
-import train as train_yolov5
-print("train_yolov5:", train_yolov5)
+
 print("os.getcwd():", os.getcwd())
 import sys
+sys.path.insert(0, "/app/repo")
 print("sys.path:", sys.path)
 
+import train as train_yolov5
+print("train_yolov5:", train_yolov5)
 
 @my_app.callback("restore_hyp")
 @sly.timeit
