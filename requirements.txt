@@ -1,6 +1,5 @@
 # pip install -r requirements.txt
-git+https://github.com/supervisely/supervisely@_original-tqdm
-# supervisely==6.72.12
+supervisely==6.72.14
 
 opencv-python-headless==4.5.5.62
 opencv-python==4.5.5.62
