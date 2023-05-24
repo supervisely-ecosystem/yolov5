@@ -2,9 +2,6 @@ import os
 import supervisely as sly
 import tqdm
 
-from supervisely import _original_tqdm
-tqdm.tqdm = _original_tqdm
-
 import sly_train_globals as g
 
 from sly_train_globals import \
