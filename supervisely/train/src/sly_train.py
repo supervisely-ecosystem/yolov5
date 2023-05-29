@@ -1,5 +1,6 @@
 import os
 import supervisely as sly
+import tqdm
 
 import sly_train_globals as g
 
