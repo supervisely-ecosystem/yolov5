@@ -173,5 +173,8 @@
     "deployed_nn"
   ],
   "poster": "https://user-images.githubusercontent.com/106374579/183668719-361e275f-e6f8-47e5-994d-3341c0e6241f.png",
-  "community_agent": false
+  "community_agent": false,
+  "license": {
+    "type": "AGPL-3.0" 
+  }
 }
