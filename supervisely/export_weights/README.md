@@ -107,3 +107,9 @@ if `mode` set to `sliding_window`:
  - for `native` cases of sliding window approach: 
     - if set to `True` - NMS applied immediately to each window inference result.
     - if set to `False` - NMS applied to the whole sliding window result set.
+
+
+
+# Acknowledgment
+
+This app is based on the great work `yolov5` ([github](https://github.com/ultralytics/yolov5)). ![GitHub Org's stars](https://img.shields.io/github/stars/ultralytics/yolov5?style=social)
