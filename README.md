@@ -85,3 +85,7 @@ YOLOv5 is one of the best available detectors. And we are proud to announce its 
 - for technical support please leave issues, questions or suggestions to original [YOLOv5 repo](https://github.com/ultralytics/yolov5/issues) with the prefix `[Supervisely]`. Our team will try to help.
 - also we can chat in slack channel [![](https://img.shields.io/badge/slack-chat-green.svg?logo=slack)](https://supervise.ly/slack) 
 - if you are interested in Supervisely Enterprise Edition (EE) please send us a [request](https://supervise.ly/enterprise/?demo) or email Yuri Borisov at [sales@supervise.ly](sales@supervise.ly)
+
+# Acknowledgment
+
+This app is based on the great work `yolov5` ([github](https://github.com/ultralytics/yolov5)). ![GitHub Org's stars](https://img.shields.io/github/stars/ultralytics/yolov5?style=social)
