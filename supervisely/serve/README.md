@@ -399,3 +399,7 @@ Prediction for batch of images ids:
     <td><img src="https://i.imgur.com/YFNmIPY.jpg" height="300"/></td>
   </tr>
 </table>
+
+# Acknowledgment
+
+This app is based on the great work `yolov5` ([github](https://github.com/ultralytics/yolov5)). ![GitHub Org's stars](https://img.shields.io/github/stars/ultralytics/yolov5?style=social)
