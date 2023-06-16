@@ -4,6 +4,7 @@
                         Rectangle, other shapes are transformed to it automatically.">
     <sly-el-table-selection-container :data="data.classes" :selected="state.selectedClasses" :identityField="'title'">
     <el-table
+            ref="sly-el-table-with-selection"
             class="ultra-table"
             :data="data.classes"
             style="width: 100%"
