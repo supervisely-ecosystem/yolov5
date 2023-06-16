@@ -67,7 +67,6 @@ from supervisely import logger
 
 
 def train(hyp, opt, device, tb_writer=None):
-
     train_batches_uploaded = False
 
     logger.info("hyperparameters", extra=hyp)
@@ -626,6 +625,9 @@ def train(hyp, opt, device, tb_writer=None):
                 # Save last, best and delete
                 torch.save(ckpt, last)
                 if best_fitness == fi:
+                    if epoch != 0:
+                        os.remove(best)
+                    best = wdir / f"best_{epoch}.pt"
                     torch.save(ckpt, best)
                 if wandb_logger.wandb:
                     if (
