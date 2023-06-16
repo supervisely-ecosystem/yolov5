@@ -2,6 +2,7 @@
           title="2. Training classes"
           subtitle="Select classes, that should be used for training. Training supports only classes of shape
                         Rectangle, other shapes are transformed to it automatically.">
+    <sly-el-table-selection-container :data="classes" :selected="state.selectedClasses" :identityField="'title'">
     <el-table
             class="ultra-table"
             :data="data.classes"
@@ -24,4 +25,5 @@
         <el-table-column prop="imagesCount" label="Images count" sortable width="150"></el-table-column>
         <el-table-column prop="objectsCount" label="Objects count" sortable width="180"></el-table-column>
     </el-table>
+    </sly-el-table-selection-container>
 </sly-card>
