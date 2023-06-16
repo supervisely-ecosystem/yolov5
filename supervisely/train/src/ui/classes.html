@@ -2,7 +2,7 @@
           title="2. Training classes"
           subtitle="Select classes, that should be used for training. Training supports only classes of shape
                         Rectangle, other shapes are transformed to it automatically.">
-    <sly-el-table-selection-container :data="classes" :selected="state.selectedClasses" :identityField="'title'">
+    <sly-el-table-selection-container :data="data.classes" :selected="state.selectedClasses" :identityField="'title'">
     <el-table
             class="ultra-table"
             :data="data.classes"
