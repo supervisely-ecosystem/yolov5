@@ -167,7 +167,7 @@
   "icon": "https://i.imgur.com/2U6HufM.png",
   "icon_cover": true,
   "isolate": true,
-  "need_gpu": true,
+  "gpu": "required",
   "headless": true,
   "session_tags": [
     "deployed_nn"
