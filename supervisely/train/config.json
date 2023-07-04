@@ -10,12 +10,12 @@
     "train"
   ],
   "description": "Dashboard to configure and monitor training",
-  "docker_image": "supervisely/yolov5:1.0.1",
+  "docker_image": "supervisely/yolov5:1.0.2",
   "instance_version": "6.4.57",
   "main_script": "supervisely/train/src/sly_train.py",
   "gui_template": "supervisely/train/src/gui.html",
   "task_location": "workspace_tasks",
-  "need_gpu": true,
+  "gpu": "required",
   "icon": "https://i.imgur.com/HZCM0QM.png",
   "icon_cover": true,
   "context_menu": {
