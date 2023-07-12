@@ -35,7 +35,7 @@ Model serving allows to apply model to image (URL, local file, Supervisely image
 **Watch usage demo:**
 
 <a data-key="sly-embeded-video-link" href="https://youtu.be/cMBhn1Erluk" data-video-code="cMBhn1Erluk">
-    <img src="https://i.imgur.com/UlEMeem.png" alt="SLY_EMBEDED_VIDEO_LINK"  style="max-width:100%;">
+    <img src="media/d1.png" alt="SLY_EMBEDED_VIDEO_LINK"  style="max-width:100%;">
 </a>
 
 # Related Apps
@@ -44,13 +44,13 @@ You can use served model in next Supervisely Applications ⬇️
   
 
 - [Apply NN to Images Project](https://ecosystem.supervise.ly/apps/supervisely-ecosystem%252Fnn-image-labeling%252Fproject-dataset) - app allows to play with different inference options and visualize predictions in real time.  Once you choose inference settings you can apply model to all images in your project to visually analyse predictions and perform automatic data pre-labeling.   
-    <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/nn-image-labeling/project-dataset" src="https://i.imgur.com/M2Tp8lE.png" height="70px" margin-bottom="20px"/>  
+    <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/nn-image-labeling/project-dataset" src="media/r1.png" height="70px" margin-bottom="20px"/>  
 
 - [Apply NN to Videos Project](https://ecosystem.supervise.ly/apps/apply-nn-to-videos-project) - app allows to label your videos using served Supervisely models.  
-  <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/apply-nn-to-videos-project" src="https://imgur.com/LDo8K1A.png" height="70px" margin-bottom="20px" />
+  <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/apply-nn-to-videos-project" src="media/r2.png" height="70px" margin-bottom="20px" />
 
 - [NN Image Labeling](https://ecosystem.supervise.ly/apps/supervisely-ecosystem%252Fnn-image-labeling%252Fannotation-tool) - integrate any deployd NN to Supervisely Image Labeling UI. Configure inference settings and model output classes. Press `Apply` button (or use hotkey) and detections with their confidences will immediately appear on the image.   
-    <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/nn-image-labeling/annotation-tool" src="https://i.imgur.com/hYEucNt.png" height="70px" margin-bottom="20px"/>
+    <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/nn-image-labeling/annotation-tool" src="media/r3.png" height="70px" margin-bottom="20px"/>
 
 
 
@@ -59,7 +59,7 @@ You can use served model in next Supervisely Applications ⬇️
 
 **For pretrained model**: just choose weights from dropdown menu and press `Run`. 
 
-<img src="https://i.imgur.com/SEuE2jD.png" width="400"/>
+<img src="media/htr1.png" width="400"/>
 
 
 **For custom weights**: 
@@ -68,11 +68,11 @@ You can use served model in next Supervisely Applications ⬇️
    Training app saves results to the directory: `/yolov5_train/<training project name>/<session id>/weights`. 
    For example: `/yolov5_train/lemons_annotated/2577/weights/best.pt`
 
-<img src="https://i.imgur.com/VkSS58q.gif" width="800"/>
+<img src="media/htr2.gif" width="800"/>
 
 2. Paste path to modal window
 
-<img src="https://i.imgur.com/YbnwzI7.png" width="400"/>
+<img src="media/htr2a.png" width="400"/>
 
 Then
 
@@ -83,7 +83,7 @@ change what agent should be used for deploy.
 
 5. Wait until you see following message in logs: `Model has been successfully deployed`
 
-<img src="https://i.imgur.com/wKs7zw0.png" width="800"/>
+<img src="media/htr2b.png" width="800"/>
 
 
 # For Developers
@@ -339,13 +339,13 @@ Prediction for image URL (full image):
 
 Image URL  |  `01_prediction_url.jpg`
 :-------------------------:|:-----------------------------------:
-<img src="https://i.imgur.com/tEkCb69.jpg" style="max-height: 300px; width: auto;"/>  |  <img src="https://i.imgur.com/9OOoXn3.jpg" style="max-height: 300px; width: auto;"/>
+<img src="media/p1.jpeg" style="max-height: 300px; width: auto;"/>  |  <img src="media/p2.jpeg" style="max-height: 300px; width: auto;"/>
 
 Prediction for image URL (ROI - red rectangle):
 
 Image URL + ROI  |  `02_prediction_url_roi.jpg`
 :-------------------------:|:-----------------------------------:
-<img src="https://i.imgur.com/tEkCb69.jpg" style="max-height: 300px; width: auto;"/>  |  <img src="https://i.imgur.com/iSKS17L.jpg" style="max-height: 300px; width: auto;"/>
+<img src="media/p3.jpeg" style="max-height: 300px; width: auto;"/>  |  <img src="media/p4.jpeg" style="max-height: 300px; width: auto;"/>
 
 
 Prediction for image id (full image):
@@ -356,8 +356,8 @@ Prediction for image id (full image):
     <th>03_prediction_id.jpg</th>
   </tr>
   <tr>
-    <td><img src="https://i.imgur.com/RQDrH4B.jpg" height="300"/></td>
-    <td><img src="https://i.imgur.com/yYujbI0.jpg" height="300"/></td>
+    <td><img src="media/p5.jpeg" height="300"/></td>
+    <td><img src="media/p6.jpeg" height="300"/></td>
   </tr>
 </table>
 
@@ -370,8 +370,8 @@ Prediction for image id (ROI - red rectangle):
     <th>04_prediction_id_roi.jpg</th>
   </tr>
   <tr>
-    <td><img src="https://i.imgur.com/2XlEZQK.jpg" height="300"/></td>
-    <td><img src="https://i.imgur.com/1U7413M.jpg" height="300"/></td>
+    <td><img src="media/p7.jpeg" height="300"/></td>
+    <td><img src="media/p8.jpeg" height="300"/></td>
   </tr>
 </table>
 
@@ -383,20 +383,20 @@ Prediction for batch of images ids:
     <th>Prediction</th>
   </tr>
   <tr>
-    <td><img src="https://i.imgur.com/4Lh9tAm.jpg" height="300"/></td>
-    <td><img src="https://i.imgur.com/emsah1q.jpg" height="300"/></td>
+    <td><img src="media/pid1.jpeg" height="300"/></td>
+    <td><img src="media/pid2.jpeg" height="300"/></td>
   </tr>
   <tr>
-    <td><img src="https://i.imgur.com/UqiV5Ka.jpg" height="300"/></td>
-    <td><img src="https://i.imgur.com/GhoKKCl.jpg" height="300"/></td>
+    <td><img src="media/pid3.jpeg" height="300"/></td>
+    <td><img src="media/pid4.jpeg" height="300"/></td>
   </tr>
   <tr>
-    <td><img src="https://i.imgur.com/8GjoNDH.jpg"/></td>
-    <td><img src="https://i.imgur.com/yzinXD6.jpg"/></td>
+    <td><img src="media/pi5.jpeg"/></td>
+    <td><img src="media/pid6.jpeg"/></td>
   </tr>
   <tr>
-    <td><img src="https://i.imgur.com/xOydF3B.jpg" height="300"/></td>
-    <td><img src="https://i.imgur.com/YFNmIPY.jpg" height="300"/></td>
+    <td><img src="media/pid7.jpeg" height="300"/></td>
+    <td><img src="media/pid8.jpeg" height="300"/></td>
   </tr>
 </table>
 
