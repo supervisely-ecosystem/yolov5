@@ -28,17 +28,17 @@ App exports pretrained YOLO v5 model weights to [Torchscript](https://pytorch.or
 
 **Step 2**: Find your pretrained model weights file in `Team Files`, open file context menue(right click on it) -> `Run App` -> `Export YOLOv5 weights`.
 
-<img src="supervisely/export_weights/media/htr2.png" width="800px"/>
+<img src="media/htr2.png" width="800px"/>
 
 **Step 3**: Press `Run` button. Now application log window will be opened. You can safely close it.
 
-<img src="supervisely/export_weights/media/htr3.png"/>
+<img src="media/htr3.png"/>
 
 **Step 4**: Converted model files will be placed to source weight file folder:
  - `{source weights filename}.onnx`
  - `{source weights filename}.torchscript.pt`
 
-<img src="supervisely/export_weights/media/htr4.png"/>
+<img src="media/htr4.png"/>
 
 # Infer models
 
