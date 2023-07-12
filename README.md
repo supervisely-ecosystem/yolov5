@@ -50,7 +50,7 @@ YOLOv5 is one of the best available detectors. And we are proud to announce its 
 
 1. [Train YOLOv5](https://ecosystem.supervise.ly/apps/supervisely-ecosystem%252Fyolov5%252Fsupervisely%252Ftrain) - start training on your custom data. Just run app from the context menu of your project, choose classes of interest, train/val splits, configure training metaparameters and augmentations, and monitor training metrics in realtime. App automatically converts all labels to rectangles. All training artifacts including model weights will be saved to Team Files and can be easily downloaded. 
 
-    <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/yolov5/supervisely/train" src="media/aca1.png" width="350px"/>
+    <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/yolov5/supervisely/train" src="media/ac1a.png" width="350px"/>
 
 2. [Serve YOLOv5](https://ecosystem.supervise.ly/apps/supervisely-ecosystem%252Fyolov5%252Fsupervisely%252Fserve) - serve model as Rest API service. You can run pretrained model, use custom model weights trained in Supervisely as well as weights trained outside (just upload weights file to Team Files). Thus other apps from Ecosystem can get predictions from the deployed model. Also developers can send inference requiests in a few lines of python code.
    
