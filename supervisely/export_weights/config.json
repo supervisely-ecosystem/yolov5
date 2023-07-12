@@ -14,7 +14,7 @@
   "instance_version": "6.4.57",
   "main_script": "supervisely/export_weights/src/sly_export_weights.py",
   "task_location": "workspace_tasks",
-  "icon": "https://i.imgur.com/pNBtA2G.png",
+  "icon": "media/icon.png",
   "icon_cover": true,
   "isolate": true,
   "headless": true,
