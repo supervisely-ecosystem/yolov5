@@ -7,7 +7,7 @@
     "object detection"
   ],
   "description": "All you need to work with YOLOv5",
-  "icon": "https://i.imgur.com/dncQdRn.png",
+  "icon": "media/icon.png",
   "icon_cover": true,
-  "poster": "https://i.imgur.com/X9NTc5X.png"
+  "poster": "media/p1.png"
 }
