@@ -31,7 +31,7 @@ Major releases:
 Watch short video for more details:
 
 <a data-key="sly-embeded-video-link" href="https://youtu.be/e47rWdgK-_M" data-video-code="e47rWdgK-_M">
-    <img src="https://i.imgur.com/sJdEEkN.png" alt="SLY_EMBEDED_VIDEO_LINK"  style="max-width:100%;">
+    <img src="media/htu1.png" alt="SLY_EMBEDED_VIDEO_LINK"  style="max-width:100%;">
 </a>
 
 1. Add app to your team from Ecosystem
@@ -47,7 +47,7 @@ Watch short video for more details:
 6. Also in this directory you can find file `open_app.lnk`. It is a link to the finished UI session. It can be opened at any time to 
    get more details about training: options, hyperparameters, metrics and so on.
 
-   <img src="https://i.imgur.com/fIgiKMJ.png"/>
+   <img src="media/htu6.png"/>
    
    - go to `Team Files`
    - open directory with training artifacts
@@ -57,7 +57,7 @@ Watch short video for more details:
 
 # Screenshot
 
-<img src="https://i.imgur.com/eiROUgb.png"/>
+<img src="media/s1.png"/>
 
 # Acknowledgment
 
