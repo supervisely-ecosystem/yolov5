@@ -1,5 +1,5 @@
 # pip install -r requirements.txt
-supervisely==6.72.55
+git+https://github.com/supervisely/supervisely.git@fix-convert-anns-to-detection-task
 
 opencv-python-headless==4.5.5.62
 opencv-python==4.5.5.62
