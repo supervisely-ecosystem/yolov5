@@ -15,7 +15,7 @@
   "main_script": "supervisely/train/src/sly_train.py",
   "gui_template": "supervisely/train/src/gui.html",
   "task_location": "workspace_tasks",
-  "need_gpu": true,
+  "need_gpu": false,
   "gpu": "preferred",
   "icon": "https://i.imgur.com/HZCM0QM.png",
   "icon_cover": true,
