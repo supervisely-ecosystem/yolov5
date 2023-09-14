@@ -22,9 +22,9 @@ sly.logger.info(f"Added to sys.path: {ui_sources_dir}")
 python_path = os.environ.get("PYTHONPATH", "/app/repo").replace(":", "")
 sys.path.insert(0, python_path)
 
-
-load_dotenv(os.path.join(root_source_dir, "supervisely", "train", "debug.env"))
-load_dotenv(os.path.join(root_source_dir, "supervisely", "train", "secret_debug.env"), override=True)
+if not sly.is_production():
+    load_dotenv(os.path.join(root_source_dir, "supervisely", "train", "debug.env"))
+    load_dotenv(os.path.join(root_source_dir, "supervisely", "train", "secret_debug.env"), override=True)
 
 my_app = AppService()
 my_app._ignore_stop_for_debug = True
@@ -51,7 +51,8 @@ with open(os.path.join(root_source_dir, "data/hyp.finetune.yaml"), 'r') as file:
 runs_dir = os.path.join(my_app.data_dir, 'runs')
 sly.fs.mkdir(runs_dir, remove_content_if_exists=True)  # for debug, does nothing in production
 experiment_name = str(task_id)
-local_artifacts_dir = os.path.join(runs_dir, experiment_name)
+# local_artifacts_dir = os.path.join(runs_dir, experiment_name)
+local_artifacts_dir = sly.app.get_data_dir()
 sly.logger.info(f"All training artifacts will be saved to local directory {local_artifacts_dir}")
 remote_artifacts_dir = os.path.join("/yolov5_train", project_info.name, experiment_name)
 remote_artifacts_dir = api.file.get_free_dir_name(team_id, remote_artifacts_dir)
