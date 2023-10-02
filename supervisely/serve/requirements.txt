@@ -1,1 +1,2 @@
-supervisely==6.72.137
+# supervisely==6.72.137
+git+https://github.com/supervisely/supervisely.git@inference-gui-model-info-hotfix
