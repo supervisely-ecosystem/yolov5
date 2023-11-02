@@ -27,8 +27,7 @@ if not sly.is_production():
     load_dotenv(os.path.join(root_source_dir, "supervisely", "train", "secret_debug.env"), override=True)
 
 my_app = AppService()
-# WHY?
-my_app._ignore_stop_for_debug = True
+# my_app._ignore_stop_for_debug = True
 
 team_id = int(os.environ['context.teamId'])
 workspace_id = int(os.environ['context.workspaceId'])
