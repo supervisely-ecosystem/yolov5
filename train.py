@@ -7,6 +7,7 @@ import time
 from copy import deepcopy
 from pathlib import Path
 from threading import Thread
+from typing import Callable
 
 import numpy as np
 import torch.distributed as dist
@@ -66,7 +67,7 @@ import supervisely as sly
 from supervisely import logger
 
 
-def train(hyp, opt, device, tb_writer=None):
+def train(hyp, opt, device, stop_event_check: Callable[[], bool], tb_writer=None):
     train_batches_uploaded = False
 
     logger.info("hyperparameters", extra=hyp)
@@ -508,7 +509,9 @@ def train(hyp, opt, device, tb_writer=None):
                 if plots and ni == 10 and opt.sly:
                     train_batches_uploaded = True
                     upload_train_data_vis()
-
+            # add check is stopped
+            if stop_event_check() is True:
+                return
             # end batch ------------------------------------------------------------------------------------------------
         # end epoch ----------------------------------------------------------------------------------------------------
 
@@ -706,7 +709,7 @@ def train(hyp, opt, device, tb_writer=None):
     return results
 
 
-def main():
+def main(stop_event_check: Callable[[], bool]):
     parser = argparse.ArgumentParser()
     parser.add_argument("--weights", type=str, default="yolov5s.pt", help="initial weights path")
     parser.add_argument("--cfg", type=str, default="", help="model.yaml path")
@@ -854,7 +857,7 @@ def main():
             # prefix = colorstr('tensorboard: ')
             # logger.info(f"{prefix}Start with 'tensorboard --logdir {opt.project}', view at http://localhost:6006/")
             tb_writer = SummaryWriter(opt.save_dir)  # Tensorboard
-        train(hyp, opt, device, tb_writer)
+        train(hyp, opt, device, stop_event_check, tb_writer)
 
     # Evolve hyperparameters (optional)
     else:
@@ -934,7 +937,7 @@ def main():
                 hyp[k] = round(hyp[k], 5)  # significant digits
 
             # Train mutation
-            results = train(hyp.copy(), opt, device)
+            results = train(hyp.copy(), opt, device, stop_event_check)
 
             # Write mutation results
             print_mutation(hyp.copy(), results, yaml_file, opt.bucket)
