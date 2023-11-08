@@ -1,12 +1,10 @@
 # Repo-specific GitIgnore ----------------------------------------------------------------------------------------------
-*.jpg
 *.jpeg
 *.png
 *.bmp
 *.tif
 *.tiff
 *.heic
-*.JPG
 *.JPEG
 *.PNG
 *.BMP
@@ -252,3 +250,4 @@ fabric.properties
 supervisely_lib
 
 app_debug_data/
+/my_model
