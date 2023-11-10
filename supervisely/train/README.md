@@ -9,7 +9,7 @@
   <a href="#How-To-Use">How To Use</a>
   <a href="#How-To-Use-Your-Trained-Model-Outside-Supervisely">How To Use Your Trained Model Outside Supervisely</a> •
   <a href="#Screenshot">Screenshot</a> •
-  <a href="#Acknowledgement">Acknowledgement</a> •
+  <a href="#Acknowledgment">Acknowledgment</a> •
 </p>
 
 
