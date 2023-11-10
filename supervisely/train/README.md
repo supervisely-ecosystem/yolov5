@@ -7,6 +7,9 @@
 <p align="center">
   <a href="#Overview">Overview</a> •
   <a href="#How-To-Use">How To Use</a>
+  <a href="#How-To-Use-Your-Trained-Model-Outside-Supervisely">How To Use Your Trained Model Outside Supervisely</a> •
+  <a href="#Screenshot">Screenshot</a> •
+  <a href="#Acknowledgement">Acknowledgement</a> •
 </p>
 
 
@@ -53,7 +56,10 @@ Watch short video for more details:
    - open directory with training artifacts
    - right click on file `open_app.lnk`
    - open
-   
+
+# How To Use Your Trained Model Outside Supervisely
+
+You can use your trained models outside Supervisely platform without any dependencies on Supervisely SDK. See this [Jupyter Notebook](https://github.com/supervisely-ecosystem/yolov5/blob/master/inference_outside_supervisely.ipynb) for details.
 
 # Screenshot
 
