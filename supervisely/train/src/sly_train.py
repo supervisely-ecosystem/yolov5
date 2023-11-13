@@ -40,7 +40,15 @@ def train(api: sly.Api, task_id, context, state, app_logger):
 
         # download and preprocess Sypervisely project (using cache)
         download_progress = get_progress_cb("Download data (using cache)", g.project_info.items_count * 2)
-        sly.download_project(api, project_id, project_dir, cache=my_app.cache, progress_cb=download_progress)
+        try:
+            sly.download_project(api, project_id, project_dir, cache=my_app.cache, progress_cb=download_progress)
+        except Exception as e:
+            sly.logger.warn("Can not download project")
+            raise Exception(
+                "Can not download the project. "
+                f"Check if the project is available, it is not archived, not modified and not empty. "
+                f"{repr(e)}"
+            )
 
         # preprocessing: transform labels to bboxes, filter classes, ...
         try:
@@ -120,10 +128,14 @@ def train(api: sly.Api, task_id, context, state, app_logger):
         upload_artifacts(g.local_artifacts_dir, g.remote_artifacts_dir)
         set_task_output()
     except Exception as e:
-        msg = f"Oops! Something went wrong, please try again or contact tech support. Find more info in the app logs. Error: {repr(e)}"
-        sly.logger.error(msg, exc_info=True, extra={ 'exc_str': str(e)})
-        my_app.show_modal_window(msg, level="error")
-        api.app.set_field(task_id, "state.started", False)
+        msg = f"Something went wrong. Find more info in the app logs."
+        my_app.show_modal_window(f"{msg} {repr(e)}", level="error", log_message=False)
+        sly.logger.error(repr(e), exc_info=True, extra={ 'exc_str': str(e)})
+        try:
+            api.task.set_output_error(task_id, repr(e), msg)
+            api.app.set_field(task_id, "state.started", False)
+        except:
+            pass
 
     # stop application
     get_progress_cb("Finished, app is stopped automatically", 1)(1)
@@ -144,7 +156,10 @@ def main():
     my_app.compile_template(g.root_source_dir)
 
     # init data for UI widgets
-    ui.init(data, state)
+    try:
+        ui.init(data, state)
+    except Exception as e:
+        raise Exception(f"UI initialization error. {str(e)}")
 
     my_app.run(data=data, state=state)
 
