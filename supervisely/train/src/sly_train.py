@@ -132,7 +132,7 @@ def train(api: sly.Api, task_id, context, state, app_logger):
         my_app.show_modal_window(f"{msg} {repr(e)}", level="error", log_message=False)
         sly.logger.error(repr(e), exc_info=True, extra={ 'exc_str': str(e)})
         try:
-            api.task.set_output_error(task_id, repr(e), msg)
+            api.task.set_output_error(task_id, repr(e), "Find more info in the app logs.")
             api.app.set_field(task_id, "state.started", False)
         except:
             pass
