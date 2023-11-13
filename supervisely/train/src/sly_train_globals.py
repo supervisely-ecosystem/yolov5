@@ -40,6 +40,7 @@ local_artifacts_dir = None
 remote_artifacts_dir = None
 project_info = api.project.get_info_by_id(project_id)
 project_meta = sly.ProjectMeta.from_json(api.project.get_meta(project_id))
+project_stats = api.project.get_stats(project_id)
 
 with open(os.path.join(root_source_dir, "data/hyp.scratch.yaml"), 'r') as file:
     scratch_str = file.read()  # yaml.safe_load(
