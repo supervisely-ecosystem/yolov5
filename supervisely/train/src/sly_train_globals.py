@@ -49,7 +49,7 @@ with open(os.path.join(root_source_dir, "data/hyp.finetune.yaml"), 'r') as file:
     finetune_str = file.read()  # yaml.safe_load(
 
 
-runs_dir = os.path.join(sly.app.get_data_dir(), 'runs')
+runs_dir = os.path.join(sly.app.get_synced_data_dir(), 'runs')
 sly.fs.mkdir(runs_dir, remove_content_if_exists=True)  # for debug, does nothing in production
 experiment_name = str(task_id)
 local_artifacts_dir = os.path.join(runs_dir, experiment_name)
