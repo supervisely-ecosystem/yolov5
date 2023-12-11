@@ -1,2 +1,2 @@
-supervisely==6.72.182
+supervisely==6.72.213
 # git+https://github.com/supervisely/supervisely.git@v1-app-shutdown
