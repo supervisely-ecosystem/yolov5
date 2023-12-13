@@ -122,7 +122,7 @@ def train(api: sly.Api, task_id, context, state, app_logger):
         # start train script
         api.app.set_field(task_id, "state.activeNames", ["labels", "train", "pred", "metrics"])  # "logs",
         get_progress_cb("YOLOv5: Scanning data ", 1)(1)
-        train_yolov5.main(stop_event_check=g.my_app.app_is_stoped)
+        train_yolov5.main(stop_event_check=g.my_app.is_stopped)
 
         # upload artifacts directory to Team Files
         upload_artifacts(g.local_artifacts_dir, g.remote_artifacts_dir)
