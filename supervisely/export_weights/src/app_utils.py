@@ -30,7 +30,7 @@ def download_file(path2file, app, team_id):
                                      local_save_path=local_file_path)
         return local_file_path
     except:
-        raise FileNotFoundError('FileNotFoundError')
+        raise FileNotFoundError(f"File not found: {path2file}")
 
 
 def get_image(path2image):
@@ -76,7 +76,7 @@ def get_configs(cfgs_path, app=None, _team_id=None):
         if app and _team_id:
             cfgs_path = download_file(path2file=cfgs_path, app=app, team_id=_team_id)
         else:
-            raise FileNotFoundError(cfgs_path)
+            raise FileNotFoundError(f"File not found: {cfgs_path}")
 
     with open(cfgs_path, 'r') as yaml_file:
         cfgs = yaml.load(yaml_file)
@@ -103,5 +103,4 @@ def download_weights(path2weights):
                                         local_save_path=weights_path)
         return weights_path
     except:
-        raise FileNotFoundError('FileNotFoundError')
-    return None
+        raise FileNotFoundError(f"Weights file not found: {path2weights}")
