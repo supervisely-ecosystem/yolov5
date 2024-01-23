@@ -1,2 +1,3 @@
-supervisely==6.72.220
+git+https://github.com/supervisely/supervisely.git@data-nodes-deploy-yolov8
+# supervisely==6.72.220
 # git+https://github.com/supervisely/supervisely.git@v1-app-shutdown
