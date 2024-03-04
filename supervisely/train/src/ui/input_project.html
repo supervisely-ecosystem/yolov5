@@ -1,8 +1,12 @@
 <sly-card title="1. Input Project" subtitle="This project will be used for training">
     <sly-field title="" description="Project">
-        <a slot="title" target="_blank"
-           :href="`/projects/${data.projectId}/datasets`">{{data.projectName}} ({{data.projectImagesCount}}
+        <a slot="title" target="_blank" :href="`/projects/${data.projectId}/datasets`">{{data.projectName}}
+            ({{data.projectImagesCount}}
             images)</a>
-        <sly-icon slot="icon" :options="{ imageUrl: `${data.projectPreviewUrl}` }"/>
+        <sly-icon slot="icon" :options="{ imageUrl: `${data.projectPreviewUrl}` }" />
     </sly-field>
+    <el-checkbox v-model="state.useCache">
+        <span v-if="data.isCached">Use cached data stored on the agent to optimize project downlaod</span>
+        <span v-else>Cache data on the agent to optimize project download for future trainings</span>
+    </el-checkbox>
 </sly-card>

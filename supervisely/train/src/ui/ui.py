@@ -9,7 +9,7 @@ import artifacts as artifacts
 
 
 def init(data, state):
-    input_project.init(data)
+    input_project.init(data, state)
     training_classes.init(g.api, data, state, g.project_meta, g.project_stats)
     train_val_split.init(g.project_info, g.project_meta, data, state)
     model_architectures.init(data, state)
