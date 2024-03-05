@@ -9,10 +9,10 @@
     "object detection",
     "detection & tracking",
     "serve"
-  ], 
+  ],
   "description": "Deploy model as REST API service",
   "docker_image": "supervisely/yolov5:1.0.2",
-  "instance_version": "6.6.7",
+  "instance_version": "6.8.88",
   "entrypoint": "python -m uvicorn main:m.app --app-dir ./supervisely/serve/src --host 0.0.0.0 --port 8000 --ws websockets",
   "port": 8000,
   "modal_template": "supervisely/serve/src/modal.html",
@@ -176,6 +176,6 @@
   "poster": "https://user-images.githubusercontent.com/106374579/183668719-361e275f-e6f8-47e5-994d-3341c0e6241f.png",
   "community_agent": false,
   "license": {
-    "type": "AGPL-3.0" 
+    "type": "AGPL-3.0"
   }
 }
