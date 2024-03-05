@@ -10,6 +10,7 @@ from sly_train_globals import \
     root_source_dir, scratch_str, finetune_str
 
 import ui as ui
+from sly_project_cached import download_project
 from sly_train_utils import init_script_arguments
 from sly_utils import get_progress_cb, upload_artifacts
 from splits import get_train_val_sets, verify_train_val_sets
@@ -39,9 +40,13 @@ def train(api: sly.Api, task_id, context, state, app_logger):
         sly.fs.mkdir(project_dir, remove_content_if_exists=True)  # clean content for debug, has no effect in prod
 
         # download and preprocess Sypervisely project (using cache)
-        download_progress = get_progress_cb("Download data (using cache)", g.project_info.items_count * 2)
         try:
-            sly.download_project(api, project_id, project_dir, cache=my_app.cache, progress_cb=download_progress)
+            download_project(
+                api=api,
+                project_info=g.project_info,
+                project_dir=project_dir,
+                use_cache=state.get("useCache", True),
+            )
         except Exception as e:
             sly.logger.warn("Can not download project")
             raise Exception(
