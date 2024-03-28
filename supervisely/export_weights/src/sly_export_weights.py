@@ -73,18 +73,22 @@ def export_to_core_ml(weights, img):
 @sly.timeit
 def export_weights(api: sly.Api, task_id, context, state, app_logger):
     weights_path = download_weights(customWeightsPath)
-    cwp = os.path.join(Path(customWeightsPath).parents[1], 'opt.yaml')
-    configs_path = download_weights(cwp)
+    try:
+        cwp = os.path.join(Path(customWeightsPath).parents[1], 'opt.yaml')
+        configs_path = download_weights(cwp)
+        with open(configs_path, 'r') as stream:
+            cfgs_loaded = yaml.safe_load(stream)
+    except:
+        cfgs_loaded = None
     model = attempt_load(weights=weights_path, map_location=device)
 
-    with open(configs_path, 'r') as stream:
-        cfgs_loaded = yaml.safe_load(stream)
+    
 
     if hasattr(model, 'module') and hasattr(model.module, 'img_size'):
         imgsz = model.module.img_size[0]
     elif hasattr(model, 'img_size'):
         imgsz = model.img_size[0]
-    elif cfgs_loaded['img_size']:
+    elif cfgs_loaded and cfgs_loaded['img_size']:
         imgsz = cfgs_loaded['img_size'][0]
     else:
         sly.logger.warning(f"Image size is not found in model checkpoint. Use default: {image_size}")
