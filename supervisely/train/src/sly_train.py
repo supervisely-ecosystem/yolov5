@@ -33,6 +33,7 @@ def restore_hyp(api: sly.Api, task_id, context, state, app_logger):
 @sly.timeit
 def train(api: sly.Api, task_id, context, state, app_logger):
     try:
+        use_cache = state.get("useCache", True)
         prepare_weights(state)
 
         # prepare directory for original Supervisely project
@@ -45,7 +46,7 @@ def train(api: sly.Api, task_id, context, state, app_logger):
                 api=api,
                 project_info=g.project_info,
                 project_dir=project_dir,
-                use_cache=state.get("useCache", True),
+                use_cache=use_cache,
             )
         except Exception as e:
             sly.logger.warn("Can not download project")
@@ -58,6 +59,18 @@ def train(api: sly.Api, task_id, context, state, app_logger):
         # preprocessing: transform labels to bboxes, filter classes, ...
         try:
             sly.Project.to_detection_task(project_dir, inplace=True)
+        except RuntimeError as e:
+            if not use_cache:
+                raise
+            sly.logger.warn("Error during project transformation to detection task. Will try to re-download the project", exc_info=True)
+            download_project(
+                api=api,
+                project_info=g.project_info,
+                project_dir=project_dir,
+                use_cache=False,
+            )
+            sly.Project.to_detection_task(project_dir, inplace=True)
+
         except ValueError:
             # search for problem images and ignore them
             images_info = []
