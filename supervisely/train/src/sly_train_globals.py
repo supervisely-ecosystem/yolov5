@@ -3,6 +3,7 @@ from pathlib import Path
 import sys
 import yaml
 import supervisely as sly
+from supervisely.nn.checkpoints.yolov5 import YOLOv5Checkpoint
 from supervisely.app.v1.app_service import AppService
 from dotenv import load_dotenv
 
@@ -54,6 +55,14 @@ sly.fs.mkdir(runs_dir, remove_content_if_exists=True)  # for debug, does nothing
 experiment_name = str(task_id)
 local_artifacts_dir = os.path.join(runs_dir, experiment_name)
 sly.logger.info(f"All training artifacts will be saved to local directory {local_artifacts_dir}")
-remote_artifacts_dir = os.path.join("/yolov5_train", project_info.name, experiment_name)
+
+checkpoint = YOLOv5Checkpoint(team_id)
+model_dir = checkpoint.get_model_dir()
+
+remote_artifacts_dir = os.path.join(model_dir, project_info.name, experiment_name)
 remote_artifacts_dir = api.file.get_free_dir_name(team_id, remote_artifacts_dir)
+
+remote_weights_dir = os.path.join(remote_artifacts_dir, checkpoint.weights_dir)
+remote_weights_dir = api.file.get_free_dir_name(team_id, remote_artifacts_dir)
+
 sly.logger.info(f"After training artifacts will be uploaded to Team Files: {remote_artifacts_dir}")

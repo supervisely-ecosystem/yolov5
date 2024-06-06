@@ -67,3 +67,14 @@ def upload_artifacts(local_dir, remote_dir):
                                     lambda monitor: progress_cb(progress_last + monitor.bytes_read))
         progress.message = _gen_message(idx + 1, len(local_files))
         time.sleep(0.5)
+        
+    # generate metadata
+    globals.checkpoint.generate_sly_metadata(
+        app_name=globals.checkpoint.app_name,
+        session_id=globals.experiment_name,
+        session_path=globals.remote_artifacts_dir,
+        weights_dir=globals.remote_weights_dir,
+        training_project_name=globals.project_info.name,
+        task_type=globals.checkpoint.task_type,
+        config_path=None,
+    )
