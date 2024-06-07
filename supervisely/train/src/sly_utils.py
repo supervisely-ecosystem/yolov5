@@ -69,12 +69,13 @@ def upload_artifacts(local_dir, remote_dir):
         time.sleep(0.5)
         
     # generate metadata
-    globals.sly_yolov5.generate_sly_metadata(
+    globals.sly_yolov5.generate_metadata(
         app_name=globals.sly_yolov5.app_name,
-        session_id=globals.experiment_name,
-        session_path=globals.remote_artifacts_dir,
-        weights_path=globals.remote_weights_dir,
-        training_project_name=globals.project_info.name,
+        task_id=globals.experiment_name,
+        artifacts_folder=globals.remote_artifacts_dir,
+        weights_folder=globals.remote_weights_dir,
+        weights_ext=globals.sly_yolov5.weights_ext,
+        project_name=globals.project_info.name,
         task_type=globals.sly_yolov5.task_type,
         config_path=None,
     )

@@ -3,7 +3,7 @@ from pathlib import Path
 import sys
 import yaml
 import supervisely as sly
-from supervisely.nn.models.yolov5 import YOLOv5
+from supervisely.nn.artifacts.yolov5 import YOLOv5
 from supervisely.app.v1.app_service import AppService
 from dotenv import load_dotenv
 
@@ -57,12 +57,12 @@ local_artifacts_dir = os.path.join(runs_dir, experiment_name)
 sly.logger.info(f"All training artifacts will be saved to local directory {local_artifacts_dir}")
 
 sly_yolov5 = YOLOv5(team_id)
-model_dir = sly_yolov5.framework_dir
+framework_dir = sly_yolov5.framework_dir
 
-remote_artifacts_dir = os.path.join(model_dir, project_info.name, experiment_name)
+remote_artifacts_dir = os.path.join(framework_dir, project_info.name, experiment_name)
 remote_artifacts_dir = api.file.get_free_dir_name(team_id, remote_artifacts_dir)
 
-remote_weights_dir = os.path.join(remote_artifacts_dir, sly_yolov5.weights_dir)
+remote_weights_dir = sly_yolov5.get_weights_path(remote_artifacts_dir)
 remote_weights_dir = api.file.get_free_dir_name(team_id, remote_artifacts_dir)
 
 sly.logger.info(f"After training artifacts will be uploaded to Team Files: {remote_artifacts_dir}")
