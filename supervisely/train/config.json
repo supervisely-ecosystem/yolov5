@@ -10,7 +10,7 @@
     "train"
   ],
   "description": "Dashboard to configure and monitor training",
-  "docker_image": "supervisely/yolov5:1.0.4",
+  "docker_image": "supervisely/yolov5:1.0.5",
   "min_instance_version": "6.8.70",
   "main_script": "supervisely/train/src/sly_train.py",
   "gui_template": "supervisely/train/src/gui.html",
