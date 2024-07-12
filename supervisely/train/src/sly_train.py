@@ -40,6 +40,10 @@ def train(api: sly.Api, task_id, context, state, app_logger):
         project_dir = os.path.join(my_app.data_dir, "sly_project")
         sly.fs.mkdir(project_dir, remove_content_if_exists=True)  # clean content for debug, has no effect in prod
 
+        # -------------------------------------- Add Workflow Input -------------------------------------- #
+        g.workflow.add_input(g.project_info, state)
+        # ----------------------------------------------- - ---------------------------------------------- #
+
         # download and preprocess Sypervisely project (using cache)
         try:
             download_project(
@@ -145,6 +149,7 @@ def train(api: sly.Api, task_id, context, state, app_logger):
         # upload artifacts directory to Team Files
         upload_artifacts(g.local_artifacts_dir, g.remote_artifacts_dir)
         set_task_output()
+        g.workflow.add_output(state, g.remote_artifacts_dir)
     except Exception as e:
         msg = f"Something went wrong. Find more info in the app logs."
         my_app.show_modal_window(f"{msg} {repr(e)}", level="error", log_message=False)

@@ -18,10 +18,13 @@ from utils.general import check_img_size, non_max_suppression, scale_coords, xyw
 from utils.datasets import letterbox
 from pathlib import Path
 
+
 root_source_path = str(Path(__file__).parents[3])
 app_source_path = str(Path(__file__).parents[1])
 load_dotenv(os.path.join(app_source_path, "local.env"))
 load_dotenv(os.path.expanduser("~/supervisely.env"))
+
+from workflow import Workflow
 
 model_weights_options = os.environ["modal.state.modelWeightsOptions"]
 pretrained_weights = os.environ["modal.state.selectedModel"].lower()
@@ -45,6 +48,8 @@ class YOLOv5Model(sly.nn.inference.ObjectDetection):
             self.local_weights_path = self.download(custom_weights)
             cfg_path_in_teamfiles = os.path.join(Path(custom_weights).parents[1], "opt.yaml")
             configs_local_path = self.download(cfg_path_in_teamfiles)
+            workflow = Workflow(self.api)
+            workflow.add_input(custom_weights)
 
         self.device = select_device(device)
         self.half = self.device.type != "cpu"  # half precision only supported on CUDA
