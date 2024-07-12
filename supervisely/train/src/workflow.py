@@ -43,6 +43,7 @@ class Workflow:
         if project_version_id is None:
             project_version_id = project_info.version.get("id", None) if project_info.version else None
         self.api.app.workflow.add_input_project(project_info.id, version_id=project_version_id)
+        file_info = False
         if state["weightsInitialization"] is not None and state["weightsInitialization"] == "custom":
              file_info = self.api.file.get_info_by_path(sly.env.team_id(), state["_weightsPath"])
              self.api.app.workflow.add_input_file(file_info, model_weight=True)
