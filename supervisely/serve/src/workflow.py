@@ -34,13 +34,16 @@ class Workflow:
 
     @check_compatibility
     def add_input(self, checkpoint_url: str):
-        meta = {"customNodeSettings": {"title": "<h4>Serve Custom Model</h4>"}}
-        sly.logger.debug(f"Workflow Input: Checkpoint URL - {checkpoint_url}")
-        if checkpoint_url and self.api.file.exists(sly.env.team_id(), checkpoint_url):
-            self.api.app.workflow.add_input_file(checkpoint_url, model_weight=True, meta=meta)
-        else:
-            sly.logger.debug(f"Checkpoint {checkpoint_url} not found in Team Files. Cannot set workflow input")
-
+        try:
+            meta = {"customNodeSettings": {"title": "<h4>Serve Custom Model</h4>"}}
+            sly.logger.debug(f"Workflow Input: Checkpoint URL - {checkpoint_url}")
+            if checkpoint_url and self.api.file.exists(sly.env.team_id(), checkpoint_url):
+                self.api.app.workflow.add_input_file(checkpoint_url, model_weight=True, meta=meta)
+            else:
+                sly.logger.debug(f"Checkpoint {checkpoint_url} not found in Team Files. Cannot set workflow input")
+        except Exception as e:
+            sly.logger.error(f"Failed to add input to the workflow: {e}")
+            
     @check_compatibility
     def add_output(self):
         raise NotImplementedError("add_output is not implemented in this workflow")
