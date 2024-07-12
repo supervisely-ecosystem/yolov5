@@ -6,6 +6,7 @@ import supervisely as sly
 from supervisely.nn.artifacts.yolov5 import YOLOv5
 from supervisely.app.v1.app_service import AppService
 from dotenv import load_dotenv
+from workflow import Workflow
 
 root_source_dir = str(Path(sys.argv[0]).parents[3])
 sly.logger.info(f"Root source directory: {root_source_dir}")
@@ -35,6 +36,7 @@ workspace_id = int(os.environ['context.workspaceId'])
 project_id = int(os.environ['modal.state.slyProjectId'])
 
 api: sly.Api = my_app.public_api
+workflow = Workflow(api)
 task_id = my_app.task_id
 
 local_artifacts_dir = None
