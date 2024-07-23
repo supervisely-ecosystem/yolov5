@@ -49,7 +49,7 @@ class Workflow:
             else:
                 sly.logger.debug(f"Checkpoint {checkpoint_url} not found in Team Files. Cannot set workflow input")
         except Exception as e:
-            sly.logger.error(f"Failed to add input to the workflow: {e}")
+            sly.logger.debug(f"Failed to add input to the workflow: {e}")
             
     @check_compatibility
     def add_output(self):
