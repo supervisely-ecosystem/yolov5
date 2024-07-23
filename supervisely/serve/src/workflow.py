@@ -4,7 +4,14 @@ import supervisely as sly
 def check_compatibility(func):
     def wrapper(self, *args, **kwargs):
         if self.is_compatible is None:
-            self.is_compatible = self.check_instance_ver_compatibility()
+            try:
+                self.is_compatible = self.check_instance_ver_compatibility()
+            except Exception as e:
+                sly.logger.error(
+                    "Can not check compatibility with Supervisely instance. "
+                    f"Workflow features will be disabled. Error: {repr(e)}"
+                )
+                self.is_compatible = False
         if not self.is_compatible:
             return
         return func(self, *args, **kwargs)
