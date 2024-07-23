@@ -7,7 +7,14 @@ import os
 def check_compatibility(func):
     def wrapper(self, *args, **kwargs):
         if self.is_compatible is None:
-            self.is_compatible = self.check_instance_ver_compatibility()
+            try:
+                self.is_compatible = self.check_instance_ver_compatibility()
+            except Exception as e:
+                sly.logger.error(
+                    "Can not check compatibility with Supervisely instance. "
+                    f"Workflow and versioning features will be disabled. Error: {repr(e)}"
+                )
+                self.is_compatible = False
         if not self.is_compatible:
             return
         return func(self, *args, **kwargs)
@@ -42,7 +49,7 @@ class Workflow:
                 project_info, "Train YOLO v5", f"This backup was created automatically by Supervisely before the Train YOLO task with ID: {self.api.task_id}"
             )
         except Exception as e:
-            sly.logger.error(f"Failed to create a project version: {e}")
+            sly.logger.warning(f"Failed to create a project version: {repr(e)}")
             project_version_id = None
             
         try:
@@ -55,7 +62,7 @@ class Workflow:
                 self.api.app.workflow.add_input_file(file_info, model_weight=True)
             sly.logger.debug(f"Workflow Input: Project ID - {project_info.id}, Project Version ID - {project_version_id}, Input File - {True if file_info else False}")
         except Exception as e:
-            sly.logger.error(f"Failed to add input to the workflow: {e}")
+            sly.logger.debug(f"Failed to add input to the workflow: {repr(e)}")
 
     @check_compatibility
     def add_output(self, state: dict, team_files_dir: str):
@@ -98,4 +105,4 @@ class Workflow:
             else:
                 sly.logger.debug(f"File with the best weighs not found in Team Files. Cannot set workflow output.")
         except Exception as e:
-            sly.logger.error(f"Failed to add output to the workflow: {e}")
+            sly.logger.debug(f"Failed to add output to the workflow: {repr(e)}")
