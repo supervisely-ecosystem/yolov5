@@ -1,4 +1,4 @@
-🚀 This guide explains how to use [**Supervisely**](https://supervise.ly/) with YOLOv5.
+🚀 This guide explains how to use [**Supervisely**](https://supervisely.com/) with YOLOv5.
 
 # Table of Contents
 
@@ -10,7 +10,7 @@
 
 # 🔥 About Supervisely
 
-You can think of [Supervisely](https://supervise.ly/) as an Operating System available via Web Browser to help you solve Computer Vision tasks. The idea is to unify all the relevant tools that may be needed to make the development process as smooth and fast as possible. 
+You can think of [Supervisely](https://supervisely.com/) as an Operating System available via Web Browser to help you solve Computer Vision tasks. The idea is to unify all the relevant tools that may be needed to make the development process as smooth and fast as possible. 
 
 More concretely, Supervisely includes the following functionality:
  - Data labeling for images, videos, 3D point cloud and volumetric medical images (dicom)
@@ -42,37 +42,37 @@ Once your computer is ready just add agent to your team and execute automaticall
 
 # 🎉 YOLO v5 Apps Collection
 
-YOLOv5 is one of the best available detectors. And we are proud to announce its full integrtion into [Supervisely Ecosystem](https://ecosystem.supervise.ly/). To learn more about how to use every app, please go to app's readme page (links are provided). Just add the apps to your team to start using them.
+YOLOv5 is one of the best available detectors. And we are proud to announce its full integrtion into [Supervisely Ecosystem](https://ecosystem.supervisely.com/). To learn more about how to use every app, please go to app's readme page (links are provided). Just add the apps to your team to start using them.
 
 <img src="https://i.imgur.com/az5sqvk.png"/>
 
  YOLOv5 Collection consists of the following apps: 
 
-1. [Train YOLOv5](https://ecosystem.supervise.ly/apps/supervisely-ecosystem%252Fyolov5%252Fsupervisely%252Ftrain) - start training on your custom data. Just run app from the context menu of your project, choose classes of interest, train/val splits, configure training metaparameters and augmentations, and monitor training metrics in realtime. App automatically converts all labels to rectangles. All training artifacts including model weights will be saved to Team Files and can be easily downloaded. 
+1. [Train YOLOv5](https://ecosystem.supervisely.com/apps/supervisely-ecosystem%252Fyolov5%252Fsupervisely%252Ftrain) - start training on your custom data. Just run app from the context menu of your project, choose classes of interest, train/val splits, configure training metaparameters and augmentations, and monitor training metrics in realtime. App automatically converts all labels to rectangles. All training artifacts including model weights will be saved to Team Files and can be easily downloaded. 
 
     <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/yolov5/supervisely/train" src="https://i.imgur.com/RkVzrLC.png" width="350px"/>
 
-2. [Serve YOLOv5](https://ecosystem.supervise.ly/apps/supervisely-ecosystem%252Fyolov5%252Fsupervisely%252Fserve) - serve model as Rest API service. You can run pretrained model, use custom model weights trained in Supervisely as well as weights trained outside (just upload weights file to Team Files). Thus other apps from Ecosystem can get predictions from the deployed model. Also developers can send inference requiests in a few lines of python code.
+2. [Serve YOLOv5](https://ecosystem.supervisely.com/apps/supervisely-ecosystem%252Fyolov5%252Fsupervisely%252Fserve) - serve model as Rest API service. You can run pretrained model, use custom model weights trained in Supervisely as well as weights trained outside (just upload weights file to Team Files). Thus other apps from Ecosystem can get predictions from the deployed model. Also developers can send inference requiests in a few lines of python code.
    
     <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/yolov5/supervisely/serve" src="https://i.imgur.com/DVONwK8.png" width="350px"/>
 
-3. [Apply NN to images project ](https://ecosystem.supervise.ly/apps/supervisely-ecosystem%252Fnn-image-labeling%252Fproject-dataset) - app allows to play with different inference options and visualize predictions in real time.  Once you choose inference settings you can apply model to all images in your project to visually analise predictions and perform automatic data pre-labeling.   
+3. [Apply NN to images project ](https://ecosystem.supervisely.com/apps/supervisely-ecosystem%252Fnn-image-labeling%252Fproject-dataset) - app allows to play with different inference options and visualize predictions in real time.  Once you choose inference settings you can apply model to all images in your project to visually analise predictions and perform automatic data pre-labeling.   
    
     <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/nn-image-labeling/project-dataset" src="https://i.imgur.com/M2Tp8lE.png" width="350px"/> 
 
-4. [NN Image Labeling](https://ecosystem.supervise.ly/apps/supervisely-ecosystem%252Fnn-image-labeling%252Fannotation-tool) - integrate any deployd NN to Supervisely Image Labeling UI. Configure inference settings and model output classes. Press `Apply` button (or use hotkey) and detections with their confidences will immediately appear on the image. 
+4. [NN Image Labeling](https://ecosystem.supervisely.com/apps/supervisely-ecosystem%252Fnn-image-labeling%252Fannotation-tool) - integrate any deployd NN to Supervisely Image Labeling UI. Configure inference settings and model output classes. Press `Apply` button (or use hotkey) and detections with their confidences will immediately appear on the image. 
    
     <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/nn-image-labeling/annotation-tool" src="https://i.imgur.com/hYEucNt.png" width="350px"/> 
 
-5. [Convert Supervisely to YOLO v5 format](https://ecosystem.supervise.ly/apps/convert-supervisely-to-yolov5-format) - export labeled images project in yolov5 compatible format. 
+5. [Convert Supervisely to YOLO v5 format](https://ecosystem.supervisely.com/apps/convert-supervisely-to-yolov5-format) - export labeled images project in yolov5 compatible format. 
    
     <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/convert-supervisely-to-yolov5-format" src="https://i.imgur.com/9cfB1m0.png" width="350px"/> 
 
-6. [Convert YOLO v5 to Supervisely format](https://ecosystem.supervise.ly/apps/convert-yolov5-to-supervisely-format) - import images and yolov5 annotatons to Supervisely.
+6. [Convert YOLO v5 to Supervisely format](https://ecosystem.supervisely.com/apps/convert-yolov5-to-supervisely-format) - import images and yolov5 annotatons to Supervisely.
 
     <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/convert-yolov5-to-supervisely-format" src="https://i.imgur.com/roiJIE8.png" width="350px"/> 
     
-7. [Export weights](https://ecosystem.supervise.ly/apps/supervisely-ecosystem/yolov5/supervisely/export_weights) - export weights to ONNX or TorchScript; also find python examples how to apply exported weights to an image and get predictions.
+7. [Export weights](https://ecosystem.supervisely.com/apps/supervisely-ecosystem/yolov5/supervisely/export_weights) - export weights to ONNX or TorchScript; also find python examples how to apply exported weights to an image and get predictions.
 
     <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/yolov5/supervisely/export_weights" src="https://i.imgur.com/6h0krdp.png" width="350px"/> 
 
@@ -83,8 +83,8 @@ YOLOv5 is one of the best available detectors. And we are proud to announce its 
 # Contact & Questions & Suggestions
 
 - for technical support please leave issues, questions or suggestions to original [YOLOv5 repo](https://github.com/ultralytics/yolov5/issues) with the prefix `[Supervisely]`. Our team will try to help.
-- also we can chat in slack channel [![](https://img.shields.io/badge/slack-chat-green.svg?logo=slack)](https://supervise.ly/slack) 
-- if you are interested in Supervisely Enterprise Edition (EE) please send us a [request](https://supervise.ly/enterprise/?demo) or email Yuri Borisov at [sales@supervise.ly](sales@supervise.ly)
+- also we can chat in slack channel [![](https://img.shields.io/badge/slack-chat-green.svg?logo=slack)](https://supervisely.com/slack) 
+- if you are interested in Supervisely Enterprise Edition (EE) please send us a [request](https://supervisely.com/enterprise/?demo) or email Yuri Borisov at [sales@supervisely.com](sales@supervisely.com)
 
 # Acknowledgment
 
