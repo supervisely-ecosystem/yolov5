@@ -12,7 +12,7 @@ from sly_train_globals import \
 import ui as ui
 from sly_project_cached import download_project
 from sly_train_utils import init_script_arguments
-from sly_utils import get_progress_cb, upload_artifacts
+from sly_utils import get_progress_cb, upload_artifacts, create_experiment
 from splits import get_train_val_sets, verify_train_val_sets
 import yolov5_format as yolov5_format
 from architectures import prepare_weights
@@ -126,6 +126,7 @@ def train(api: sly.Api, task_id, context, state, app_logger):
 
         # split to train / validation sets (paths to images and annotations)
         train_set, val_set = get_train_val_sets(project_dir, state)
+        g.train_size, g.val_size = len(train_set), len(val_set)
         verify_train_val_sets(train_set, val_set)
         sly.logger.info(f"Train set: {len(train_set)} images")
         sly.logger.info(f"Val set: {len(val_set)} images")
@@ -148,6 +149,24 @@ def train(api: sly.Api, task_id, context, state, app_logger):
 
         # upload artifacts directory to Team Files
         upload_artifacts(g.local_artifacts_dir, g.remote_artifacts_dir)
+
+        # Implement model evaluation benchmark here
+        benchmark_report_template, report_id, eval_metrics, primary_metric_name = None, None, None, None
+        # --------------------------------------- #
+
+        try:
+            sly.logger.info("Creating experiment info")
+            create_experiment(
+                model_name="YOLOv5",
+                remote_dir=g.remote_artifacts_dir,
+                local_dir=g.local_artifacts_dir,
+                report_id=report_id,
+                eval_metrics=eval_metrics,
+                primary_metric_name=primary_metric_name,
+            )
+        except Exception as e:
+            sly.logger.error(f"Couldn't create experiment, this training session will not appear in the experiments table. Error: {e}")
+
         set_task_output()
         g.workflow.add_output(state, g.remote_artifacts_dir)
     except Exception as e:
