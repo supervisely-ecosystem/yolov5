@@ -59,6 +59,9 @@ local_artifacts_dir = os.path.join(runs_dir, experiment_name)
 sly.logger.info(f"All training artifacts will be saved to local directory {local_artifacts_dir}")
 
 sly_yolov5 = YOLOv5(team_id)
+sly_yolov5_generated_metadata = None
+train_size, val_size = None, None
+
 framework_dir = sly_yolov5.framework_folder
 
 remote_artifacts_dir = os.path.join(framework_dir, project_info.name, experiment_name)

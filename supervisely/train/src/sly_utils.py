@@ -3,6 +3,8 @@ import os
 import time
 import supervisely as sly
 import sly_train_globals as globals
+from dataclasses import asdict
+from supervisely.nn.artifacts.artifacts import TrainInfo
 
 
 def update_progress(count, api: sly.Api, task_id, progress: sly.Progress):
@@ -67,9 +69,9 @@ def upload_artifacts(local_dir, remote_dir):
                                     lambda monitor: progress_cb(progress_last + monitor.bytes_read))
         progress.message = _gen_message(idx + 1, len(local_files))
         time.sleep(0.5)
-        
+
     # generate metadata
-    globals.sly_yolov5.generate_metadata(
+    globals.sly_yolov5_generated_metadata = globals.sly_yolov5.generate_metadata(
         app_name=globals.sly_yolov5.app_name,
         task_id=globals.experiment_name,
         artifacts_folder=globals.remote_artifacts_dir,
@@ -79,3 +81,39 @@ def upload_artifacts(local_dir, remote_dir):
         task_type=globals.sly_yolov5.task_type,
         config_path=None,
     )
+
+def create_experiment(
+    model_name,
+    remote_dir,
+    local_dir,
+    report_id=None,
+    eval_metrics=None,
+    primary_metric_name=None,
+):
+    train_info = TrainInfo(**globals.sly_yolov5_generated_metadata)
+    experiment_info = globals.sly_yolov5.convert_train_to_experiment_info(train_info)
+    experiment_info.experiment_name = (
+        f"{globals.task_id} {globals.project_info.name} {model_name}"
+    )
+    experiment_info.model_name = model_name
+    experiment_info.framework_name = f"{globals.sly_yolov5.framework_name}"
+    experiment_info.train_size = globals.train_size
+    experiment_info.val_size = globals.val_size
+    experiment_info.evaluation_report_id = report_id
+    experiment_info.experiment_report_id = None
+    if report_id is not None:
+        experiment_info.evaluation_report_link = f"/model-benchmark?id={str(report_id)}"
+    experiment_info.evaluation_metrics = eval_metrics
+
+    experiment_info_json = asdict(experiment_info)
+    experiment_info_json["project_preview"] = globals.project_info.image_preview_url
+    experiment_info_json["primary_metric"] = primary_metric_name
+
+    globals.api.task.set_output_experiment(globals.task_id, experiment_info_json)
+    experiment_info_json.pop("project_preview")
+    experiment_info_json.pop("primary_metric")
+
+    experiment_info_path = os.path.join(local_dir, "experiment_info.json")
+    remote_experiment_info_path = os.path.join(remote_dir, "experiment_info.json")
+    sly.json.dump_json_file(experiment_info_json, experiment_info_path)
+    globals.api.file.upload(globals.team_id, experiment_info_path, remote_experiment_info_path)
