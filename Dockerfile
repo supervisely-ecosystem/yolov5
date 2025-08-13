@@ -10,6 +10,7 @@ COPY dev_requirements.txt dev_requirements.txt
 RUN python -m pip install --upgrade pip
 RUN pip uninstall -y nvidia-tensorboard nvidia-tensorboard-plugin-dlprof
 
+RUN pip install setuptools==69.5.1
 RUN pip install --no-cache gsutil notebook
 RUN pip install --no-cache -r dev_requirements.txt
 
