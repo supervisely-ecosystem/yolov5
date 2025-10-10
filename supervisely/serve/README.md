@@ -10,7 +10,7 @@
   <a href="#For-Developers">For Developers</a>
 </p>
 
-[![](https://img.shields.io/badge/supervisely-ecosystem-brightgreen)](../../../../supervisely-ecosystem/yolov5/supervisely/serve)
+[![](https://img.shields.io/badge/supervisely-ecosystem-brightgreen)](../../../../../../supervisely-ecosystem/yolov5/supervisely/serve)
 [![](https://img.shields.io/badge/slack-chat-green.svg?logo=slack)](https://supervisely.com/slack)
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/supervisely-ecosystem/yolov5)
 [![views](https://app.supervisely.com/img/badges/views/supervisely-ecosystem/yolov5/supervisely/serve)](https://supervisely.com)
