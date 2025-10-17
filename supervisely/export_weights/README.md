@@ -24,7 +24,7 @@
 App exports pretrained YOLO v5 model weights to [Torchscript](https://pytorch.org/docs/stable/jit.html?highlight=model%20features)(.torchscript.pt), [ONNX](https://onnx.ai/index.html)(.onnx) formats. 
 
 # How To Run
-**Step 1**: Add app to your team from [Ecosystem](../../../../supervisely-ecosystem/import-mot-format) if it is not there.
+**Step 1**: Add app to your team from [Ecosystem](https://ecosystem.supervisely.com/apps/import-mot-format) if it is not there.
 
 **Step 2**: Find your pretrained model weights file in `Team Files`, open file context menue(right click on it) -> `Run App` -> `Export YOLOv5 weights`.
 
