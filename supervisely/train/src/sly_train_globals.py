@@ -42,6 +42,9 @@ task_id = my_app.task_id
 local_artifacts_dir = None
 remote_artifacts_dir = None
 project_info = api.project.get_info_by_id(project_id)
+if project_info.items_count == 0:
+    raise ValueError(f"Input project (id={project_id}) is empty. Please add images to the project and try again.")
+
 project_meta = sly.ProjectMeta.from_json(api.project.get_meta(project_id))
 project_stats = api.project.get_stats(project_id)
 
