@@ -21,8 +21,7 @@ COPY . /usr/src/app
 # Set environment variables
 ENV HOME=/usr/src/app
 
-LABEL python_sdk_version=6.73.138
-
+LABEL python_sdk_version="6.73.486"
 # ---------------------------------------------------  Extras Below  ---------------------------------------------------
 
 # Build and Push

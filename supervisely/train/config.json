@@ -1,34 +1,34 @@
 {
-  "name": "Train YOLOv5",
-  "type": "app",
-  "categories": [
-    "neural network",
-    "images",
-    "videos",
-    "object detection",
-    "detection & tracking",
-    "train"
-  ],
-  "description": "Dashboard to configure and monitor training",
-  "docker_image": "supervisely/yolov5:1.0.9",
-  "instance_version": "6.10.0",
-  "main_script": "supervisely/train/src/sly_train.py",
-  "gui_template": "supervisely/train/src/gui.html",
-  "task_location": "workspace_tasks",
-  "need_gpu": true,
-  "gpu": "required",
-  "icon": "https://i.imgur.com/HZCM0QM.png",
-  "icon_cover": true,
-  "context_menu": {
-    "target": [
-      "images_project"
+    "name": "Train YOLOv5",
+    "type": "app",
+    "categories": [
+        "neural network",
+        "images",
+        "videos",
+        "object detection",
+        "detection & tracking",
+        "train"
     ],
-    "context_root": "Neural Networks",
-    "context_category": "YOLO"
-  },
-  "poster": "https://user-images.githubusercontent.com/106374579/183667927-7b2161e7-97e3-4219-90ec-6b558992faa2.png",
-  "community_agent": false,
-  "license": {
-    "type": "AGPL-3.0"
-  }
+    "description": "Dashboard to configure and monitor training",
+    "docker_image": "supervisely/yolov5:1.0.10",
+    "instance_version": "6.15.35",
+    "main_script": "supervisely/train/src/sly_train.py",
+    "gui_template": "supervisely/train/src/gui.html",
+    "task_location": "workspace_tasks",
+    "need_gpu": true,
+    "gpu": "required",
+    "icon": "https://i.imgur.com/HZCM0QM.png",
+    "icon_cover": true,
+    "context_menu": {
+        "target": [
+            "images_project"
+        ],
+        "context_root": "Neural Networks",
+        "context_category": "YOLO"
+    },
+    "poster": "https://user-images.githubusercontent.com/106374579/183667927-7b2161e7-97e3-4219-90ec-6b558992faa2.png",
+    "community_agent": false,
+    "license": {
+        "type": "AGPL-3.0"
+    }
 }
