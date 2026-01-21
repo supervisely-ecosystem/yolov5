@@ -1,10 +1,10 @@
 # git+https://github.com/supervisely/supervisely.git@test-branch
 
 # pip install -r requirements.txt
-supervisely==6.73.138
+supervisely==6.73.418
 
-opencv-python-headless==4.5.5.62
-opencv-python==4.5.5.62
+opencv-python-headless==4.6.0.66
+opencv-python==4.6.0.66
 
 # base ----------------------------------------
 PyYAML==5.4.1
