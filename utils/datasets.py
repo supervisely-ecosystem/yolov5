@@ -17,7 +17,8 @@ import torch
 import torch.nn.functional as F
 from PIL import Image, ExifTags
 from torch.utils.data import Dataset
-from tqdm import tqdm
+import supervisely.task.progress.sly_tqdm as tqdm
+
 
 from utils.general import check_requirements, xyxy2xywh, xywh2xyxy, xywhn2xyxy, xyn2xy, segment2box, segments2boxes, \
     resample_segments, clean_str
@@ -444,6 +445,8 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
             self.img_hw0, self.img_hw = [None] * n, [None] * n
             results = ThreadPool(8).imap(lambda x: load_image(*x), zip(repeat(self), range(n)))  # 8 threads
             pbar = tqdm(enumerate(results), total=n)
+            if not hasattr(pbar, "mininterval"):
+                pbar.mininterval = 0.1
             for i, x in pbar:
                 self.imgs[i], self.img_hw0[i], self.img_hw[i] = x  # img, hw_original, hw_resized = load_image(self, i)
                 gb += self.imgs[i].nbytes
@@ -455,6 +458,8 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
         x = {}  # dict
         nm, nf, ne, nc = 0, 0, 0, 0  # number missing, found, empty, duplicate
         pbar = tqdm(zip(self.img_files, self.label_files), desc='Scanning images', total=len(self.img_files))
+        if not hasattr(pbar, "mininterval"):
+            pbar.mininterval = 0.1
         for i, (im_file, lb_file) in enumerate(pbar):
             try:
                 # verify images
