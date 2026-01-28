@@ -19,15 +19,6 @@ from PIL import Image, ExifTags
 from torch.utils.data import Dataset
 from tqdm import tqdm
 
-try:
-    from supervisely.task import progress as _sly_progress
-
-    _cls = getattr(_sly_progress, "tqdm_sly", None)
-    if _cls is not None and not hasattr(_cls, "mininterval"):
-        _cls.mininterval = 0.1
-except Exception:
-    pass
-
 from utils.general import check_requirements, xyxy2xywh, xywh2xyxy, xywhn2xyxy, xyn2xy, segment2box, segments2boxes, \
     resample_segments, clean_str
 from utils.torch_utils import torch_distributed_zero_first
