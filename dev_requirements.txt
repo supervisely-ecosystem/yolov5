@@ -3,7 +3,6 @@
 # pip install -r requirements.txt
 supervisely==6.73.138
 
-opencv-python-headless==4.5.5.62
 opencv-python==4.5.5.62
 
 # base ----------------------------------------
