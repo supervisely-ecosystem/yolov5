@@ -1,1 +1,2 @@
 supervisely==6.73.516
+opencv-python==4.6.0.66
