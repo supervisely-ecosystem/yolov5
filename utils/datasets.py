@@ -17,8 +17,16 @@ import torch
 import torch.nn.functional as F
 from PIL import Image, ExifTags
 from torch.utils.data import Dataset
-import tqdm
+from tqdm import tqdm
 
+try:
+    from supervisely.task import progress as _sly_progress
+
+    _cls = getattr(_sly_progress, "tqdm_sly", None)
+    if _cls is not None and not hasattr(_cls, "mininterval"):
+        _cls.mininterval = 0.1
+except Exception:
+    pass
 
 from utils.general import check_requirements, xyxy2xywh, xywh2xyxy, xywhn2xyxy, xyn2xy, segment2box, segments2boxes, \
     resample_segments, clean_str
@@ -445,40 +453,18 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
             self.img_hw0, self.img_hw = [None] * n, [None] * n
             results = ThreadPool(8).imap(lambda x: load_image(*x), zip(repeat(self), range(n)))  # 8 threads
             pbar = tqdm(enumerate(results), total=n)
-            if not hasattr(pbar, "mininterval"):
-                pbar.mininterval = 0.1
-            # In some environments the error is raised inside `iter(pbar)` (Supervisely tqdm wrapper),
-            # so fall back to a plain iterator without tqdm if the progress wrapper is broken.
-            try:
-                pbar_iter = iter(pbar)
-            except AttributeError:
-                print(f"{prefix}WARNING: tqdm progress wrapper is incompatible, disabling progress bar for caching.")
-                pbar_iter = iter(enumerate(results))
-                pbar = None
-
-            for i, x in pbar_iter:
+            for i, x in pbar:
                 self.imgs[i], self.img_hw0[i], self.img_hw[i] = x  # img, hw_original, hw_resized = load_image(self, i)
                 gb += self.imgs[i].nbytes
-                if pbar is not None:
-                    pbar.desc = f'{prefix}Caching images ({gb / 1E9:.1f}GB)'
-            if pbar is not None:
-                pbar.close()
+                pbar.desc = f'{prefix}Caching images ({gb / 1E9:.1f}GB)'
+            pbar.close()
 
     def cache_labels(self, path=Path('./labels.cache'), prefix=''):
         # Cache dataset labels, check images and read shapes
         x = {}  # dict
         nm, nf, ne, nc = 0, 0, 0, 0  # number missing, found, empty, duplicate
         pbar = tqdm(zip(self.img_files, self.label_files), desc='Scanning images', total=len(self.img_files))
-        if not hasattr(pbar, "mininterval"):
-            pbar.mininterval = 0.1
-        try:
-            pbar_iter = iter(pbar)
-        except AttributeError:
-            print(f"{prefix}WARNING: tqdm progress wrapper is incompatible, disabling progress bar for scanning.")
-            pbar_iter = iter(zip(self.img_files, self.label_files))
-            pbar = None
-
-        for i, (im_file, lb_file) in enumerate(pbar_iter):
+        for i, (im_file, lb_file) in enumerate(pbar):
             try:
                 # verify images
                 im = Image.open(im_file)
@@ -514,11 +500,9 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
                 nc += 1
                 print(f'{prefix}WARNING: Ignoring corrupted image and/or label {im_file}: {e}')
 
-            if pbar is not None:
-                pbar.desc = f"{prefix}Scanning '{path.parent / path.stem}' images and labels... " \
-                            f"{nf} found, {nm} missing, {ne} empty, {nc} corrupted"
-        if pbar is not None:
-            pbar.close()
+            pbar.desc = f"{prefix}Scanning '{path.parent / path.stem}' images and labels... " \
+                        f"{nf} found, {nm} missing, {ne} empty, {nc} corrupted"
+        pbar.close()
 
         if nf == 0:
             print(f'{prefix}WARNING: No labels found in {path}. See {help_url}')
