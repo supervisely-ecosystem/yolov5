@@ -1,7 +1,6 @@
 import os
 import supervisely as sly
-import supervisely.task.progress.sly_tqdm as tqdm
-# import tqdm
+import tqdm
 
 import sly_train_globals as g
 
