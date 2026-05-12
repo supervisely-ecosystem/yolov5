@@ -1,0 +1,34 @@
+name: Manual Build App Image From Template (Release)
+run-name: Manual Build App Image for "${{ github.event.repository.name }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_version:
+        description: "Tag version to build image for"
+        required: false
+      enable_cve_checks:
+        description: "Enable CVE checks during image build"
+        required: false
+        type: boolean
+        default: true
+      skip_tag_check:
+        description: "Skip tag existence check before building image"
+        required: false
+        type: boolean
+        default: false
+      no_cache_requirements:
+        description: "Do not use cache for installing requirements"
+        required: false
+        type: boolean
+        default: false
+jobs:
+  build-image:
+    uses: supervisely-ecosystem/workflows/.github/workflows/build_image_from_template.yml@master
+    with:
+      image_name: "${{ github.event.repository.name }}"
+      config_path: "supervisely/train/config.json"
+      tag_version: "${{ inputs.tag_version }}"
+      cve_checks: ${{ inputs.enable_cve_checks }}
+      skip_tag_check: ${{ inputs.skip_tag_check }}
+      no_cache_requirements: ${{ inputs.no_cache_requirements }}
