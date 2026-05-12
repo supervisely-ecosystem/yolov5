@@ -11,9 +11,9 @@ jobs:
     if: "!github.event.release.prerelease"
     uses: supervisely-ecosystem/workflows/.github/workflows/build_image_from_template.yml@master
     with:
-      image_name: "${{ github.event.repository.name }}"
-      config_path: "supervisely/train/config.json"
-      runtime_base_image: "base-py-cuda-hardened"
+      dockerfile_template_path: "docker/Dockerfile.tmpl"
+      config_file: "supervisely/train/config.json"
+      no_cache_requirements: true
       cve_checks: true
   Supervisely-Release:
     if: "!github.event.release.prerelease"

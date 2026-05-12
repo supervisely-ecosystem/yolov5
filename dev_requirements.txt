@@ -1,7 +1,6 @@
 # git+https://github.com/supervisely/supervisely.git@test-branch
 
-supervisely==6.73.567
-supervisely[agent] @ git+https://github.com/supervisely/supervisely.git@upgrade-protobuf
+supervisely[agent,model-benchmark] @ git+https://github.com/supervisely/supervisely.git@upgrade-protobuf
 
 opencv-python-headless==4.5.5.62
 opencv-python==4.5.5.62

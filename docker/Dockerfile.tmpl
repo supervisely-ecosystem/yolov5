@@ -1,0 +1,118 @@
+ARG tag_ref_name
+ARG REQUIREMENTS_FILE=dev_requirements.txt
+ARG RUNTIME_BASE_IMAGE=base-py-cuda-hardened
+ARG EXTRA_BUILDER_LIBS=""
+
+FROM nvcr.io/nvidia/pytorch:21.03-py3 AS yolov5-base
+
+FROM yolov5-base AS requirements-builder
+
+ENV LANG=C.UTF-8 \
+  PYTHONDONTWRITEBYTECODE=1 \
+  PYTHONUNBUFFERED=1 \
+  PIP_DISABLE_PIP_VERSION_CHECK=1 \
+  PIP_NO_CACHE_DIR=1 \
+  PIP_PREFER_BINARY=1
+
+ARG REQUIREMENTS_FILE
+ARG EXTRA_BUILDER_LIBS
+RUN set -eux; \
+  apt-get update; \
+  apt-get install -y --no-install-recommends \
+    ca-certificates \
+    git \
+    python3-venv \
+    zip \
+    htop \
+    screen \
+    libgl1-mesa-glx \
+    ffmpeg \
+    ${EXTRA_BUILDER_LIBS}; \
+  rm -rf /var/lib/apt/lists/*; \
+  python -m pip uninstall -y nvidia-tensorboard nvidia-tensorboard-plugin-dlprof || true
+
+COPY ${REQUIREMENTS_FILE} /tmp/requirements.txt
+
+RUN set -eux; \
+  python -m venv --system-site-packages /opt/venv; \
+  /opt/venv/bin/python -m ensurepip --upgrade; \
+  /opt/venv/bin/python -m pip install --no-cache-dir --upgrade pip==25.0.1 wheel setuptools; \
+  /opt/venv/bin/python -m pip download --no-cache-dir --only-binary=:all: --dest /tmp/wheels pip==25.0.1; \
+  if [ -s /tmp/requirements.txt ]; then \
+    /opt/venv/bin/python -m pip wheel --no-cache-dir -r /tmp/requirements.txt -w /tmp/wheels; \
+  else \
+    mkdir -p /tmp/wheels; \
+  fi
+
+FROM yolov5-base AS runtime
+
+ENV LANG=C.UTF-8 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+ARG tag_ref_name
+ARG REQUIREMENTS_FILE
+ARG CACHEBUST=""
+
+COPY ${REQUIREMENTS_FILE} /tmp/requirements.txt
+
+RUN --mount=from=requirements-builder,source=/tmp/wheels,target=/tmp/wheels,ro \
+  set -eux; \
+  apt-get update; \
+  apt-get install -y --no-install-recommends \
+    ca-certificates \
+    python3-venv \
+    zip \
+    htop \
+    screen \
+    libgl1-mesa-glx \
+    ffmpeg; \
+  python -m pip uninstall -y nvidia-tensorboard nvidia-tensorboard-plugin-dlprof || true; \
+  python -m venv --system-site-packages /opt/venv; \
+  if [ -s /tmp/requirements.txt ]; then \
+    /opt/venv/bin/python -m ensurepip --upgrade; \
+    /opt/venv/bin/python -m pip install --no-cache-dir --no-index --find-links=/tmp/wheels --upgrade pip==25.0.1; \
+    set -- /tmp/wheels/*.whl; \
+    if [ -e "$1" ]; then \
+      /opt/venv/bin/python -m pip install --no-cache-dir --no-compile --no-index /tmp/wheels/*.whl; \
+      rm -rf \
+        /opt/venv/lib/python*/site-packages/pip* \
+        /opt/venv/lib/python*/site-packages/setuptools* \
+        /opt/venv/lib/python*/site-packages/wheel* \
+        /opt/venv/lib/python*/site-packages/pkg_resources* \
+        /opt/venv/lib/python*/site-packages/_distutils_hack* \
+        /opt/venv/lib/python*/site-packages/_distutils* \
+        /opt/venv/lib/python*/site-packages/distutils-precedence.pth \
+        /opt/venv/bin/pip \
+        /opt/venv/bin/pip3 \
+        /opt/venv/bin/pip3.* \
+        /opt/venv/bin/easy_install \
+        /opt/venv/bin/easy_install-* \
+        /opt/venv/bin/wheel; \
+    fi; \
+  fi; \
+  rm -rf \
+    /var/lib/apt/lists/* \
+    /usr/bin/apt \
+    /usr/bin/apt-get \
+    /usr/bin/apt-cache \
+    /usr/bin/apt-mark \
+    /usr/bin/apt-key \
+    /usr/bin/dpkg \
+    /usr/bin/dpkg-deb \
+    /usr/bin/dpkg-query \
+    /usr/bin/dpkg-divert \
+    /usr/bin/git \
+    /usr/bin/curl \
+    /usr/bin/wget; \
+  find /opt/venv -type d -name '__pycache__' -prune -exec rm -rf {} +; \
+  find /opt/venv -type f \( -name '*.pyc' -o -name '*.pyo' \) -delete; \
+  find /opt/venv/lib/python*/site-packages -type d \( -name 'tests' -o -name 'test' \) -prune -exec rm -rf {} +; \
+  rm -rf /tmp/requirements.txt
+
+ENV PATH="/opt/venv/bin:$PATH" \
+    HOME=/usr/src/app \
+    NVIDIA_VISIBLE_DEVICES=all \
+    NVIDIA_DRIVER_CAPABILITIES=compute,utility
+
+LABEL python_sdk_version="${tag_ref_name}"
