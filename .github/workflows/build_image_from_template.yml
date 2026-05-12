@@ -27,6 +27,7 @@ jobs:
     uses: supervisely-ecosystem/workflows/.github/workflows/build_image_from_template.yml@master
     with:
       image_name: "${{ github.event.repository.name }}"
+      runtime_base_image: "base-py-cuda-hardened"
       config_path: "supervisely/train/config.json"
       tag_version: "${{ inputs.tag_version }}"
       cve_checks: ${{ inputs.enable_cve_checks }}
