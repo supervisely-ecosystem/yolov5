@@ -40,9 +40,10 @@ RUN set -eux; \
   python -m venv --system-site-packages /opt/venv; \
   /opt/venv/bin/python -m ensurepip --upgrade; \
   /opt/venv/bin/python -m pip install --no-cache-dir --upgrade pip==25.0.1 wheel==0.43.0 setuptools==69.5.1 packaging==24.2; \
+  /opt/venv/bin/python -m pip install --no-cache-dir numpy==1.19.5 cython==0.29.36; \
   /opt/venv/bin/python -m pip download --no-cache-dir --only-binary=:all: --dest /tmp/wheels pip==25.0.1; \
   if [ -s /tmp/requirements.txt ]; then \
-    /opt/venv/bin/python -m pip wheel --no-cache-dir -r /tmp/requirements.txt -w /tmp/wheels; \
+    /opt/venv/bin/python -m pip wheel --no-cache-dir --no-build-isolation -r /tmp/requirements.txt -w /tmp/wheels; \
   else \
     mkdir -p /tmp/wheels; \
   fi
