@@ -46,6 +46,7 @@ RUN set -eux; \
   /opt/venv/bin/python -m ensurepip --upgrade; \
   /opt/venv/bin/python -m pip install --no-cache-dir --upgrade pip==25.0.1 wheel==0.45.1 setuptools==69.5.1 packaging==24.2; \
   /opt/venv/bin/python -m pip install --no-cache-dir numpy==1.26.4; \
+  /opt/venv/bin/python -m pip install --no-cache-dir requests; \
   /opt/venv/bin/python -m pip install --no-cache-dir \
     torch==2.7.1+cu128 torchvision==0.22.1+cu128 \
     --index-url https://download.pytorch.org/whl/cu128; \
