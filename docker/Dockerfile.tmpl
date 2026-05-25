@@ -5,6 +5,9 @@ ARG EXTRA_BUILDER_LIBS=""
 
 FROM nvcr.io/nvidia/pytorch:21.03-py3 AS yolov5-base
 
+ENV DEBIAN_FRONTEND=noninteractive \
+    TZ=Etc/UTC
+
 FROM yolov5-base AS requirements-builder
 
 ENV LANG=C.UTF-8 \
