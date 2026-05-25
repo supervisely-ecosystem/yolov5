@@ -7,7 +7,7 @@ opencv-python==4.5.5.62
 
 # base ----------------------------------------
 PyYAML==5.4.1
-packaging==22.0  # Runtime replacement for pkg_resources requirement checks.
+packaging==24.2  # Runtime replacement for pkg_resources requirement checks.
 tensorboard==2.4.1
 
 # plotting ------------------------------------
