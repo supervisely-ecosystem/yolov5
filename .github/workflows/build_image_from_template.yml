@@ -1,35 +1,39 @@
-name: Dummy Build App Image From Template
+
+name: Manual Build App Image From Template (Release)
+run-name: Manual Build App Image for "${{ github.event.repository.name }}
 
 on:
   workflow_dispatch:
     inputs:
       tag_version:
-        description: "Tag version accepted for compatibility with manual build callers"
+        description: "Tag version to build image for"
         required: false
       tag_ref_name:
-        description: "Accepted for compatibility; ignored by this placeholder"
+        description: "Runtime base image tag/ref to use; defaults to tag_version"
         required: false
       enable_cve_checks:
-        description: "Accepted for compatibility; ignored by this placeholder"
-        required: false
-        type: boolean
-        default: false
-      skip_tag_check:
-        description: "Accepted for compatibility; ignored by this placeholder"
+        description: "Enable CVE checks during image build"
         required: false
         type: boolean
         default: true
-      no_cache_requirements:
-        description: "Accepted for compatibility; ignored by this placeholder"
+      skip_tag_check:
+        description: "Skip tag existence check before building image"
         required: false
         type: boolean
         default: false
-
+      no_cache_requirements:
+        description: "Do not use cache for installing requirements"
+        required: false
+        type: boolean
+        default: false
 jobs:
-  noop:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Confirm dispatch path
-        run: |
-          echo "Dummy workflow_dispatch placeholder for branch-local workflow testing."
-          echo "Replace this on the feature branch with the real reusable wrapper."
+  build-image:
+    uses: supervisely-ecosystem/workflows/.github/workflows/build_image_from_template.yml@master
+    with:
+      dockerfile_template_path: "docker/Dockerfile.tmpl"
+      config_file: "supervisely/train/config.json"
+      tag_version: "${{ inputs.tag_version }}"
+      tag_ref_name: "${{ inputs.tag_ref_name }}"
+      cve_checks: ${{ inputs.enable_cve_checks }}
+      skip_tag_check: ${{ inputs.skip_tag_check }}
+      no_cache_requirements: true
