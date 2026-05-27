@@ -1,5 +1,6 @@
+
 name: Manual Build App Image From Template (Release)
-run-name: Manual Build App Image for "${{ github.event.repository.name }}"
+run-name: Manual Build App Image for "${{ github.event.repository.name }}
 
 on:
   workflow_dispatch:
