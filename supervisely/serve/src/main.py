@@ -46,8 +46,16 @@ class YOLOv5Model(sly.nn.inference.ObjectDetection):
             self.local_weights_path = self.download(pretrained_weights_url)
         if model_weights_options == "custom":
             self.local_weights_path = self.download(custom_weights)
-            cfg_path_in_teamfiles = os.path.join(Path(custom_weights).parents[1], "opt.yaml")
-            configs_local_path = self.download(cfg_path_in_teamfiles)
+            configs_local_path = None
+            weights_parents = Path(custom_weights).parents
+            if len(weights_parents) > 1:
+                cfg_path_in_teamfiles = os.path.join(weights_parents[1], "opt.yaml")
+                configs_local_path = self.download(cfg_path_in_teamfiles)
+            else:
+                sly.logger.warning(
+                    f"Can not look for opt.yaml next to weights: {custom_weights}. "
+                    "Model settings will be read from the checkpoint."
+                )
             workflow = Workflow(self.api)
             workflow.add_input(custom_weights)
 
