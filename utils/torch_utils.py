@@ -61,7 +61,11 @@ def git_describe(path=Path(__file__).parent):  # path must be a directory
 
 
 def select_device(device='', batch_size=None):
-    # device = 'cpu' or '0' or '0,1,2,3'
+    # device = 'cpu' or '0' or '0,1,2,3' or a torch device string 'cuda' / 'cuda:0'
+    device = str(device).strip()
+    if device.lower().startswith('cuda'):
+        # 'cuda' -> let torch use the visible devices, 'cuda:1' -> '1'
+        device = device.split(':', 1)[1] if ':' in device else ''
     s = f'YOLOv5 🚀 {git_describe() or date_modified()} torch {torch.__version__} '  # string
     cpu = device.lower() == 'cpu'
     if cpu:
